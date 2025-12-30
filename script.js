@@ -1,10 +1,5 @@
 let rowCounter = 0;
 
-// Add initial sample row
-window.onload = function() {
-    addRow();
-};
-
 function addRow() {
     rowCounter++;
     const tbody = document.getElementById('tableBody');
@@ -12,7 +7,7 @@ function addRow() {
     
     row.innerHTML = `
         <td>${rowCounter}</td>
-        <td><input type="text" class="item-name" placeholder="Nhập tên hàng"></td>
+        <td><textarea class="item-name" placeholder="Nhập tên hàng" rows="1"></textarea></td>
         <td><input type="text" class="dimension" placeholder="VD: 330 x 120" onblur="formatDimensionOnBlur(this)"></td>
         <td><input type="text" class="quantity" placeholder="Tự động hoặc nhập thủ công" oninput="calculateRow(this)"></td>
         <td><input type="text" class="unit-price" placeholder="0" onblur="formatAndCalculate(this)" required></td>
@@ -344,20 +339,84 @@ function printTable() {
 }
 
 // ===== PDF EXPORT FUNCTION =====
+let pdfOrientationCallback = null;
+
 function exportToPDF() {
+    document.getElementById('pdfOrientationModal').style.display = 'block';
+}
+
+function confirmPDFOrientation(orientation) {
+    document.getElementById('pdfOrientationModal').style.display = 'none';
+    
     const customerName = document.getElementById('customerName').value || 'KhachHang';
     const fileName = `BKL_${customerName}_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.pdf`;
     
     const element = document.querySelector('.container');
+    
+    // Temporarily hide borders for PDF export
+    const style = document.createElement('style');
+    style.id = 'pdf-export-style';
+    style.innerHTML = `
+        .editable-header input, #customerName, table input {
+            border: none !important;
+            background: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        .row-actions {
+            display: none !important;
+        }
+        th.no-print, td.no-print {
+            display: none !important;
+        }
+        tfoot {
+            display: table-footer-group !important;
+        }
+        .total-row {
+            display: table-row !important;
+            visibility: visible !important;
+            page-break-inside: avoid !important;
+        }
+        #grandTotal {
+            display: table-cell !important;
+            visibility: visible !important;
+        }
+        .container {
+            width: 100% !important;
+        }
+        table {
+            width: 100% !important;
+            table-layout: auto !important;
+        }
+    `;
+    document.head.appendChild(style);
+    
     const opt = {
-        margin: 10,
+        margin: [3, 3, 3, 3],
         filename: fileName,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        html2canvas: { 
+            scale: orientation === 'portrait' ? 1.0 : 2,
+            useCORS: true,
+            windowWidth: 1000,
+            width: 1000,
+            height: orientation === 'portrait' ? 2000 : undefined,
+            logging: false
+        },
+        jsPDF: { 
+            unit: 'mm', 
+            format: orientation === 'portrait' ? [210, 350] : 'a4',
+            orientation: orientation,
+            compress: true
+        },
+        pagebreak: { mode: 'avoid-all' }
     };
     
-    html2pdf().set(opt).from(element).save();
+    html2pdf().set(opt).from(element).save().then(() => {
+        // Remove temporary style after export
+        const tempStyle = document.getElementById('pdf-export-style');
+        if (tempStyle) tempStyle.remove();
+    });
 }
 
 async function clearTable() {

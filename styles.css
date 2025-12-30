@@ -160,6 +160,16 @@ th, td {
     border: 1px solid #000;
     padding: 8px;
     text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Cột tên hàng có thể xuống dòng */
+td:nth-child(2) {
+    max-width: 250px;
+    white-space: normal;
+    word-break: break-word;
+    text-align: left;
 }
 
 th {
@@ -167,15 +177,28 @@ th {
     font-weight: bold;
 }
 
-input[type="text"], input[type="number"] {
+input[type="text"], input[type="number"], textarea {
     width: 100%;
     border: none;
     padding: 5px;
     text-align: center;
     background-color: transparent;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-height: 30px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 14px;
+    resize: vertical;
 }
 
-input[type="text"]:focus, input[type="number"]:focus {
+textarea.item-name {
+    text-align: left;
+    overflow: hidden;
+    resize: none;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
     outline: 2px solid #4CAF50;
     background-color: #fffacd;
 }
@@ -183,6 +206,11 @@ input[type="text"]:focus, input[type="number"]:focus {
 .total-row {
     font-weight: bold;
     background-color: #e8f5e9;
+}
+
+.total-row td {
+    text-align: center !important;
+    vertical-align: middle;
 }
 
 .editable-header {
@@ -217,12 +245,35 @@ input[type="text"]:focus, input[type="number"]:focus {
 }
 
 @media print {
-    .controls, .row-actions, .no-print {
+    .controls, .row-actions, .fab-button, .fab-menu {
         display: none !important;
     }
-    .editable-header input, #customerName {
-        border: none !important;
+    
+    th.no-print, td.no-print {
+        display: none !important;
     }
+    
+    /* Đảm bảo tfoot và total-row hiển thị */
+    tfoot, .total-row {
+        display: table-row-group !important;
+    }
+    
+    .total-row {
+        display: table-row !important;
+    }
+    
+    /* Điều chỉnh colspan cho tổng cộng khi ẩn cột thao tác */
+    .total-row td:first-child {
+        width: auto;
+    }
+    
+    .editable-header input, #customerName, table input, table textarea {
+        border: none !important;
+        background: transparent !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    
     input::placeholder {
         color: transparent !important;
     }
@@ -234,6 +285,16 @@ input[type="text"]:focus, input[type="number"]:focus {
     
     body {
         margin: 1cm;
+    }
+    
+    .container {
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+    }
+    
+    table {
+        width: 100%;
     }
 }
 
@@ -298,7 +359,11 @@ input[type="text"]:focus, input[type="number"]:focus {
         font-size: 12px;
         display: block;
         overflow-x: auto;
-        white-space: nowrap;
+        min-width: 1000px;
+    }
+    
+    table tbody td {
+        white-space: normal;
     }
 
     th, td {
@@ -306,7 +371,7 @@ input[type="text"]:focus, input[type="number"]:focus {
         font-size: 11px;
     }
 
-    input[type="text"], input[type="number"] {
+    input[type="text"], input[type="number"], textarea {
         font-size: 12px;
         padding: 3px;
     }

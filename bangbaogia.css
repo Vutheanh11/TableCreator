@@ -22,3 +22,20 @@
     border-color: #6c5ce7;
     transform: translateY(-2px);
 }
+
+#noteText {
+    width: calc(100% - 100px);
+    text-align: left;
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
+    border-radius: 4px;
+    background-color: white !important;
+    color: #000 !important;
+    font-size: 14px;
+}
+
+#noteText:focus {
+    outline: 2px solid #4CAF50;
+    background-color: #fffacd !important;
+    border-color: #4CAF50 !important;
+}

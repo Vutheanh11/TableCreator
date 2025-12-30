@@ -8,7 +8,7 @@ function addRow() {
     
     row.innerHTML = `
         <td>${rowCounter}</td>
-        <td><input type="text" class="item-name" placeholder="Nhập tên hàng"></td>
+        <td><textarea class="item-name" placeholder="Nhập tên hàng" rows="1"></textarea></td>
         <td><input type="text" class="unit-price" placeholder="0" onblur="formatPrice(this)"></td>
         <td class="no-print">
             <div class="row-actions">
@@ -105,19 +105,74 @@ function toggleFabMenu(event) {
 
 // ===== PDF EXPORT FUNCTION =====
 function exportToPDF() {
+    document.getElementById('pdfOrientationModal').style.display = 'block';
+}
+
+function confirmPDFOrientation(orientation) {
+    document.getElementById('pdfOrientationModal').style.display = 'none';
+    
     const customerName = document.getElementById('customerName').value || 'KhachHang';
     const fileName = `BBG_${customerName}_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.pdf`;
     
     const element = document.querySelector('.container');
+    
+    // Replace noteText input with span for PDF export
+    const noteInput = document.getElementById('noteText');
+    const noteValue = noteInput.value || '';
+    const noteSpan = document.createElement('span');
+    noteSpan.id = 'noteText-temp';
+    noteSpan.textContent = noteValue;
+    noteSpan.style.cssText = 'display: inline-block; color: #000; font-size: 14px;';
+    noteInput.style.display = 'none';
+    noteInput.parentNode.insertBefore(noteSpan, noteInput.nextSibling);
+    
+    // Temporarily hide borders for PDF export
+    const style = document.createElement('style');
+    style.id = 'pdf-export-style';
+    style.innerHTML = `
+        .editable-header input, #customerName, table input, table textarea {
+            border: none !important;
+            background: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        .row-actions {
+            display: none !important;
+        }
+        th.no-print, td.no-print {
+            display: none !important;
+        }
+    `;
+    document.head.appendChild(style);
+    
     const opt = {
-        margin: 10,
+        margin: [5, 5, 5, 5],
         filename: fileName,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        html2canvas: { 
+            scale: orientation === 'portrait' ? 1.5 : 2,
+            useCORS: true,
+            windowWidth: orientation === 'portrait' ? 800 : 1200,
+            height: orientation === 'portrait' ? 1400 : undefined
+        },
+        jsPDF: { 
+            unit: 'mm', 
+            format: 'a4', 
+            orientation: orientation,
+            compress: true
+        }
     };
     
-    html2pdf().set(opt).from(element).save();
+    html2pdf().set(opt).from(element).save().then(() => {
+        // Restore noteText input
+        noteInput.style.display = '';
+        const tempSpan = document.getElementById('noteText-temp');
+        if (tempSpan) tempSpan.remove();
+        
+        // Remove temporary style after export
+        const tempStyle = document.getElementById('pdf-export-style');
+        if (tempStyle) tempStyle.remove();
+    });
 }
 
 // Close FAB menu when clicking outside
