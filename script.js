@@ -1,1223 +1,554 @@
-// Sidebar Toggle for Mobile
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
-    sidebar.classList.toggle('active');
-    mainContent.classList.toggle('sidebar-open');
-}
+let rowCounter = 0;
 
-// Tab Switching Function
-function switchTab(event, lessonId) {
-    // Hide all tab contents
-    const tabContents = document.getElementsByClassName('tab-content');
-    for (let i = 0; i < tabContents.length; i++) {
-        tabContents[i].classList.remove('active');
-    }
+// Add initial sample row
+window.onload = function() {
+    addRow();
+};
+
+function addRow() {
+    rowCounter++;
+    const tbody = document.getElementById('tableBody');
+    const row = tbody.insertRow();
     
-    // Remove active class from all buttons
-    const tabButtons = document.getElementsByClassName('tab-button');
-    for (let i = 0; i < tabButtons.length; i++) {
-        tabButtons[i].classList.remove('active');
-    }
-    
-    // Show selected tab content
-    document.getElementById(lessonId).classList.add('active');
-    
-    // Add active class to clicked button
-    event.currentTarget.classList.add('active');
-    
-    // Close sidebar on mobile after selecting
-    if (window.innerWidth <= 768) {
-        toggleSidebar();
-    }
-}
-
-// Background Music Control
-function toggleMusic() {
-    const music = document.getElementById('bgMusic');
-    const toggle = document.getElementById('bgMusicToggle');
-    const status = document.getElementById('musicStatus');
-    
-    if (toggle.checked) {
-        music.play().catch(e => console.log('Music play failed:', e));
-        status.textContent = 'Bật';
-        localStorage.setItem('musicEnabled', 'true');
-    } else {
-        music.pause();
-        status.textContent = 'Tắt';
-        localStorage.setItem('musicEnabled', 'false');
-    }
-}
-
-// Dark Mode Control
-function toggleDarkMode() {
-    const toggle = document.getElementById('darkModeToggle');
-    const status = document.getElementById('darkModeStatus');
-    
-    if (toggle.checked) {
-        document.body.classList.add('dark-mode');
-        status.textContent = 'Bật';
-        localStorage.setItem('darkMode', 'true');
-    } else {
-        document.body.classList.remove('dark-mode');
-        status.textContent = 'Tắt';
-        localStorage.setItem('darkMode', 'false');
-    }
-}
-
-// AI Reading Generator with Gemini API
-const GEMINI_API_KEY = 'AIzaSyD5QGYg4kIJXbiZw2Yds2CHuC15POeN61w';
-
-// Chat Widget Functions
-let chatHistory = [];
-
-function toggleChat() {
-    const chatBody = document.getElementById('chatBody');
-    const chatToggle = document.getElementById('chatToggle');
-    
-    chatBody.classList.toggle('collapsed');
-    chatToggle.textContent = chatBody.classList.contains('collapsed') ? '+' : '−';
-}
-
-async function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const message = input.value.trim();
-    
-    if (!message) return;
-    
-    // Add user message to chat
-    addMessageToChat(message, 'user');
-    input.value = '';
-    
-    // Disable send button
-    const sendBtn = document.querySelector('.chat-send-btn');
-    sendBtn.disabled = true;
-    sendBtn.textContent = '...';
-    
-    try {
-        // Add to history
-        chatHistory.push({
-            role: 'user',
-            parts: [{ text: message }]
-        });
-        
-        const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
-        
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-goog-api-key': GEMINI_API_KEY
-            },
-            body: JSON.stringify({
-                contents: [
-                    {
-                        role: 'user',
-                        parts: [{ text: 'Bạn là trợ lý AI giúp học tiếng Nhật. Trả lời ngắn gọn, dễ hiểu bằng tiếng Việt và có ví dụ tiếng Nhật khi cần.' }]
-                    },
-                    ...chatHistory
-                ],
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 500
-                }
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.error?.message || 'API Error');
-        }
-        
-        const botReply = data.candidates[0].content.parts[0].text;
-        
-        // Add bot response to history
-        chatHistory.push({
-            role: 'model',
-            parts: [{ text: botReply }]
-        });
-        
-        // Add bot message to chat
-        addMessageToChat(botReply, 'bot');
-        
-    } catch (error) {
-        console.error('Chat Error:', error);
-        addMessageToChat('Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại.', 'bot');
-    } finally {
-        sendBtn.disabled = false;
-        sendBtn.textContent = 'Gửi';
-    }
-}
-
-function addMessageToChat(message, sender) {
-    const chatMessages = document.getElementById('chatMessages');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `chat-message ${sender}-message`;
-    
-    const contentDiv = document.createElement('div');
-    contentDiv.className = 'message-content';
-    contentDiv.textContent = message;
-    
-    messageDiv.appendChild(contentDiv);
-    chatMessages.appendChild(messageDiv);
-    
-    // Scroll to bottom
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-// All available kanji from lessons 8-11
-const ALL_KANJI = ['家', '族', '父', '母', '兄', '弟', '姉', '妹', '犬', '高', '短', '長', '好', '歌', '音', '楽', '車', '映', '画', '旅', '海', '外', '駅', '上', '下', '地', '図', '館', '右', '左', '道', '起', '歩', '乗', '始', '終', '勉', '強', '朝', '昼', '夜'];
-
-// Random topics for variety
-const TOPICS = [
-    '家族について',
-    '週末の過ごし方',
-    '趣味について', 
-    '毎日の生活',
-    '旅行の思い出',
-    '好きなこと',
-    '学校生活',
-    '友達と遊ぶ'
-];
-
-function getRandomKanji() {
-    // Shuffle and pick 5-7 random kanji
-    const shuffled = [...ALL_KANJI].sort(() => 0.5 - Math.random());
-    const count = Math.floor(Math.random() * 3) + 5; // 5-7
-    return shuffled.slice(0, count);
-}
-
-function getRandomTopic() {
-    return TOPICS[Math.floor(Math.random() * TOPICS.length)];
-}
-
-async function generateReading() {
-    const btn = document.getElementById('generateBtn');
-    const btnText = document.getElementById('btnText');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    const readingResult = document.getElementById('readingResult');
-    const readingContent = document.getElementById('readingContent');
-
-    // Disable button and show loading
-    btn.disabled = true;
-    btnText.textContent = '⏳ Đang tạo...';
-    loadingSpinner.style.display = 'block';
-    readingResult.style.display = 'none';
-
-    // Get random kanji and topic
-    const selectedKanji = getRandomKanji();
-    const topic = getRandomTopic();
-    
-    const prompt = `Hãy tạo một bài đọc tiếng Nhật về chủ đề: ${topic}
-
-YÊU CẦU QUAN TRỌNG:
-1. Viết thành 1 ĐOẠN VĂN liên tục 12-15 câu (không xuống dòng giữa các câu)
-2. CHỈ sử dụng 5-7 CHỮ KANJI từ list sau (không được dùng chữ nào khác): ${selectedKanji.join(', ')}
-3. Tất cả Kanji PHẢI có furigana format: 家[いえ]
-4. TUYỆT ĐỐI KHÔNG dùng Kanji khác ngoài list trên
-5. Sử dụng lại các Kanji nhiều lần trong bài để làm dài bài đọc
-6. Format:
-
-私[わたし]の家[いえ]族[ぞく]は四[よ]人[にん]です。父[ちち]と母[はは]と兄[あに]がいます。兄[あに]は音[おん]楽[がく]が好[す]きです。週[しゅう]末[まつ]はよく家[か]族[ぞく]で映[えい]画[が]を見[み]ます。夏[なつ]に海[うみ]へ旅[りょ]行[こう]しました。
-
-Sau đó xuống 2 dòng và viết dịch tiếng Việt:
-
-Gia đình tôi có bốn người. Có bố, mẹ và anh trai. Anh trai thích âm nhạc. Cuối tuần thường cùng gia đình xem phim. Mùa hè đã đi du lịch biển.
-
-LƯU Ý:
-- KHÔNG xuống dòng giữa các câu tiếng Nhật
-- CHỈ dùng Kanji trong list trên
-- Câu văn đơn giản, ngắn gọn`;
-
-    try {
-        // Use v1beta API endpoint with gemini-2.0-flash model
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
-        
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-goog-api-key': GEMINI_API_KEY
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }],
-                generationConfig: {
-                    temperature: 0.9,
-                    maxOutputTokens: 1024
-                }
-            })
-        });
-
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.error?.message || `API Error: ${response.status}`);
-        }
-
-        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-            throw new Error('Invalid response from API');
-        }
-
-        const generatedText = data.candidates[0].content.parts[0].text;
-
-        // Format the reading content
-        const formattedContent = formatReadingContent(generatedText);
-        readingContent.innerHTML = formattedContent;
-
-        // Show result
-        loadingSpinner.style.display = 'none';
-        readingResult.style.display = 'block';
-        btnText.textContent = '🎯 START - Tạo Bài Đọc Mới';
-        btn.disabled = false;
-
-    } catch (error) {
-        console.error('Error:', error);
-        loadingSpinner.style.display = 'none';
-        readingContent.innerHTML = `
-            <div class="note" style="background: #ff6b6b; color: white; border: 6px solid #000;">
-                <div class="note-title">❌ Lỗi:</div>
-                <p>Không thể tạo bài đọc. Vui lòng thử lại!</p>
-                <p style="font-size: 0.8em; margin-top: 10px;">Chi tiết: ${error.message}</p>
-                <p style="font-size: 0.7em; margin-top: 10px;">Lưu ý: Cần kết nối internet và API key hợp lệ</p>
+    row.innerHTML = `
+        <td>${rowCounter}</td>
+        <td><input type="text" class="item-name" placeholder="Nhập tên hàng"></td>
+        <td><input type="text" class="dimension" placeholder="VD: 330 x 120" onblur="formatDimensionOnBlur(this)"></td>
+        <td><input type="text" class="quantity" placeholder="Tự động hoặc nhập thủ công" oninput="calculateRow(this)"></td>
+        <td><input type="text" class="unit-price" placeholder="0" onblur="formatAndCalculate(this)" required></td>
+        <td class="line-total">0</td>
+        <td class="no-print">
+            <div class="row-actions">
+                <button onclick="deleteRow(this)" class="delete-btn">Xóa</button>
             </div>
-        `;
-        readingResult.style.display = 'block';
-        btnText.textContent = '🎯 START - Tạo Bài Đọc';
-        btn.disabled = false;
-    }
+        </td>
+    `;
 }
 
-let romajiVisible = false;
-
-function toggleRomaji() {
-    romajiVisible = !romajiVisible;
-    const romajiBtnText = document.getElementById('romajiBtnText');
-    const romajiElements = document.querySelectorAll('.romaji-text');
-    const textWithRuby = document.querySelectorAll('.japanese-text-with-ruby');
-    const textNoRuby = document.querySelectorAll('.japanese-text-no-ruby');
+async function deleteRow(btn) {
+    const row = btn.closest('tr');
     
-    if (romajiVisible) {
-        romajiBtnText.textContent = '🙈 Ẩn Furigana & Romaji';
-        romajiElements.forEach(el => el.style.display = 'block');
-        textWithRuby.forEach(el => el.style.display = 'block');
-        textNoRuby.forEach(el => el.style.display = 'none');
-    } else {
-        romajiBtnText.textContent = '👁️ Hiện Furigana & Romaji';
-        romajiElements.forEach(el => el.style.display = 'none');
-        textWithRuby.forEach(el => el.style.display = 'none');
-        textNoRuby.forEach(el => el.style.display = 'block');
-    }
-}
-
-function formatReadingContent(text) {
-    // Split by double newline to separate Japanese paragraph from Vietnamese translation
-    const parts = text.split('\n\n').filter(part => part.trim());
-    let html = '';
+    // Kiểm tra xem hàng có dữ liệu không
+    const itemName = row.querySelector('.item-name').value.trim();
+    const dimension = row.querySelector('.dimension').value.trim();
+    const quantity = row.querySelector('.quantity').value.trim();
+    const unitPrice = row.querySelector('.unit-price').value.trim();
     
-    for (let part of parts) {
-        const trimmedPart = part.trim();
-        if (!trimmedPart) continue;
-
-        // Check if it's Japanese text (contains hiragana/katakana/kanji)
-        if (/[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/.test(trimmedPart)) {
-            // Create two versions: with and without furigana
-            let withFurigana = trimmedPart.replace(/([一-龯々]+)\[([ぁ-んァ-ン]+)\]/g, '<ruby>$1<rt>$2</rt></ruby>');
-            let withoutFurigana = trimmedPart.replace(/([一-龯々]+)\[([ぁ-んァ-ン]+)\]/g, '$1');
-            
-            html += `<div class="example" style="margin-bottom: 25px;">
-                <div class="japanese-text-no-ruby" style="font-size: 20px; line-height: 2.2; margin-bottom: 10px; text-align: justify;">${withoutFurigana}</div>
-                <div class="japanese-text-with-ruby" style="display: none; font-size: 20px; line-height: 2.8; margin-bottom: 10px; text-align: justify;">${withFurigana}</div>
-                <div class="romaji-text" style="display: none; color: #9966ff; font-size: 14px; margin-bottom: 10px; font-style: italic; line-height: 1.8; word-wrap: break-word; overflow-wrap: break-word;">${convertToRomaji(trimmedPart)}</div>`;
-        } else if (trimmedPart.length > 0 && !trimmedPart.startsWith('#') && !trimmedPart.startsWith('**')) {
-            // Vietnamese translation
-            html += `<div class="meaning" style="color: #555; font-size: 15px; line-height: 1.8; text-align: justify; padding: 15px; background: rgba(153, 102, 255, 0.1); border-radius: 8px;">${trimmedPart}</div></div>`;
-        }
-    }
-
-    return html || '<div class="note"><p>Không thể format bài đọc. Vui lòng thử lại!</p></div>';
-}
-
-function convertToRomaji(text) {
-    // Particles that should be separated
-    const particles = ['は', 'が', 'を', 'に', 'へ', 'と', 'の', 'で', 'や', 'も', 'か', 'から', 'まで', 'より'];
+    const hasData = itemName || dimension || quantity || unitPrice;
     
-    // Hiragana to romaji map
-    const hiraganaMap = {
-        'あ': 'a', 'い': 'i', 'う': 'u', 'え': 'e', 'お': 'o',
-        'か': 'ka', 'き': 'ki', 'く': 'ku', 'け': 'ke', 'こ': 'ko',
-        'さ': 'sa', 'し': 'shi', 'す': 'su', 'せ': 'se', 'そ': 'so',
-        'た': 'ta', 'ち': 'chi', 'つ': 'tsu', 'て': 'te', 'と': 'to',
-        'な': 'na', 'に': 'ni', 'ぬ': 'nu', 'ね': 'ne', 'の': 'no',
-        'は': 'ha', 'ひ': 'hi', 'ふ': 'fu', 'へ': 'he', 'ほ': 'ho',
-        'ま': 'ma', 'み': 'mi', 'む': 'mu', 'め': 'me', 'も': 'mo',
-        'や': 'ya', 'ゆ': 'yu', 'よ': 'yo',
-        'ら': 'ra', 'り': 'ri', 'る': 'ru', 'れ': 're', 'ろ': 'ro',
-        'わ': 'wa', 'を': 'wo', 'ん': 'n',
-        'が': 'ga', 'ぎ': 'gi', 'ぐ': 'gu', 'げ': 'ge', 'ご': 'go',
-        'ざ': 'za', 'じ': 'ji', 'ず': 'zu', 'ぜ': 'ze', 'ぞ': 'zo',
-        'だ': 'da', 'ぢ': 'ji', 'づ': 'zu', 'で': 'de', 'ど': 'do',
-        'ば': 'ba', 'び': 'bi', 'ぶ': 'bu', 'べ': 'be', 'ぼ': 'bo',
-        'ぱ': 'pa', 'ぴ': 'pi', 'ぷ': 'pu', 'ぺ': 'pe', 'ぽ': 'po',
-        'きゃ': 'kya', 'きゅ': 'kyu', 'きょ': 'kyo',
-        'しゃ': 'sha', 'しゅ': 'shu', 'しょ': 'sho',
-        'ちゃ': 'cha', 'ちゅ': 'chu', 'ちょ': 'cho',
-        'にゃ': 'nya', 'にゅ': 'nyu', 'にょ': 'nyo',
-        'ひゃ': 'hya', 'ひゅ': 'hyu', 'ひょ': 'hyo',
-        'みゃ': 'mya', 'みゅ': 'myu', 'みょ': 'myo',
-        'りゃ': 'rya', 'りゅ': 'ryu', 'りょ': 'ryo',
-        'ぎゃ': 'gya', 'ぎゅ': 'gyu', 'ぎょ': 'gyo',
-        'じゃ': 'ja', 'じゅ': 'ju', 'じょ': 'jo',
-        'びゃ': 'bya', 'びゅ': 'byu', 'びょ': 'byo',
-        'ぴゃ': 'pya', 'ぴゅ': 'pyu', 'ぴょ': 'pyo',
-        'っ': '',
-        'ー': '-'
-    };
-    
-    // Extract furigana from brackets and add spaces around kanji
-    let cleanText = text.replace(/([一-龯々]+)\[([ぁ-んァ-ン]+)\]/g, ' $2 ');
-    
-    // Add space after punctuation
-    cleanText = cleanText.replace(/[。、]/g, ' ');
-    
-    let result = '';
-    let i = 0;
-    let currentWord = '';
-    
-    while (i < cleanText.length) {
-        const char = cleanText[i];
-        
-        // Handle spaces
-        if (char === ' ') {
-            if (currentWord) {
-                result += currentWord + ' ';
-                currentWord = '';
-            }
-            i++;
-            continue;
-        }
-        
-        let found = false;
-        
-        // Try 2-character combinations first (for ゃ, ゅ, ょ)
-        if (i < cleanText.length - 1) {
-            const twoChar = cleanText.substring(i, i + 2);
-            if (hiraganaMap[twoChar]) {
-                currentWord += hiraganaMap[twoChar];
-                i += 2;
-                found = true;
-            }
-        }
-        
-        // Try single character
-        if (!found) {
-            if (hiraganaMap[char]) {
-                const romaji = hiraganaMap[char];
-                
-                // Check if this is a particle
-                if (particles.includes(char) && currentWord) {
-                    // Add space before particle
-                    result += currentWord + ' ';
-                    currentWord = '';
-                    
-                    // Special case: は as particle = wa
-                    if (char === 'は') {
-                        currentWord = 'wa';
-                    } else if (char === 'へ') {
-                        currentWord = 'e';
-                    } else {
-                        currentWord = romaji;
-                    }
-                } else {
-                    currentWord += romaji;
-                }
-            } else {
-                currentWord += char;
-            }
-            i++;
+    // Nếu có dữ liệu, yêu cầu xác nhận
+    if (hasData) {
+        const confirmed = await showConfirm('Bạn có chắc muốn xóa hàng này?');
+        if (!confirmed) {
+            return;
         }
     }
     
-    // Add remaining word
-    if (currentWord) {
-        result += currentWord;
-    }
-    
-    // Clean up multiple spaces
-    return result.replace(/\s+/g, ' ').trim();
+    row.remove();
+    updateRowNumbers();
+    calculateGrandTotal();
 }
 
-// Load saved settings on page load
-window.addEventListener('DOMContentLoaded', function() {
-    // Load music setting
-    const musicEnabled = localStorage.getItem('musicEnabled') === 'true';
-    const musicToggle = document.getElementById('bgMusicToggle');
-    const musicStatus = document.getElementById('musicStatus');
-    if (musicEnabled && musicToggle) {
-        musicToggle.checked = true;
-        musicStatus.textContent = 'Bật';
-    }
-
-    // Load dark mode setting
-    const darkModeEnabled = localStorage.getItem('darkMode') === 'true';
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const darkModeStatus = document.getElementById('darkModeStatus');
-    if (darkModeEnabled) {
-        document.body.classList.add('dark-mode');
-        if (darkModeToggle) {
-            darkModeToggle.checked = true;
-            darkModeStatus.textContent = 'Bật';
-        }
-    }
-});
-
-// Kanji Test System
-const KANJI_DATA = {
-    8: [
-        {kanji: '家', meaning: 'nhà', reading: 'いえ・うち'},
-        {kanji: '族', meaning: 'tộc, gia đình', reading: 'ゾク'},
-        {kanji: '父', meaning: 'bố', reading: 'ちち'},
-        {kanji: '母', meaning: 'mẹ', reading: 'はは'},
-        {kanji: '兄', meaning: 'anh trai', reading: 'あに'},
-        {kanji: '弟', meaning: 'em trai', reading: 'おとうと'},
-        {kanji: '姉', meaning: 'chị gái', reading: 'あね'},
-        {kanji: '妹', meaning: 'em gái', reading: 'いもうと'},
-        {kanji: '犬', meaning: 'chó', reading: 'いぬ'},
-        {kanji: '高', meaning: 'cao', reading: 'たか'},
-        {kanji: '短', meaning: 'ngắn', reading: 'みじか'},
-        {kanji: '長', meaning: 'dài', reading: 'なが'}
-    ],
-    9: [
-        {kanji: '好', meaning: 'thích', reading: 'す'},
-        {kanji: '歌', meaning: 'bài hát', reading: 'うた'},
-        {kanji: '音', meaning: 'âm thanh', reading: 'おと'},
-        {kanji: '楽', meaning: 'vui, nhạc', reading: 'たの・らく'},
-        {kanji: '車', meaning: 'xe', reading: 'くるま'},
-        {kanji: '映', meaning: 'chiếu', reading: 'うつ'},
-        {kanji: '画', meaning: 'tranh, phim', reading: 'が'},
-        {kanji: '旅', meaning: 'du lịch', reading: 'たび'},
-        {kanji: '海', meaning: 'biển', reading: 'うみ'},
-        {kanji: '外', meaning: 'ngoài', reading: 'そと'}
-    ],
-    10: [
-        {kanji: '駅', meaning: 'ga tàu', reading: 'えき'},
-        {kanji: '上', meaning: 'trên', reading: 'うえ'},
-        {kanji: '下', meaning: 'dưới', reading: 'した'},
-        {kanji: '地', meaning: 'đất', reading: 'ち'},
-        {kanji: '図', meaning: 'bản đồ', reading: 'ず'},
-        {kanji: '館', meaning: 'quán', reading: 'かん'},
-        {kanji: '右', meaning: 'phải', reading: 'みぎ'},
-        {kanji: '左', meaning: 'trái', reading: 'ひだり'},
-        {kanji: '道', meaning: 'đường', reading: 'みち'},
-        {kanji: '起', meaning: 'dậy', reading: 'お'},
-        {kanji: '歩', meaning: 'đi bộ', reading: 'ある'},
-        {kanji: '乗', meaning: 'lên (xe)', reading: 'の'}
-    ],
-    11: [
-        {kanji: '始', meaning: 'bắt đầu', reading: 'はじ'},
-        {kanji: '終', meaning: 'kết thúc', reading: 'お'},
-        {kanji: '勉', meaning: 'cố gắng', reading: 'べん'},
-        {kanji: '強', meaning: 'mạnh, học', reading: 'つよ・きょう'},
-        {kanji: '朝', meaning: 'buổi sáng', reading: 'あさ'},
-        {kanji: '昼', meaning: 'buổi trưa', reading: 'ひる'},
-        {kanji: '夜', meaning: 'buổi tối', reading: 'よる'}
-    ]
-};
-
-let currentTest = {
-    lesson: 8,
-    questions: [],
-    currentIndex: 0,
-    score: 0,
-    answers: []
-};
-
-function loadKanjiTest() {
-    const lesson = document.getElementById('lessonSelect').value;
-    currentTest.lesson = lesson;
-}
-
-function startKanjiTest() {
-    const lesson = currentTest.lesson;
-    const allKanji = KANJI_DATA[lesson];
-    
-    // Random 5 kanji
-    const shuffled = [...allKanji].sort(() => 0.5 - Math.random());
-    currentTest.questions = shuffled.slice(0, 5);
-    currentTest.currentIndex = 0;
-    currentTest.score = 0;
-    currentTest.answers = [];
-    
-    // Show test area
-    document.getElementById('testArea').style.display = 'block';
-    document.getElementById('resultArea').style.display = 'none';
-    
-    showQuestion();
-}
-
-function showQuestion() {
-    const question = currentTest.questions[currentTest.currentIndex];
-    const questionNum = currentTest.currentIndex + 1;
-    
-    document.getElementById('questionTitle').textContent = `Câu ${questionNum}/5`;
-    document.getElementById('kanjiDisplay').textContent = question.kanji;
-    
-    // Generate options (1 correct + 3 wrong) - using reading instead of meaning
-    const allKanji = KANJI_DATA[currentTest.lesson];
-    const wrongOptions = allKanji
-        .filter(k => k.kanji !== question.kanji)
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 3);
-    
-    const options = [question, ...wrongOptions].sort(() => 0.5 - Math.random());
-    
-    const optionsArea = document.getElementById('optionsArea');
-    optionsArea.innerHTML = '';
-    
-    options.forEach((opt, index) => {
-        const button = document.createElement('button');
-        button.className = 'option-button';
-        const span = document.createElement('span');
-        span.textContent = opt.reading; // Show furigana instead of meaning
-        button.appendChild(span);
-        button.onclick = () => selectAnswer(opt.kanji === question.kanji, button);
-        optionsArea.appendChild(button);
+function updateRowNumbers() {
+    const rows = document.querySelectorAll('#tableBody tr');
+    rows.forEach((row, index) => {
+        row.cells[0].textContent = index + 1;
     });
+    rowCounter = rows.length;
 }
 
-function selectAnswer(isCorrect, button) {
-    // Disable all buttons
-    const buttons = document.querySelectorAll('.option-button');
-    buttons.forEach(btn => btn.disabled = true);
+function formatDimensionOnBlur(input) {
+    const row = input.closest('tr');
+    const quantityInput = row.querySelector('.quantity');
+    let dimensionText = input.value.trim();
     
-    // Mark correct/wrong
-    if (isCorrect) {
-        button.classList.add('correct');
-        currentTest.score++;
-    } else {
-        button.classList.add('wrong');
-        // Highlight correct answer
-        const question = currentTest.questions[currentTest.currentIndex];
-        buttons.forEach(btn => {
-            if (btn.textContent === question.reading) {
-                btn.classList.add('correct');
-            }
-        });
-    }
-    
-    // Save answer
-    currentTest.answers.push({
-        kanji: currentTest.questions[currentTest.currentIndex].kanji,
-        reading: currentTest.questions[currentTest.currentIndex].reading,
-        correct: isCorrect
-    });
-    
-    // Next question after delay
-    setTimeout(() => {
-        currentTest.currentIndex++;
-        if (currentTest.currentIndex < 5) {
-            showQuestion();
-        } else {
-            showResult();
-        }
-    }, 1500);
-}
-
-function showResult() {
-    document.getElementById('testArea').style.display = 'none';
-    document.getElementById('resultArea').style.display = 'block';
-    
-    const scoreTitle = document.getElementById('scoreTitle');
-    const resultDetails = document.getElementById('resultDetails');
-    
-    scoreTitle.textContent = `${currentTest.score}/5`;
-    
-    let html = '';
-    currentTest.answers.forEach((ans, i) => {
-        html += `<div class="result-item ${ans.correct ? 'correct' : 'wrong'}">
-            <div class="result-kanji">${ans.kanji}</div>
-            <div class="result-answer correct-answer">✓ ${ans.reading}</div>
-        </div>`;
-    });
-    
-    resultDetails.innerHTML = html;
-}
-
-// ===== READING QUIZ FUNCTIONS =====
-let quizData = [];
-let currentQuizIndex = 0;
-let quizScore = 0;
-let selectedAnswer = null;
-let userAnswers = [];
-
-// 42 câu hỏi kiểu thi FE - đa dạng dạng câu hỏi
-const readingQuizData = [
-    // PHẦN 1: NGỮ PHÁP - Bài 8 (10 câu)
-    {
-        type: "grammar",
-        question: "わたしは ホーチミン＿＿ すんでいます。",
-        options: ["に", "で", "を", "へ"],
-        correct: 0,
-        explanation: "Dùng に với すんでいます để chỉ nơi sinh sống"
-    },
-    {
-        type: "grammar",
-        question: "かぞくは 4にん＿＿ すんでいます。",
-        options: ["に", "で", "が", "を"],
-        correct: 1,
-        explanation: "Dùng で để chỉ số người sống cùng"
-    },
-    {
-        type: "grammar",
-        question: "いぬ＿＿ 1ぴき います。",
-        options: ["は", "を", "が", "に"],
-        correct: 2,
-        explanation: "Dùng が với います khi nói về sự tồn tại"
-    },
-    {
-        type: "grammar",
-        question: "かみが ながい＿＿、きれいです。",
-        options: ["て", "くて", "で", "に"],
-        correct: 1,
-        explanation: "Tính từ い nối bằng くて"
-    },
-    {
-        type: "grammar",
-        question: "しんせつ＿＿、やさしいです。",
-        options: ["くて", "て", "で", "に"],
-        correct: 2,
-        explanation: "Tính từ な nối bằng で"
-    },
-    {
-        type: "grammar",
-        question: "ちちは わたし＿＿ ほんを くれました。",
-        options: ["を", "に", "が", "で"],
-        correct: 1,
-        explanation: "Dùng に để chỉ người nhận trong câu くれる"
-    },
-    {
-        type: "grammar",
-        question: "わたしは ともだち＿＿ プレゼントを もらいました。",
-        options: ["を", "が", "に", "で"],
-        correct: 2,
-        explanation: "Dùng に để chỉ người cho trong câu もらう"
-    },
-    {
-        type: "vocabulary",
-        question: "「背が高い」の意味は？",
-        options: ["Cao", "Thấp", "Dài", "Ngắn"],
-        correct: 0,
-        explanation: "せが たかい = cao (về chiều cao)"
-    },
-    {
-        type: "vocabulary",
-        question: "「家族」を読んでください。",
-        options: ["かぞく", "いえぞく", "かそく", "けぞく"],
-        correct: 0,
-        explanation: "家族 đọc là かぞく (gia đình)"
-    },
-    {
-        type: "grammar",
-        question: "A: どんな ひとですか。B: やさしい＿＿ です。",
-        options: ["の", "な", "ひと", "もの"],
-        correct: 2,
-        explanation: "Trả lời bằng やさしい ひと です"
-    },
-
-    // PHẦN 2: NGỮ PHÁP - Bài 9 (11 câu)
-    {
-        type: "grammar",
-        question: "わたしの しゅみは おんがくを きく＿＿ です。",
-        options: ["の", "こと", "もの", "ひと"],
-        correct: 1,
-        explanation: "Dùng こと để danh từ hóa động từ khi nói về sở thích"
-    },
-    {
-        type: "grammar",
-        question: "1しゅうかん＿＿ 2かい テニスを します。",
-        options: ["で", "を", "に", "が"],
-        correct: 2,
-        explanation: "Dùng に với tần suất: 1しゅうかんに 2かい"
-    },
-    {
-        type: "vocabulary",
-        question: "「映画を見る」を読んでください。",
-        options: ["えいがを みる", "えがを みる", "えいかを みる", "がえいを みる"],
-        correct: 0,
-        explanation: "映画 đọc là えいが (phim)"
-    },
-    {
-        type: "grammar",
-        question: "えいがを み＿＿、ごはんを たべました。",
-        options: ["る", "た", "て", "に"],
-        correct: 2,
-        explanation: "Dùng て để nối các hành động theo thứ tự"
-    },
-    {
-        type: "vocabulary",
-        question: "「旅行」の意味は？",
-        options: ["Du lịch", "Biển", "Xe", "Nhạc"],
-        correct: 0,
-        explanation: "りょこう = du lịch"
-    },
-    {
-        type: "grammar",
-        question: "A: どうやって がっこうへ いきますか。B: バス＿＿ いきます。",
-        options: ["を", "に", "で", "が"],
-        correct: 2,
-        explanation: "Dùng で để chỉ phương tiện"
-    },
-    {
-        type: "vocabulary",
-        question: "「好き」を読んでください。",
-        options: ["すき", "こうき", "よしき", "こき"],
-        correct: 0,
-        explanation: "好き đọc là すき (thích)"
-    },
-    {
-        type: "grammar",
-        question: "りょうり＿＿ できます。",
-        options: ["を", "に", "が", "で"],
-        correct: 2,
-        explanation: "Dùng が với できます"
-    },
-    {
-        type: "reading",
-        passage: "わたしは まいにち 6じに おきます。あさごはんを たべて、がっこうへ いきます。",
-        question: "なんじに おきますか。",
-        options: ["5じ", "6じ", "7じ", "8じ"],
-        correct: 1,
-        explanation: "6じに おきます = dậy lúc 6 giờ"
-    },
-    {
-        type: "vocabulary",
-        question: "「音楽」を読んでください。",
-        options: ["おとがく", "おんがく", "ねがく", "いんがく"],
-        correct: 1,
-        explanation: "音楽 đọc là おんがく (âm nhạc)"
-    },
-    {
-        type: "grammar",
-        question: "A: しゅうまつ なにを しますか。B: ほんを よん＿＿、えいがを みたり します。",
-        options: ["で", "だり", "たり", "て"],
-        correct: 2,
-        explanation: "Dùng たり để liệt kê hành động không theo thứ tự"
-    },
-
-    // PHẦN 3: NGỮ PHÁP - Bài 10 (10 câu)
-    {
-        type: "grammar",
-        question: "A: もう しゅくだいを しましたか。B: いいえ、まだ＿＿。",
-        options: ["しました", "します", "していません", "しません"],
-        correct: 2,
-        explanation: "まだ + thể phủ định tiếp diễn = vẫn chưa"
-    },
-    {
-        type: "grammar",
-        question: "コンビニへ いって＿＿。",
-        options: ["ください", "きます", "いきます", "あります"],
-        correct: 1,
-        explanation: "Vてきます = đi làm gì rồi quay lại"
-    },
-    {
-        type: "grammar",
-        question: "まどから やま＿＿ みえます。",
-        options: ["を", "に", "が", "で"],
-        correct: 2,
-        explanation: "Dùng が với みえます (nhìn thấy)"
-    },
-    {
-        type: "grammar",
-        question: "しゃしんを とっ＿＿ いいですか。",
-        options: ["て", "ても", "たら", "ば"],
-        correct: 1,
-        explanation: "Vてもいいですか = xin phép làm gì"
-    },
-    {
-        type: "grammar",
-        question: "ここで たばこを すわ＿＿ ください。",
-        options: ["って", "ないで", "なくて", "ない"],
-        correct: 1,
-        explanation: "Vないでください = xin đừng làm gì"
-    },
-    {
-        type: "vocabulary",
-        question: "「駅」を読んでください。",
-        options: ["えき", "いき", "えい", "うえき"],
-        correct: 0,
-        explanation: "駅 đọc là えき (ga)"
-    },
-    {
-        type: "grammar",
-        question: "こうえんを＿＿ います。",
-        options: ["あるいて", "あるき", "あるく", "あるけ"],
-        correct: 0,
-        explanation: "を + động từ di chuyển (あるいて います = đang đi bộ qua)"
-    },
-    {
-        type: "reading",
-        passage: "カフェから うみが みえます。とても きれいです。",
-        question: "なにが みえますか。",
-        options: ["やま", "うみ", "そら", "かわ"],
-        correct: 1,
-        explanation: "うみが みえます = nhìn thấy biển"
-    },
-    {
-        type: "vocabulary",
-        question: "「道」を読んでください。",
-        options: ["どう", "みち", "どお", "とう"],
-        correct: 1,
-        explanation: "道 đọc là みち (đường)"
-    },
-    {
-        type: "grammar",
-        question: "ここで およぐ＿＿が できます。",
-        options: ["の", "こと", "もの", "ひと"],
-        correct: 1,
-        explanation: "Vることができます = có thể làm gì"
-    },
-
-    // PHẦN 4: NGỮ PHÁP - Bài 11 (11 câu)
-    {
-        type: "grammar",
-        question: "わたしは さかなは すきです＿＿、にくは すきじゃありません。",
-        options: ["そして", "でも", "が", "から"],
-        correct: 2,
-        explanation: "Dùng が để nối câu đối lập"
-    },
-    {
-        type: "grammar",
-        question: "まいにち にほんごを べんきょうし＿＿ います。",
-        options: ["て", "た", "に", "で"],
-        correct: 0,
-        explanation: "Vています = đang làm gì (thói quen, tiếp diễn)"
-    },
-    {
-        type: "grammar",
-        question: "やすみの ひは ほんを よん＿＿、おんがくを きいたり します。",
-        options: ["で", "だり", "たり", "て"],
-        correct: 2,
-        explanation: "Vたり Vたり します = làm việc này việc kia"
-    },
-    {
-        type: "grammar",
-        question: "ひま＿＿ とき、なにを しますか。",
-        options: ["の", "な", "だ", "で"],
-        correct: 1,
-        explanation: "Tính từ な + な + とき"
-    },
-    {
-        type: "grammar",
-        question: "さむい とき、あたたかい おちゃ＿＿ のみます。",
-        options: ["が", "を", "に", "で"],
-        correct: 1,
-        explanation: "Dùng を cho tân ngữ với のみます"
-    },
-    {
-        type: "vocabulary",
-        question: "「起きる」を読んでください。",
-        options: ["おこる", "おきる", "おちる", "あきる"],
-        correct: 1,
-        explanation: "起きる đọc là おきる (thức dậy)"
-    },
-    {
-        type: "grammar",
-        question: "テストの まえの ひは はやく＿＿。",
-        options: ["ねます", "ねました", "ねる", "ねて"],
-        correct: 0,
-        explanation: "Dùng thể thường ở cuối câu bình thường: ねます"
-    },
-    {
-        type: "grammar",
-        question: "A: どうしましたか。B: あたま＿＿ いたいです。",
-        options: ["を", "に", "が", "で"],
-        correct: 2,
-        explanation: "Dùng が với tính từ (あたまが いたい)"
-    },
-    {
-        type: "vocabulary",
-        question: "「朝」を読んでください。",
-        options: ["よる", "ひる", "あさ", "ゆう"],
-        correct: 2,
-        explanation: "朝 đọc là あさ (buổi sáng)"
-    },
-    {
-        type: "grammar",
-        question: "にほんごが じょうず＿＿ なりました。",
-        options: ["を", "が", "に", "で"],
-        correct: 2,
-        explanation: "になります = trở nên (dùng với tính từ な, danh từ)"
-    },
-    {
-        type: "vocabulary",
-        question: "「勉強」を読んでください。",
-        options: ["べんきょ", "べんきょう", "ぺんきょう", "べんこう"],
-        correct: 1,
-        explanation: "勉強 đọc là べんきょう (học tập)"
-    }
-];
-
-// Generate AI Quiz với Gemini
-async function generateAIQuiz() {
-    const btn = document.getElementById('startQuizBtn');
-    const btnText = btn.querySelector('span');
-    const originalText = btnText.textContent;
-    
-    btn.disabled = true;
-    btnText.textContent = '⏳ Đang tạo 42 câu quiz...';
-    
-    const prompt = `Tạo 42 câu hỏi trắc nghiệm tiếng Nhật cho bài thi FE (Final Exam) của FPT University, bao gồm:
-
-**PHÂN BỐ:**
-- 20 câu ngữ pháp (điền trợ từ: で、に、が、を、へ、から、まで、も、と、の...)
-- 18 câu từ vựng (đọc Kanji, nghĩa từ vựng)
-- 2 câu đọc hiểu (có đoạn văn ngắn 2-3 câu)
-
-**YÊU CẦU:**
-1. Mỗi câu có 4 đáp án (A, B, C, D)
-2. Câu hỏi dựa trên bài 8, 9, 10, 11 sách Marugoto A2
-3. Random chủ đề: gia đình, sở thích, thời gian, địa điểm, hoạt động hàng ngày
-4. Trả về FORMAT JSON chính xác như sau:
-
-\`\`\`json
-{
-  "questions": [
-    {
-      "type": "grammar",
-      "question": "わたしは ホーチミン＿＿ すんでいます。",
-      "options": ["に", "で", "を", "へ"],
-      "correct": 0,
-      "explanation": "Dùng に với すんでいます để chỉ nơi sinh sống"
-    },
-    {
-      "type": "vocabulary",
-      "question": "「家族」を読んでください。",
-      "options": ["かぞく", "いえぞく", "かそく", "けぞく"],
-      "correct": 0,
-      "explanation": "家族 đọc là かぞく (gia đình)"
-    },
-    {
-      "type": "reading",
-      "passage": "わたしは まいにち 6じに おきます。あさごはんを たべて、がっこうへ いきます。",
-      "question": "なんじに おきますか。",
-      "options": ["5じ", "6じ", "7じ", "8じ"],
-      "correct": 1,
-      "explanation": "6じに おきます = dậy lúc 6 giờ"
-    }
-  ]
-}
-\`\`\`
-
-**LƯU Ý:**
-- PHẢI trả về JSON hợp lệ
-- correct là index (0, 1, 2, 3)
-- Giải thích bằng tiếng Việt ngắn gọn
-- 2 câu reading cuối cùng trong danh sách`;
-
-    try {
-        const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
-        
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-goog-api-key': GEMINI_API_KEY
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }],
-                generationConfig: {
-                    temperature: 1.0,
-                    maxOutputTokens: 8192
-                }
-            })
-        });
-
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.error?.message || `API Error: ${response.status}`);
-        }
-
-        let generatedText = data.candidates[0].content.parts[0].text;
-        
-        // Extract JSON from markdown code blocks and clean up
-        generatedText = generatedText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-        
-        // Find the JSON object boundaries
-        const jsonStart = generatedText.indexOf('{');
-        const jsonEnd = generatedText.lastIndexOf('}');
-        
-        if (jsonStart === -1 || jsonEnd === -1) {
-            throw new Error('Không tìm thấy JSON trong response');
-        }
-        
-        generatedText = generatedText.substring(jsonStart, jsonEnd + 1);
-        
-        let quizDataFromAI;
-        try {
-            quizDataFromAI = JSON.parse(generatedText);
-        } catch (parseError) {
-            console.error('JSON Parse Error:', parseError);
-            console.error('Generated Text:', generatedText.substring(0, 500));
-            throw new Error('JSON không hợp lệ: ' + parseError.message);
-        }
-        
-        if (!quizDataFromAI.questions || quizDataFromAI.questions.length < 30) {
-            throw new Error('Số câu hỏi không đủ (cần ít nhất 30 câu, nhận được: ' + (quizDataFromAI.questions?.length || 0) + ')');
-        }
-        
-        // Load vào quizData
-        quizData = quizDataFromAI.questions;
-        
-        // Bắt đầu quiz
-        currentQuizIndex = 0;
-        quizScore = 0;
-        selectedAnswer = null;
-        userAnswers = [];
-        
-        document.querySelector('.grammar-item').style.display = 'none';
-        document.getElementById('quizArea').style.display = 'block';
-        document.getElementById('quizResult').style.display = 'none';
-        
-        showQuizQuestion();
-        
-        btn.disabled = false;
-        btnText.textContent = originalText;
-        
-    } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Lỗi khi tạo quiz! Vui lòng thử lại.\n\nChi tiết: ' + error.message);
-        btn.disabled = false;
-        btnText.textContent = originalText;
-    }
-}
-
-function startReadingQuiz() {
-    // Sử dụng quiz cố định
-    quizData = [...readingQuizData];
-    currentQuizIndex = 0;
-    quizScore = 0;
-    selectedAnswer = null;
-    userAnswers = [];
-    
-    document.querySelector('.grammar-item').style.display = 'none';
-    document.getElementById('quizArea').style.display = 'block';
-    document.getElementById('quizResult').style.display = 'none';
-    
-    showQuizQuestion();
-}
-
-function showQuizQuestion() {
-    const question = quizData[currentQuizIndex];
-    
-    document.getElementById('currentQuestion').textContent = `Câu ${currentQuizIndex + 1}/42`;
-    document.getElementById('quizScore').textContent = `Điểm: ${quizScore}`;
-    document.getElementById('progressFill').style.width = `${((currentQuizIndex) / 42) * 100}%`;
-    
-    // Hiển thị đoạn văn (nếu có) hoặc ẩn đi
-    const passageEl = document.querySelector('.reading-passage');
-    if (question.passage) {
-        passageEl.style.display = 'block';
-        document.getElementById('passageText').textContent = question.passage;
-    } else {
-        passageEl.style.display = 'none';
-    }
-    
-    document.getElementById('questionText').textContent = question.question;
-    
-    const optionsHtml = question.options.map((option, index) => `
-        <button class="quiz-option" onclick="selectQuizAnswer(${index})">
-            ${String.fromCharCode(65 + index)}. ${option}
-        </button>
-    `).join('');
-    
-    document.getElementById('quizOptions').innerHTML = optionsHtml;
-    document.getElementById('answerFeedback').style.display = 'none';
-    document.getElementById('submitAnswer').style.display = 'inline-block';
-    document.getElementById('nextQuestion').style.display = 'none';
-    
-    selectedAnswer = null;
-}
-
-function selectQuizAnswer(index) {
-    if (selectedAnswer !== null) return;
-    
-    const options = document.querySelectorAll('.quiz-option');
-    options.forEach(opt => opt.classList.remove('selected'));
-    options[index].classList.add('selected');
-    selectedAnswer = index;
-}
-
-function submitQuizAnswer() {
-    if (selectedAnswer === null) {
-        alert('Vui lòng chọn một đáp án!');
+    if (!dimensionText) {
         return;
     }
     
-    const question = quizData[currentQuizIndex];
-    const options = document.querySelectorAll('.quiz-option');
-    const feedback = document.getElementById('answerFeedback');
+    // Tự động format dimension input (120 x 90 → 1m20 x 90cm)
+    dimensionText = autoFormatDimension(dimensionText);
+    input.value = dimensionText;
     
-    // Lưu câu trả lời
-    userAnswers[currentQuizIndex] = selectedAnswer;
+    // Tính toán số lượng
+    calculateFromDimension(input);
+}
+
+function calculateFromDimension(input) {
+    const row = input.closest('tr');
+    const quantityInput = row.querySelector('.quantity');
+    const dimensionText = input.value.trim();
     
-    // Kiểm tra đáp án
-    if (selectedAnswer === question.correct) {
-        quizScore++;
-        feedback.innerHTML = `<span class="correct">✓ Đúng rồi!</span><p>${question.explanation}</p>`;
-        options[selectedAnswer].classList.add('correct');
-    } else {
-        feedback.innerHTML = `<span class="incorrect">✗ Sai rồi!</span><p>Đáp án đúng: ${String.fromCharCode(65 + question.correct)}. ${question.options[question.correct]}</p><p>${question.explanation}</p>`;
-        options[selectedAnswer].classList.add('incorrect');
-        options[question.correct].classList.add('correct');
+    if (!dimensionText) {
+        return;
     }
     
-    feedback.style.display = 'block';
-    document.getElementById('submitAnswer').style.display = 'none';
-    document.getElementById('nextQuestion').style.display = 'inline-block';
-    document.getElementById('quizScore').textContent = `Điểm: ${quizScore}`;
+    let result = 0;
+    
+    // Tách và xử lý biểu thức
+    if (dimensionText.toLowerCase().includes('x')) {
+        // Phép nhân - tính diện tích (m²)
+        const parts = dimensionText.toLowerCase().split('x').map(p => p.trim());
+        if (parts.length >= 2) {
+            const num1 = parseDimensionToMeter(parts[0]); // Chuyển về mét
+            const num2 = parseDimensionToMeter(parts[1]); // Chuyển về mét
+            const area = num1 * num2; // Diện tích m²
+            result = area * 100; // Chuyển thành "cm" để format (3.96 m² = 396)
+            quantityInput.value = formatResultDimension(result);
+        }
+    } else if (dimensionText.includes('+')) {
+        // Phép cộng
+        const parts = dimensionText.split('+').map(p => p.trim());
+        result = parts.reduce((sum, part) => sum + parseDimensionToCm(part), 0);
+        quantityInput.value = formatResultDimension(result);
+    } else {
+        // Chỉ có một giá trị
+        result = parseDimensionToCm(dimensionText);
+        quantityInput.value = formatResultDimension(result);
+    }
+    
+    calculateRow(quantityInput);
 }
 
-function nextQuizQuestion() {
-    currentQuizIndex++;
+function autoFormatDimension(text) {
+    // Tự động format: 309,8 x 295,6 → 3m09,8 x 2m95,6
+    // Xử lý cả phép nhân và phép cộng
     
-    if (currentQuizIndex < quizData.length) {
-        showQuizQuestion();
+    // Kiểm tra xem đã có format m hoặc cm chưa
+    const hasUnit = /\d+m[\d,]+|\d+cm/i.test(text);
+    if (hasUnit) {
+        return text;
+    }
+    
+    // Tách theo dấu x hoặc +
+    let operator = '';
+    let parts = [];
+    
+    if (/\s*x\s*/i.test(text)) {
+        operator = 'x';
+        parts = text.split(/\s*x\s*/i).map(p => p.trim());
+    } else if (text.includes('+')) {
+        operator = '+';
+        parts = text.split('+').map(p => p.trim());
     } else {
-        showQuizResult();
+        parts = [text.trim()];
+    }
+    
+    // Format từng phần
+    const formattedParts = parts.map(part => {
+        // Loại bỏ tất cả ký tự không phải số, dấu phẩy
+        const cleanPart = part.replace(/[^0-9,]/g, '');
+        
+        // Tách phần nguyên và phần thập phân
+        const hasDecimal = cleanPart.includes(',');
+        let integerPart, decimalPart;
+        
+        if (hasDecimal) {
+            [integerPart, decimalPart] = cleanPart.split(',');
+        } else {
+            integerPart = cleanPart;
+            decimalPart = '';
+        }
+        
+        const num = parseInt(integerPart);
+        
+        if (isNaN(num) || num === 0) return part;
+        
+        if (num >= 100) {
+            // Chuyển thành format mXX (vd: 309 → 3m09, 309,8 → 3m09,8)
+            const meters = Math.floor(num / 100);
+            const remainder = num % 100;
+            const formattedRemainder = remainder.toString().padStart(2, '0');
+            
+            if (decimalPart) {
+                return `${meters}m${formattedRemainder},${decimalPart}`;
+            } else {
+                return `${meters}m${formattedRemainder}`;
+            }
+        } else {
+            // Giữ nguyên và thêm cm (vd: 90 → 90cm, 90,5 → 90,5cm)
+            if (decimalPart) {
+                return `${num},${decimalPart}cm`;
+            } else {
+                return `${num}cm`;
+            }
+        }
+    });
+    
+    // Ghép lại với operator
+    if (operator) {
+        return formattedParts.join(` ${operator} `);
+    } else {
+        return formattedParts[0];
     }
 }
 
-function showQuizResult() {
-    document.getElementById('quizArea').style.display = 'none';
-    document.getElementById('quizResult').style.display = 'block';
+function parseDimensionToCm(text) {
+    // Parse "1m20", "90cm", "3m09.8" về cm
+    text = text.toLowerCase().trim();
     
-    const percentage = ((quizScore / 42) * 100).toFixed(1);
-    document.getElementById('finalScore').textContent = `${quizScore}/42 (${percentage}%)`;
-    
-    let grade = '';
-    if (percentage >= 90) grade = 'Xuất sắc! 🏆';
-    else if (percentage >= 80) grade = 'Giỏi! 🌟';
-    else if (percentage >= 70) grade = 'Khá tốt! 👍';
-    else if (percentage >= 60) grade = 'Trung bình 📚';
-    else grade = 'Cần cố gắng thêm! 💪';
-    
-    document.getElementById('gradeText').textContent = grade;
+    if (text.includes('m') && !text.includes('cm')) {
+        // Format: 1m20, 3m09.8, 3m30
+        const parts = text.split('m');
+        const meters = parseFloat(parts[0]) || 0;
+        const cms = parseFloat(parts[1]) || 0;
+        return meters * 100 + cms;
+    } else if (text.includes('cm')) {
+        // Format: 90cm
+        return parseFloat(text.replace('cm', '')) || 0;
+    } else {
+        // Số thuần
+        return parseFloat(text) || 0;
+    }
 }
 
-function restartQuiz() {
-    startReadingQuiz();
+function parseDimensionToMeter(text) {
+    // Parse về mét để tính diện tích
+    // Hỗ trợ: 3m09,8 -> 3.098, 2m95,6 -> 2.956
+    text = text.toLowerCase().trim();
+    
+    if (text.includes('m') && !text.includes('cm')) {
+        // Format: 1m20, 3m30, 3m09,8
+        const parts = text.split('m');
+        const meters = parseFloat(parts[0].replace(',', '.')) || 0;
+        const cmsText = parts[1] ? parts[1].replace(',', '.') : '0';
+        const cms = parseFloat(cmsText) || 0;
+        return meters + (cms / 100);
+    } else if (text.includes('cm')) {
+        // Format: 90cm, 90,5cm
+        const cm = parseFloat(text.replace('cm', '').replace(',', '.')) || 0;
+        return cm / 100;
+    } else {
+        // Số thuần, giả sử là cm
+        return parseFloat(text.replace(',', '.')) / 100 || 0;
+    }
 }
 
-function backToQuizPanel() {
-    document.getElementById('quizResult').style.display = 'none';
-    document.querySelector('.grammar-item').style.display = 'block';
+function formatResultDimension(num) {
+    // Format kết quả: 915.348 → 9m15,3, 89 → 89cm
+    // Cắt bỏ phần thập phân sau chữ số thứ nhất (không làm tròn)
+    
+    if (num >= 100) {
+        const meters = Math.floor(num / 100);
+        const remainder = num % 100;
+        
+        // Kiểm tra có phần thập phân không
+        if (remainder % 1 !== 0) {
+            // Có phần thập phân - cắt đến 1 chữ số (không làm tròn)
+            const truncatedRemainder = Math.floor(remainder * 10) / 10;
+            const intPart = Math.floor(truncatedRemainder);
+            const decimalPart = truncatedRemainder - intPart;
+            
+            if (decimalPart > 0) {
+                // Có phần thập phân sau khi cắt
+                const remainderStr = truncatedRemainder.toString().replace('.', ',');
+                const paddedInt = intPart.toString().padStart(2, '0');
+                const decimal = remainderStr.split(',')[1] || '';
+                return `${meters}m${paddedInt},${decimal}`;
+            } else {
+                // Không có phần thập phân sau khi cắt
+                return `${meters}m${intPart.toString().padStart(2, '0')}`;
+            }
+        } else {
+            // Không có phần thập phân
+            return `${meters}m${Math.floor(remainder).toString().padStart(2, '0')}`;
+        }
+    } else {
+        // Nhỏ hơn 100
+        if (num % 1 !== 0) {
+            // Có phần thập phân - cắt đến 1 chữ số (không làm tròn)
+            const truncated = Math.floor(num * 10) / 10;
+            return `${truncated.toString().replace('.', ',')}cm`;
+        } else {
+            // Không có phần thập phân
+            return `${Math.floor(num)}cm`;
+        }
+    }
+}
+
+function formatAndCalculate(input) {
+    let value = input.value.replace(/\./g, '').replace(/[^0-9]/g, ''); // Xóa dấu chấm cũ và giữ số
+    if (value) {
+        // Nếu số có 4 chữ số trở xuống, tự động nhân 1000
+        // VD: 1200 → 1200000, 500 → 500000
+        let numValue = parseInt(value);
+        if (numValue > 0 && numValue < 10000) {
+            numValue = numValue * 1000;
+        }
+        // Format với dấu chấm ngăn cách hàng nghìn
+        input.value = numValue.toLocaleString('de-DE');
+    }
+    calculateRow(input);
+}
+
+function calculateRow(input) {
+    const row = input.closest('tr');
+    const quantityInput = row.querySelector('.quantity');
+    const unitPriceInput = row.querySelector('.unit-price');
+    const lineTotalCell = row.querySelector('.line-total');
+
+    let quantity = 0;
+    const quantityText = quantityInput.value.trim();
+    
+    // Try to extract number from quantity (handles formats like "9m1.5.7", "16 con", etc.)
+    const numberMatch = quantityText.match(/[\d.]+/);
+    if (numberMatch) {
+        quantity = parseFloat(numberMatch[0]);
+    }
+
+    // Parse unit price - remove dots and convert to number
+    let unitPrice = parseFloat(unitPriceInput.value.replace(/\./g, '')) || 0;
+    if (unitPrice < 0) {
+        unitPrice = 0;
+        unitPriceInput.value = '0';
+    }
+    
+    const lineTotal = quantity * unitPrice;
+
+    lineTotalCell.textContent = formatNumber(lineTotal);
+    calculateGrandTotal();
+}
+
+function calculateGrandTotal() {
+    let total = 0;
+    const lineTotals = document.querySelectorAll('.line-total');
+    
+    lineTotals.forEach(cell => {
+        const value = parseFloat(cell.textContent.replace(/[,.]/g, '')) || 0;
+        total += value;
+    });
+
+    document.getElementById('grandTotal').textContent = formatNumber(total);
+}
+
+function formatNumber(num) {
+    return new Intl.NumberFormat('vi-VN').format(Math.round(num));
+}
+
+function printTable() {
+    window.print();
+}
+
+async function clearTable() {
+    const confirmed = await showConfirm('Bạn có chắc muốn xóa tất cả dữ liệu?');
+    if (confirmed) {
+        document.getElementById('tableBody').innerHTML = '';
+        rowCounter = 0;
+        calculateGrandTotal();
+    }
+}
+
+function showHelp() {
+    document.getElementById('helpModal').style.display = 'block';
+}
+
+function closeHelp() {
+    document.getElementById('helpModal').style.display = 'none';
+}
+
+// Đóng modal khi click bên ngoài
+window.onclick = function(event) {
+    const modal = document.getElementById('helpModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Custom Confirm Dialog
+let confirmCallback = null;
+
+function showConfirm(message) {
+    return new Promise((resolve) => {
+        confirmCallback = resolve;
+        document.getElementById('confirmMessage').textContent = message;
+        document.getElementById('confirmModal').style.display = 'block';
+    });
+}
+
+function confirmAction(result) {
+    document.getElementById('confirmModal').style.display = 'none';
+    if (confirmCallback) {
+        confirmCallback(result);
+        confirmCallback = null;
+    }
+}
+
+// ===== EXCEL EXPORT/IMPORT FUNCTIONS =====
+function exportToExcel() {
+    // Thu thập dữ liệu từ header
+    const companyName = document.getElementById('companyName').value;
+    const companyTax = document.getElementById('companyTax').value;
+    const companyAddress = document.getElementById('companyAddress').value;
+    const companyPhone = document.getElementById('companyPhone').value;
+    const customerName = document.getElementById('customerName').value;
+    
+    // Thu thập dữ liệu từ bảng
+    const rows = document.querySelectorAll('#tableBody tr');
+    const data = [];
+    
+    // Header info
+    data.push([companyName]);
+    data.push([companyTax]);
+    data.push([companyAddress]);
+    data.push([companyPhone]);
+    data.push(['Khách hàng:', customerName]);
+    data.push([]);
+    data.push(['BẢNG KHỐI LƯỢNG']);
+    data.push([]);
+    
+    // Table headers
+    data.push(['STT', 'Tên Hàng', 'Kích Thước', 'Số Lượng', 'Đơn Giá', 'Thành Tiền']);
+    
+    // Table rows
+    rows.forEach((row, index) => {
+        const itemName = row.querySelector('.item-name')?.value || '';
+        const dimension = row.querySelector('.dimension')?.value || '';
+        const quantity = row.querySelector('.quantity')?.value || '';
+        const unitPrice = row.querySelector('.unit-price')?.value.replace(/\./g, '') || '0';
+        const lineTotal = row.querySelector('.line-total')?.textContent.replace(/\./g, '') || '0';
+        
+        data.push([
+            index + 1,
+            itemName,
+            dimension,
+            quantity,
+            parseInt(unitPrice),
+            parseInt(lineTotal)
+        ]);
+    });
+    
+    // Grand total
+    const grandTotal = document.getElementById('grandTotal').textContent.replace(/\./g, '');
+    data.push([]);
+    data.push(['', 'Tổng Cộng', '', '', '', parseInt(grandTotal)]);
+    
+    // Tạo workbook và worksheet
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    
+    // Set column widths
+    ws['!cols'] = [
+        {wch: 8},  // STT
+        {wch: 30}, // Tên Hàng
+        {wch: 20}, // Kích Thước
+        {wch: 15}, // Số Lượng
+        {wch: 15}, // Đơn Giá
+        {wch: 15}  // Thành Tiền
+    ];
+    
+    XLSX.utils.book_append_sheet(wb, ws, 'Khối Lượng');
+    
+    // Xuất file
+    const fileName = `BaoGia_${customerName || 'KhachHang'}_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.xlsx`;
+    XLSX.writeFile(wb, fileName);
+}
+
+function loadFromExcel(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet, {header: 1});
+            
+            // Tìm vị trí của header table (dòng chứa 'STT')
+            let headerIndex = -1;
+            for (let i = 0; i < jsonData.length; i++) {
+                if (jsonData[i][0] === 'STT' || jsonData[i][0] === 'stt') {
+                    headerIndex = i;
+                    break;
+                }
+            }
+            
+            // Xóa tất cả các hàng hiện tại
+            document.getElementById('tableBody').innerHTML = '';
+            rowCounter = 0;
+            
+            // Load thông tin header (các dòng trước table) nếu có
+            if (jsonData.length > 0) {
+                if (jsonData[0] && jsonData[0][0]) {
+                    document.getElementById('companyName').value = jsonData[0][0] || '';
+                }
+                if (jsonData[1] && jsonData[1][0]) {
+                    document.getElementById('companyTax').value = jsonData[1][0] || '';
+                }
+                if (jsonData[2] && jsonData[2][0]) {
+                    document.getElementById('companyAddress').value = jsonData[2][0] || '';
+                }
+                if (jsonData[3] && jsonData[3][0]) {
+                    document.getElementById('companyPhone').value = jsonData[3][0] || '';
+                }
+                if (jsonData[4] && jsonData[4][1]) {
+                    document.getElementById('customerName').value = jsonData[4][1] || '';
+                }
+            }
+            
+            let rowsLoaded = 0;
+            
+            // Load data vào bảng nếu tìm thấy header
+            if (headerIndex !== -1) {
+                for (let i = headerIndex + 1; i < jsonData.length; i++) {
+                    const row = jsonData[i];
+                    
+                    // Bỏ qua hàng trống hoặc hàng tổng cộng
+                    if (!row[1] || row[1] === 'Tổng Cộng') break;
+                    
+                    addRow();
+                    const tbody = document.getElementById('tableBody');
+                    const lastRow = tbody.lastElementChild;
+                    
+                    // Fill data
+                    if (lastRow) {
+                        const itemName = lastRow.querySelector('.item-name');
+                        const dimension = lastRow.querySelector('.dimension');
+                        const quantity = lastRow.querySelector('.quantity');
+                        const unitPrice = lastRow.querySelector('.unit-price');
+                        
+                        if (itemName) itemName.value = row[1] || '';
+                        if (dimension) dimension.value = row[2] || '';
+                        if (quantity) quantity.value = row[3] || '';
+                        if (unitPrice && row[4]) {
+                            // Load giá trực tiếp từ Excel mà không xử lý (đã là số đầy đủ)
+                            const price = parseInt(row[4]) || 0;
+                            unitPrice.value = price.toLocaleString('de-DE');
+                            calculateRow(unitPrice);
+                        }
+                        rowsLoaded++;
+                    }
+                }
+            }
+            
+            // Nếu không có hàng nào được load hoặc file trống, thêm 1 hàng trống để người dùng có thể nhập
+            if (rowsLoaded === 0) {
+                addRow();
+            }
+            
+            calculateGrandTotal();
+            
+            if (headerIndex === -1) {
+                alert('Không tìm thấy dữ liệu bảng trong file Excel!\nĐã tạo hàng trống để bạn có thể nhập liệu.');
+            } else if (rowsLoaded === 0) {
+                alert('File Excel không có dữ liệu hàng hóa!\nĐã tạo hàng trống để bạn có thể nhập liệu.');
+            } else {
+                alert(`Đã load ${rowsLoaded} hàng từ Excel thành công!\nBạn có thể tiếp tục chỉnh sửa hoặc thêm hàng mới.`);
+            }
+            
+        } catch (error) {
+            console.error('Lỗi khi đọc file Excel:', error);
+            // Thêm 1 hàng trống khi có lỗi
+            document.getElementById('tableBody').innerHTML = '';
+            rowCounter = 0;
+            addRow();
+            alert('Lỗi khi đọc file Excel!\nĐã tạo hàng trống để bạn có thể nhập liệu thủ công.');
+        }
+        
+        // Reset input file
+        event.target.value = '';
+    };
+    
+    reader.readAsArrayBuffer(file);
 }

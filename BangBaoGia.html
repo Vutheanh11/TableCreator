@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bảng Khối Lượng Tự Động</title>
+    <title>Bảng Báo Giá</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="bangbaogia.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -16,7 +17,7 @@
             <button onclick="document.getElementById('excelFileInput').click()" class="load-btn">Load Excel</button>
             <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="display: none;" onchange="loadFromExcel(event)">
             <button onclick="clearTable()" class="delete-btn">Xóa Tất Cả</button>
-            <button onclick="window.location.href='BangBaoGia.html'" class="print-btn" style="background-color: #9C27B0;">Bảng Báo Giá</button>
+            <button onclick="window.location.href='index.html'" class="excel-btn" style="background-color: #9C27B0;">Bảng Khối Lượng</button>
             <button onclick="showHelp()" class="help-btn">Cách sử dụng</button>
         </div>
         
@@ -29,7 +30,7 @@
             </div>
 
             <div class="header">
-                <div class="title">BẢNG KHỐI LƯỢNG</div>
+                <div class="title">BẢNG BÁO GIÁ</div>
                 <div class="subtitle">
                     <span>Kính gửi quý khách hàng: <input type="text" id="customerName" placeholder="Nhập tên" value="" style="border: none; border-bottom: 1px solid #000; padding: 2px 5px; min-width: 150px; background: transparent; font-style: italic; font-size: 16px; font-family: 'Times New Roman', serif;"></span>
                 </div>
@@ -38,26 +39,20 @@
         <table id="priceTable">
             <thead>
                 <tr>
-                    <th style="width: 50px;">STT</th>
-                    <th style="width: 250px;">Tên Hàng</th>
-                    <th style="width: 180px;">Kích Thước</th>
-                    <th style="width: 120px;">Số Lượng</th>
-                    <th style="width: 120px;">Đơn Giá</th>
-                    <th style="width: 140px;">Thành Tiền</th>
-                    <th style="width: 100px;" class="no-print">Thao Tác</th>
+                    <th style="width: 60px;">STT</th>
+                    <th style="width: 400px;">Tên Hàng</th>
+                    <th style="width: 250px;">Đơn Giá</th>
+                    <th style="width: 180px;" class="no-print">Thao Tác</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
                 <!-- Rows will be added here -->
             </tbody>
-            <tfoot>
-                <tr class="total-row">
-                    <td colspan="5">Tổng Cộng</td>
-                    <td id="grandTotal">0</td>
-                    <td class="no-print"></td>
-                </tr>
-            </tfoot>
         </table>
+        
+        <div style="margin-top: 20px; font-size: 14px;">
+            <strong>*Chú ý:</strong> <input type="text" id="noteText" placeholder="Nhập lưu ý...">
+        </div>
     </div>
     </div>
 
@@ -68,26 +63,19 @@
             <h2>Hướng dẫn sử dụng</h2>
             <div class="help-content">
                 <h3>1. Nhập thông tin công ty:</h3>
-                <p>- Chỉnh sửa tên công ty, MST, địa chỉ, số điện thoại ổ phía trên</p>
+                <p>- Chỉnh sửa tên công ty, MST, địa chỉ, số điện thoại ở phía trên</p>
                 <p>- Nhập tên khách hàng vào ô sau "Kính gửi quý khách hàng:"</p>
                 
                 <h3>2. Thêm hàng hóa:</h3>
                 <p>- Nhấn nút "Thêm Hàng" để thêm dòng mới</p>
-                <p>- Nhập tên hàng, kích thước, số lượng, đơn giá</p>
+                <p>- Nhập tên hàng và đơn giá</p>
                 
-                <h3>3. Kích thước tự động:</h3>
-                <p>- Nhập: <strong>330 x 120</strong> → Tự động chuyển thành: <strong>3m30 x 1m20</strong></p>
-                <p>- Hỗ trợ số thập phân: <strong>309,8 x 295,6</strong> → <strong>3m09,8 x 2m95,6</strong></p>
-                <p>- Phép cộng: <strong>450 + 75</strong> → <strong>4m50 + 75cm</strong></p>
+                <h3>3. Đơn giá:</h3>
+                <p>- Nhập <strong>1200</strong> → Tự động format thành <strong>1.200.000</strong> khi chuyển ô</p>
+                <p>- Nhấn nút <strong>Edit</strong> để chọn đơn vị (/m², /cái, /cây)</p>
+                <p>- Ví dụ: Chọn /m² → <strong>1.200.000</strong> thành <strong>1.200.000/m²</strong></p>
                 
-                <h3>4. Số lượng tự động tính:</h3>
-                <p>- Khi nhập kích thước và nhấn Tab, số lượng sẽ tự động tính</p>
-                <p>- Ví dụ: <strong>3m30 x 1m20</strong> = <strong>3m96</strong> (diện tích)</p>
-                
-                <h3>5. Đơn giá:</h3>
-                <p>- Nhập số thuần, tự động format: <strong>5100000</strong> → <strong>5.100.000</strong></p>
-                
-                <h3>6. In và Lưu:</h3>
+                <h3>4. In và Lưu:</h3>
                 <p>- Nhấn nút "In" để in hoặc lưu PDF</p>
                 <p>- Nhấn "Xóa Tất Cả" để làm mới bảng</p>
             </div>
@@ -101,10 +89,24 @@
             <div class="confirm-buttons">
                 <button onclick="confirmAction(true)" class="confirm-yes">Xác nhận</button>
                 <button onclick="confirmAction(false)" class="confirm-no">Hủy</button>
+            </div>²
+        </div>
+    </div>
+
+    <!-- Modal chọn đơn vị -->
+    <div id="unitModal" class="modal">
+        <div class="modal-content">
+            <h2>Chọn Đơn Vị</h2>
+            <div class="unit-options">
+                <div class="unit-option" onclick="selectUnit('/m²')">1. /m²</div>
+                <div class="unit-option" onclick="selectUnit('/cái')">2. /cái</div>
+                <div class="unit-option" onclick="selectUnit('/cây')">3. /cây</div>
             </div>
+            <button onclick="closeUnitModal()" class="delete-btn" style="margin-top: 20px; width: 100%;">Đóng</button>
         </div>
     </div>
 
     <script src="script.js"></script>
+    <script src="bangbaogia.js"></script>
 </body>
 </html>
