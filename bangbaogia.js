@@ -103,6 +103,23 @@ function toggleFabMenu(event) {
     fabMenu.classList.toggle('active');
 }
 
+// ===== PDF EXPORT FUNCTION =====
+function exportToPDF() {
+    const customerName = document.getElementById('customerName').value || 'KhachHang';
+    const fileName = `BBG_${customerName}_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.pdf`;
+    
+    const element = document.querySelector('.container');
+    const opt = {
+        margin: 10,
+        filename: fileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    
+    html2pdf().set(opt).from(element).save();
+}
+
 // Close FAB menu when clicking outside
 document.addEventListener('click', function(event) {
     const fabBtn = document.getElementById('fabBtn');

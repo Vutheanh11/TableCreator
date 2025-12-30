@@ -343,6 +343,23 @@ function printTable() {
     window.print();
 }
 
+// ===== PDF EXPORT FUNCTION =====
+function exportToPDF() {
+    const customerName = document.getElementById('customerName').value || 'KhachHang';
+    const fileName = `BKL_${customerName}_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.pdf`;
+    
+    const element = document.querySelector('.container');
+    const opt = {
+        margin: 10,
+        filename: fileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    
+    html2pdf().set(opt).from(element).save();
+}
+
 async function clearTable() {
     const confirmed = await showConfirm('Bạn có chắc muốn xóa tất cả dữ liệu?');
     if (confirmed) {
