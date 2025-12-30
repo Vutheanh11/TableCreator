@@ -1,11 +1,3 @@
-// Sidebar Toggle for Mobile
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
-    sidebar.classList.toggle('active');
-    mainContent.classList.toggle('sidebar-open');
-}
-
 // Tab Switching Function
 function switchTab(event, lessonId) {
     // Hide all tab contents
@@ -25,11 +17,6 @@ function switchTab(event, lessonId) {
     
     // Add active class to clicked button
     event.currentTarget.classList.add('active');
-    
-    // Close sidebar on mobile after selecting
-    if (window.innerWidth <= 768) {
-        toggleSidebar();
-    }
 }
 
 // Background Music Control
@@ -66,105 +53,7 @@ function toggleDarkMode() {
 }
 
 // AI Reading Generator with Gemini API
-const GEMINI_API_KEY = 'AIzaSyD5QGYg4kIJXbiZw2Yds2CHuC15POeN61w';
-
-// Chat Widget Functions
-let chatHistory = [];
-
-function toggleChat() {
-    const chatBody = document.getElementById('chatBody');
-    const chatToggle = document.getElementById('chatToggle');
-    
-    chatBody.classList.toggle('collapsed');
-    chatToggle.textContent = chatBody.classList.contains('collapsed') ? '+' : '−';
-}
-
-async function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const message = input.value.trim();
-    
-    if (!message) return;
-    
-    // Add user message to chat
-    addMessageToChat(message, 'user');
-    input.value = '';
-    
-    // Disable send button
-    const sendBtn = document.querySelector('.chat-send-btn');
-    sendBtn.disabled = true;
-    sendBtn.textContent = '...';
-    
-    try {
-        // Add to history
-        chatHistory.push({
-            role: 'user',
-            parts: [{ text: message }]
-        });
-        
-        const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
-        
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-goog-api-key': GEMINI_API_KEY
-            },
-            body: JSON.stringify({
-                contents: [
-                    {
-                        role: 'user',
-                        parts: [{ text: 'Bạn là trợ lý AI giúp học tiếng Nhật. Trả lời ngắn gọn, dễ hiểu bằng tiếng Việt và có ví dụ tiếng Nhật khi cần.' }]
-                    },
-                    ...chatHistory
-                ],
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 500
-                }
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.error?.message || 'API Error');
-        }
-        
-        const botReply = data.candidates[0].content.parts[0].text;
-        
-        // Add bot response to history
-        chatHistory.push({
-            role: 'model',
-            parts: [{ text: botReply }]
-        });
-        
-        // Add bot message to chat
-        addMessageToChat(botReply, 'bot');
-        
-    } catch (error) {
-        console.error('Chat Error:', error);
-        addMessageToChat('Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại.', 'bot');
-    } finally {
-        sendBtn.disabled = false;
-        sendBtn.textContent = 'Gửi';
-    }
-}
-
-function addMessageToChat(message, sender) {
-    const chatMessages = document.getElementById('chatMessages');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `chat-message ${sender}-message`;
-    
-    const contentDiv = document.createElement('div');
-    contentDiv.className = 'message-content';
-    contentDiv.textContent = message;
-    
-    messageDiv.appendChild(contentDiv);
-    chatMessages.appendChild(messageDiv);
-    
-    // Scroll to bottom
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
+const GEMINI_API_KEY = 'AIzaSyBgnR2T8yRS0Gf4bfiCegVliUn9b-Tk5q0';
 
 // All available kanji from lessons 8-11
 const ALL_KANJI = ['家', '族', '父', '母', '兄', '弟', '姉', '妹', '犬', '高', '短', '長', '好', '歌', '音', '楽', '車', '映', '画', '旅', '海', '外', '駅', '上', '下', '地', '図', '館', '右', '左', '道', '起', '歩', '乗', '始', '終', '勉', '強', '朝', '昼', '夜'];
@@ -925,11 +814,12 @@ const readingQuizData = [
         explanation: "起きる đọc là おきる (thức dậy)"
     },
     {
-        type: "grammar",
-        question: "テストの まえの ひは はやく＿＿。",
-        options: ["ねます", "ねました", "ねる", "ねて"],
-        correct: 0,
-        explanation: "Dùng thể thường ở cuối câu bình thường: ねます"
+        type: "reading",
+        passage: "あした テストが あります。だから きょうは べんきょうします。",
+        question: "いつ テストが ありますか。",
+        options: ["きょう", "あした", "きのう", "あさって"],
+        correct: 1,
+        explanation: "あした テストが あります = ngày mai có kiểm tra"
     },
     {
         type: "grammar",
@@ -953,155 +843,16 @@ const readingQuizData = [
         explanation: "になります = trở nên (dùng với tính từ な, danh từ)"
     },
     {
-        type: "vocabulary",
-        question: "「勉強」を読んでください。",
-        options: ["べんきょ", "べんきょう", "ぺんきょう", "べんこう"],
-        correct: 1,
-        explanation: "勉強 đọc là べんきょう (học tập)"
+        type: "reading",
+        passage: "わたしは 7じに おきます。あには 6じに おきます。ちちは 5じに おきます。",
+        question: "だれが いちばん はやく おきますか。",
+        options: ["わたし", "あに", "ちち", "はは"],
+        correct: 2,
+        explanation: "ちちは 5じに おきます = bố dậy lúc 5 giờ (sớm nhất)"
     }
 ];
 
-// Generate AI Quiz với Gemini
-async function generateAIQuiz() {
-    const btn = document.getElementById('startQuizBtn');
-    const btnText = btn.querySelector('span');
-    const originalText = btnText.textContent;
-    
-    btn.disabled = true;
-    btnText.textContent = '⏳ Đang tạo 42 câu quiz...';
-    
-    const prompt = `Tạo 42 câu hỏi trắc nghiệm tiếng Nhật cho bài thi FE (Final Exam) của FPT University, bao gồm:
-
-**PHÂN BỐ:**
-- 20 câu ngữ pháp (điền trợ từ: で、に、が、を、へ、から、まで、も、と、の...)
-- 18 câu từ vựng (đọc Kanji, nghĩa từ vựng)
-- 2 câu đọc hiểu (có đoạn văn ngắn 2-3 câu)
-
-**YÊU CẦU:**
-1. Mỗi câu có 4 đáp án (A, B, C, D)
-2. Câu hỏi dựa trên bài 8, 9, 10, 11 sách Marugoto A2
-3. Random chủ đề: gia đình, sở thích, thời gian, địa điểm, hoạt động hàng ngày
-4. Trả về FORMAT JSON chính xác như sau:
-
-\`\`\`json
-{
-  "questions": [
-    {
-      "type": "grammar",
-      "question": "わたしは ホーチミン＿＿ すんでいます。",
-      "options": ["に", "で", "を", "へ"],
-      "correct": 0,
-      "explanation": "Dùng に với すんでいます để chỉ nơi sinh sống"
-    },
-    {
-      "type": "vocabulary",
-      "question": "「家族」を読んでください。",
-      "options": ["かぞく", "いえぞく", "かそく", "けぞく"],
-      "correct": 0,
-      "explanation": "家族 đọc là かぞく (gia đình)"
-    },
-    {
-      "type": "reading",
-      "passage": "わたしは まいにち 6じに おきます。あさごはんを たべて、がっこうへ いきます。",
-      "question": "なんじに おきますか。",
-      "options": ["5じ", "6じ", "7じ", "8じ"],
-      "correct": 1,
-      "explanation": "6じに おきます = dậy lúc 6 giờ"
-    }
-  ]
-}
-\`\`\`
-
-**LƯU Ý:**
-- PHẢI trả về JSON hợp lệ
-- correct là index (0, 1, 2, 3)
-- Giải thích bằng tiếng Việt ngắn gọn
-- 2 câu reading cuối cùng trong danh sách`;
-
-    try {
-        const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
-        
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-goog-api-key': GEMINI_API_KEY
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }],
-                generationConfig: {
-                    temperature: 1.0,
-                    maxOutputTokens: 8192
-                }
-            })
-        });
-
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.error?.message || `API Error: ${response.status}`);
-        }
-
-        let generatedText = data.candidates[0].content.parts[0].text;
-        
-        // Extract JSON from markdown code blocks and clean up
-        generatedText = generatedText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-        
-        // Find the JSON object boundaries
-        const jsonStart = generatedText.indexOf('{');
-        const jsonEnd = generatedText.lastIndexOf('}');
-        
-        if (jsonStart === -1 || jsonEnd === -1) {
-            throw new Error('Không tìm thấy JSON trong response');
-        }
-        
-        generatedText = generatedText.substring(jsonStart, jsonEnd + 1);
-        
-        let quizDataFromAI;
-        try {
-            quizDataFromAI = JSON.parse(generatedText);
-        } catch (parseError) {
-            console.error('JSON Parse Error:', parseError);
-            console.error('Generated Text:', generatedText.substring(0, 500));
-            throw new Error('JSON không hợp lệ: ' + parseError.message);
-        }
-        
-        if (!quizDataFromAI.questions || quizDataFromAI.questions.length < 30) {
-            throw new Error('Số câu hỏi không đủ (cần ít nhất 30 câu, nhận được: ' + (quizDataFromAI.questions?.length || 0) + ')');
-        }
-        
-        // Load vào quizData
-        quizData = quizDataFromAI.questions;
-        
-        // Bắt đầu quiz
-        currentQuizIndex = 0;
-        quizScore = 0;
-        selectedAnswer = null;
-        userAnswers = [];
-        
-        document.querySelector('.grammar-item').style.display = 'none';
-        document.getElementById('quizArea').style.display = 'block';
-        document.getElementById('quizResult').style.display = 'none';
-        
-        showQuizQuestion();
-        
-        btn.disabled = false;
-        btnText.textContent = originalText;
-        
-    } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Lỗi khi tạo quiz! Vui lòng thử lại.\n\nChi tiết: ' + error.message);
-        btn.disabled = false;
-        btnText.textContent = originalText;
-    }
-}
-
 function startReadingQuiz() {
-    // Sử dụng quiz cố định
     quizData = [...readingQuizData];
     currentQuizIndex = 0;
     quizScore = 0;
@@ -1220,4 +971,387 @@ function restartQuiz() {
 function backToQuizPanel() {
     document.getElementById('quizResult').style.display = 'none';
     document.querySelector('.grammar-item').style.display = 'block';
+}
+        options: ["ほん", "ケーキ", "かばん", "プレゼント"],
+        correct: 2,
+        explanation: "Bố tặng cái cặp (ちちは かばんを くれました)"
+    },
+    {
+        passage: `きのうは たんじょうびでした。ちちは わたしに あたらしい かばんを くれました。ははは ケーキを つくって くれました。あには わたしに ほんを あげました。いもうとも プレゼントを くれました。とても たのしい いちにちでした。`,
+        question: "だれが ケーキを つくりましたか。",
+        options: ["ちち", "はは", "あに", "いもうと"],
+        correct: 1,
+        explanation: "Mẹ làm bánh (ははは ケーキを つくって くれました)"
+    },
+    {
+        passage: `やまださんは わたしの せんぱいです。だいがくで べんきょうして います。やまださんは しんせつで、あたまが いいです。まいにち としょかんで べんきょうして います。やまださんは らいねん にほんへ りゅうがくします。`,
+        question: "やまださんは どこで べんきょうして いますか。",
+        options: ["がっこう", "うち", "としょかん", "こうえん"],
+        correct: 2,
+        explanation: "Yamada học ở thư viện (としょかんで べんきょうして います)"
+    },
+    {
+        passage: `やまださんは わたしの せんぱいです。だいがくで べんきょうして います。やまださんは しんせつで、あたまが いいです。まいにち としょかんで べんきょうして います。やまださんは らいねん にほんへ りゅうがくします。`,
+        question: "やまださんは いつ にほんへ いきますか。",
+        options: ["きょう", "あした", "らいしゅう", "らいねん"],
+        correct: 3,
+        explanation: "Yamada sang Nhật năm sau (らいねん にほんへ りゅうがくします)"
+    },
+    {
+        passage: `わたしの いもうとは こうこうせいです。いもうとは かわいくて、げんきです。いもうとは うたを うたうことが すきです。まいにち カラオケで れんしゅうして います。いもうとの ゆめは かしゅに なることです。`,
+        question: "いもうとは なにが すきですか。",
+        options: ["ダンス", "うた", "スポーツ", "えいが"],
+        correct: 1,
+        explanation: "Em gái thích hát (うたを うたうことが すきです)"
+    },
+    {
+        passage: `わたしの いもうとは こうこうせいです。いもうとは かわいくて、げんきです。いもうとは うたを うたうことが すきです。まいにち カラオケで れんしゅうして います。いもうとの ゆめは かしゅに なることです。`,
+        question: "いもうとの ゆめは なんですか。",
+        options: ["せんせい", "いしゃ", "かしゅ", "かいしゃいん"],
+        correct: 2,
+        explanation: "Ước mơ của em gái là trở thành ca sĩ (かしゅに なること)"
+    },
+
+    // Bài 9 - 11 câu
+    {
+        passage: `わたしの しゅみは おんがくを きくことです。まいにち 1じかん ぐらい きいて います。ポップスが すきです。ときどき コンサートへ いきます。おんがくを きくと、げんきに なります。ともだちと カラオケへ いくことも すきです。`,
+        question: "しゅみは なんですか。",
+        options: ["スポーツ", "りょうり", "おんがく", "どくしょ"],
+        correct: 2,
+        explanation: "Sở thích là nghe nhạc (しゅみは おんがくを きくことです)"
+    },
+    {
+        passage: `わたしの しゅみは おんがくを きくことです。まいにち 1じかん ぐらい きいて います。ポップスが すきです。ときどき コンサートへ いきます。おんがくを きくと、げんきに なります。ともだちと カラオケへ いくことも すきです。`,
+        question: "まいにち どのぐらい おんがくを ききますか。",
+        options: ["30ぷん", "1じかん", "2じかん", "3じかん"],
+        correct: 1,
+        explanation: "Nghe khoảng 1 tiếng mỗi ngày (まいにち 1じかん ぐらい)"
+    },
+    {
+        passage: `しゅうまつは ともだちと えいがを みました。えいがかんへ いって、アクションえいがを みました。とても おもしろかったです。それから、レストランで ばんごはんを たべました。ともだちと たくさん はなしました。たのしい しゅうまつでした。`,
+        question: "なにを みましたか。",
+        options: ["テレビ", "えいが", "ほん", "しんぶん"],
+        correct: 1,
+        explanation: "Xem phim (えいがを みました)"
+    },
+    {
+        passage: `しゅうまつは ともだちと えいがを みました。えいがかんへ いって、アクションえいがを みました。とても おもしろかったです。それから、レストランで ばんごはんを たべました。ともだちと たくさん はなしました。たのしい しゅうまつでした。`,
+        question: "だれと えいがを みましたか。",
+        options: ["ひとりで", "かぞくと", "ともだちと", "せんせいと"],
+        correct: 2,
+        explanation: "Xem với bạn bè (ともだちと えいがを みました)"
+    },
+    {
+        passage: `けさ 6じに おきました。シャワーを あびて、あさごはんを たべました。それから、バスで がっこうへ いきました。がっこうで にほんごを べんきょうしました。ごご、としょかんで しゅくだいを しました。よる、うちで テレビを みました。`,
+        question: "なんじに おきましたか。",
+        options: ["5じ", "6じ", "7じ", "8じ"],
+        correct: 1,
+        explanation: "Dậy lúc 6 giờ (6じに おきました)"
+    },
+    {
+        passage: `けさ 6じに おきました。シャワーを あびて、あさごはんを たべました。それから、バスで がっこうへ いきました。がっこうで にほんごを べんきょうしました。ごご、としょかんで しゅくだいを しました。よる、うちで テレビを みました。`,
+        question: "どうやって がっこうへ いきましたか。",
+        options: ["あるいて", "バスで", "でんしゃで", "じてんしゃで"],
+        correct: 1,
+        explanation: "Đi bằng xe buýt (バスで がっこうへ いきました)"
+    },
+    {
+        passage: `わたしは りょうりが できます。まいにち じぶんで りょうりを つくります。ベトナムりょうりが とくいです。ときどき ともだちに りょうりを つくって あげます。ともだちは「おいしい」と いいます。うれしいです。`,
+        question: "なにが できますか。",
+        options: ["うた", "ダンス", "りょうり", "スポーツ"],
+        correct: 2,
+        explanation: "Có thể nấu ăn (りょうりが できます)"
+    },
+    {
+        passage: `わたしは りょうりが できます。まいにち じぶんで りょうりを つくります。ベトナムりょうりが とくいです。ときどき ともだちに りょうりを つくって あげます。ともだちは「おいしい」と いいます。うれしいです。`,
+        question: "どんな りょうりが とくいですか。",
+        options: ["にほんりょうり", "ベトナムりょうり", "かんこくりょうり", "ちゅうかりょうり"],
+        correct: 1,
+        explanation: "Giỏi món Việt (ベトナムりょうりが とくいです)"
+    },
+    {
+        passage: `にちようびに うみへ いきました。ともだちと およぎました。すなはまで あそびました。きれいな かいがらを ひろいました。それから、うみの ちかくの レストランで さかなを たべました。とても おいしかったです。たのしかったです。`,
+        question: "どこへ いきましたか。",
+        options: ["やま", "うみ", "こうえん", "かわ"],
+        correct: 1,
+        explanation: "Đi biển (うみへ いきました)"
+    },
+    {
+        passage: `にちようびに うみへ いきました。ともだちと およぎました。すなはまで あそびました。きれいな かいがらを ひろいました。それから、うみの ちかくの レストランで さかなを たべました。とても おいしかったです。たのしかったです。`,
+        question: "レストランで なにを たべましたか。",
+        options: ["にく", "さかな", "やさい", "くだもの"],
+        correct: 1,
+        explanation: "Ăn cá (さかなを たべました)"
+    },
+    {
+        passage: `わたしは よく ほんを よみます。1しゅうかんに 2かい ぐらい としょかんへ いきます。すいようびと どようびに いきます。としょかんは しずかで、べんきょうしやすいです。しょうせつや まんがを よみます。ほんを よむことが だいすきです。`,
+        question: "1しゅうかんに なんかい としょかんへ いきますか。",
+        options: ["1かい", "2かい", "3かい", "まいにち"],
+        correct: 1,
+        explanation: "Đi thư viện 2 lần một tuần (1しゅうかんに 2かい ぐらい)"
+    },
+    {
+        passage: `わたしは よく ほんを よみます。1しゅうかんに 2かい ぐらい としょかんへ いきます。すいようびと どようびに いきます。としょかんは しずかで、べんきょうしやすいです。しょうせつや まんがを よみます。ほんを よむことが だいすきです。`,
+        question: "どんな ほんを よみますか。",
+        options: ["ざっしだけ", "しんぶんだけ", "しょうせつや まんが", "きょうかしょだけ"],
+        correct: 2,
+        explanation: "Đọc tiểu thuyết và manga (しょうせつや まんがを よみます)"
+    },
+
+    // Bài 10 - 10 câu
+    {
+        passage: `えきの ちかくに あたらしい カフェが できました。きれいで、おおきい カフェです。まだ いって いません。こんど ともだちと いきたいです。カフェから やまが みえます。コーヒーが おいしいそうです。`,
+        question: "カフェは どこに ありますか。",
+        options: ["がっこうの ちかく", "えきの ちかく", "うちの ちかく", "こうえんの ちかく"],
+        correct: 1,
+        explanation: "Quán cà phê ở gần ga (えきの ちかくに)"
+    },
+    {
+        passage: `えきの ちかくに あたらしい カフェが できました。きれいで、おおきい カフェです。まだ いって いません。こんど ともだちと いきたいです。カフェから やまが みえます。コーヒーが おいしいそうです。`,
+        question: "もう カフェへ いきましたか。",
+        options: ["はい、いきました", "いいえ、まだです", "よく いきます", "きのう いきました"],
+        correct: 1,
+        explanation: "Chưa đi (まだ いって いません)"
+    },
+    {
+        passage: `あした テストが あります。だから、きょうは いえで べんきょうします。としょかんへ いかないで、うちで べんきょうします。テレビを みないで、べんきょうします。ともだちと あそばないで、べんきょうします。がんばります。`,
+        question: "あした なにが ありますか。",
+        options: ["しけん", "テスト", "パーティー", "りょこう"],
+        correct: 1,
+        explanation: "Ngày mai có bài kiểm tra (あした テストが あります)"
+    },
+    {
+        passage: `あした テストが あります。だから、きょうは いえで べんきょうします。としょかんへ いかないで、うちで べんきょうします。テレビを みないで、べんきょうします。ともだちと あそばないで、べんきょうします。がんばります。`,
+        question: "きょう どこで べんきょうしますか。",
+        options: ["としょかん", "がっこう", "いえ", "カフェ"],
+        correct: 2,
+        explanation: "Học ở nhà (いえで べんきょうします)"
+    },
+    {
+        passage: `コンビニへ いって きます。ジュースと おかしを かって きます。10ぷん ぐらいで かえって きます。でんわが あったら、メッセージを おいて ください。`,
+        question: "どこへ いきますか。",
+        options: ["スーパー", "コンビニ", "デパート", "ほんや"],
+        correct: 1,
+        explanation: "Đi cửa hàng tiện lợi (コンビニへ いって きます)"
+    },
+    {
+        passage: `コンビニへ いって きます。ジュースと おかしを かって きます。10ぷん ぐらいで かえって きます。でんわが あったら、メッセージを おいて ください。`,
+        question: "なにを かいますか。",
+        options: ["ほんと ざっし", "ジュースと おかし", "くつと かばん", "さかなと やさい"],
+        correct: 1,
+        explanation: "Mua nước ngọt và kẹo (ジュースと おかしを かって きます)"
+    },
+    {
+        passage: `びじゅつかんで えを みて います。ゆうめいな がかの えです。とても きれいです。しゃしんを とっても いいですか。いいえ、とらないで ください。びじゅつかんの なかで しゃしんを とることが できません。`,
+        question: "どこに いますか。",
+        options: ["としょかん", "びじゅつかん", "こうえん", "がっこう"],
+        correct: 1,
+        explanation: "Đang ở viện bảo tàng mỹ thuật (びじゅつかんで)"
+    },
+    {
+        passage: `びじゅつかんで えを みて います。ゆうめいな がかの えです。とても きれいです。しゃしんを とっても いいですか。いいえ、とらないで ください。びじゅつかんの なかで しゃしんを とることが できません。`,
+        question: "びじゅつかんで しゃしんを とることが できますか。",
+        options: ["はい、できます", "いいえ、できません", "ときどき できます", "わかりません"],
+        correct: 1,
+        explanation: "Không thể chụp ảnh (とることが できません)"
+    },
+    {
+        passage: `にほんごの クラスは 9じに はじまります。まえに コーヒーを のんで、しんぶんを よみます。8じに きょうしつに つきます。ともだちと はなして、じゅぎょうの じゅんびを します。せんせいが きて、じゅぎょうが はじまります。`,
+        question: "なんじに クラスが はじまりますか。",
+        options: ["8じ", "9じ", "10じ", "11じ"],
+        correct: 1,
+        explanation: "Lớp bắt đầu lúc 9 giờ (9じに はじまります)"
+    },
+    {
+        passage: `にほんごの クラスは 9じに はじまります。まえに コーヒーを のんで、しんぶんを よみます。8じに きょうしつに つきます。ともだちと はなして、じゅぎょうの じゅんびを します。せんせいが きて、じゅぎょうが はじまります。`,
+        question: "クラスの まえに なにを しますか。",
+        options: ["ねます", "べんきょうします", "コーヒーを のみます", "りょうりを つくります"],
+        correct: 2,
+        explanation: "Uống cà phê trước lớp (コーヒーを のんで)"
+    },
+
+    // Bài 11 - 10 câu
+    {
+        passage: `わたしは にほんごが すきです。でも、かんじは むずかしいです。まいにち かんじを べんきょうして います。ノートに なんども かきます。かんじの テストは むずかしいですが、がんばります。せんせいは やさしいです。`,
+        question: "なにが むずかしいですか。",
+        options: ["ぶんぽう", "たんご", "かんじ", "かいわ"],
+        correct: 2,
+        explanation: "Kanji khó (かんじは むずかしいです)"
+    },
+    {
+        passage: `わたしは にほんごが すきです。でも、かんじは むずかしいです。まいにち かんじを べんきょうして います。ノートに なんども かきます。かんじの テストは むずかしいですが、がんばります。せんせいは やさしいです。`,
+        question: "どうやって かんじを べんきょうしますか。",
+        options: ["よむだけ", "きくだけ", "ノートに かきます", "なにも しません"],
+        correct: 2,
+        explanation: "Viết vào vở (ノートに なんども かきます)"
+    },
+    {
+        passage: `やすみの ひは いろいろな ことを します。あさ おきて、ジョギングを したり、ヨガを したり します。ひるごはんの あとで、ほんを よんだり、おんがくを きいたり します。よる、ともだちと でんわで はなします。`,
+        question: "あさ なにを しますか。",
+        options: ["ねます", "べんきょうします", "ジョギングや ヨガを します", "りょうりを つくります"],
+        correct: 2,
+        explanation: "Chạy bộ và yoga (ジョギングを したり、ヨガを したり します)"
+    },
+    {
+        passage: `やすみの ひは いろいろな ことを します。あさ おきて、ジョギングを したり、ヨガを したり します。ひるごはんの あとで、ほんを よんだり、おんがくを きいたり します。よる、ともだちと でんわで はなします。`,
+        question: "ひるごはんの あとで なにを しますか。",
+        options: ["ねます", "ほんを よんだり おんがくを きいたり します", "さんぽします", "テレビを みます"],
+        correct: 1,
+        explanation: "Đọc sách và nghe nhạc (ほんを よんだり、おんがくを きいたり します)"
+    },
+    {
+        passage: `さむい とき、あたたかい おちゃを のみます。あつい とき、つめたい ジュースを のみます。つかれた とき、おんがくを ききます。ひまな とき、さんぽします。いそがしい ときも、うんどうします。`,
+        question: "さむい とき、なにを のみますか。",
+        options: ["つめたい ジュース", "あたたかい おちゃ", "ビール", "みず"],
+        correct: 1,
+        explanation: "Uống trà ấm (あたたかい おちゃを のみます)"
+    },
+    {
+        passage: `さむい とき、あたたかい おちゃを のみます。あつい とき、つめたい ジュースを のみます。つかれた とき、おんがくを ききます。ひまな とき、さんぽします。いそがしい ときも、うんどうします。`,
+        question: "つかれた とき、なにを しますか。",
+        options: ["ねます", "おんがくを ききます", "べんきょうします", "りょうりします"],
+        correct: 1,
+        explanation: "Nghe nhạc (おんがくを ききます)"
+    },
+    {
+        passage: `らいしゅう テストが あります。どうしますか。まず、きょうかしょを よみます。それから、もんだいしゅうを します。わからない ことが あったら、せんせいに ききます。テストの まえの ひは、はやく ねます。`,
+        question: "テストは いつ ありますか。",
+        options: ["きょう", "あした", "らいしゅう", "らいげつ"],
+        correct: 2,
+        explanation: "Tuần sau có kiểm tra (らいしゅう テストが あります)"
+    },
+    {
+        passage: `らいしゅう テストが あります。どうしますか。まず、きょうかしょを よみます。それから、もんだいしゅうを します。わからない ことが あったら、せんせいに ききます。テストの まえの ひは、はやく ねます。`,
+        question: "わからない とき、どうしますか。",
+        options: ["なにも しません", "ともだちに ききます", "せんせいに ききます", "あきらめます"],
+        correct: 2,
+        explanation: "Hỏi giáo viên (せんせいに ききます)"
+    },
+    {
+        passage: `わたしは まいあさ 6じに おきます。あには 7じに おきます。ちちは 5じに おきます。ははは 6じはんに おきます。ちちが いちばん はやく おきます。ちちは まいあさ うんどうします。げんきです。`,
+        question: "だれが いちばん はやく おきますか。",
+        options: ["わたし", "あに", "ちち", "はは"],
+        correct: 2,
+        explanation: "Bố dậy sớm nhất (ちちが いちばん はやく おきます)"
+    },
+    {
+        passage: `わたしは まいあさ 6じに おきます。あには 7じに おきます。ちちは 5じに おきます。ははは 6じはんに おきます。ちちが いちばん はやく おきます。ちちは まいあさ うんどうします。げんきです。`,
+        question: "ちちは まいあさ なにを しますか。",
+        options: ["ねます", "べんきょうします", "うんどうします", "テレビを みます"],
+        correct: 2,
+        explanation: "Tập thể dục (うんどうします)"
+    }
+];
+
+function startReadingQuiz() {
+    quizData = [...readingQuizData];
+    currentQuizIndex = 0;
+    quizScore = 0;
+    selectedAnswer = null;
+    userAnswers = [];
+    
+    document.querySelector('.grammar-item').style.display = 'none';
+    document.getElementById('quizArea').style.display = 'block';
+    document.getElementById('quizResult').style.display = 'none';
+    
+    showQuizQuestion();
+}
+
+function showQuizQuestion() {
+    const question = quizData[currentQuizIndex];
+    
+    document.getElementById('currentQuestion').textContent = `Câu ${currentQuizIndex + 1}/42`;
+    document.getElementById('quizScore').textContent = `Điểm: ${quizScore}`;
+    document.getElementById('progressFill').style.width = `${((currentQuizIndex) / 42) * 100}%`;
+    
+    document.getElementById('passageText').textContent = question.passage;
+    document.getElementById('questionText').textContent = question.question;
+    
+    const optionsHtml = question.options.map((opt, i) => 
+        `<div class="quiz-option" onclick="selectQuizAnswer(${i})">${opt}</div>`
+    ).join('');
+    
+    document.getElementById('quizOptions').innerHTML = optionsHtml;
+    document.getElementById('answerFeedback').style.display = 'none';
+    document.getElementById('submitAnswer').style.display = 'inline-block';
+    document.getElementById('nextQuestion').style.display = 'none';
+    
+    selectedAnswer = null;
+}
+
+function selectQuizAnswer(index) {
+    if (selectedAnswer !== null) return;
+    
+    const options = document.querySelectorAll('.quiz-option');
+    options.forEach(opt => opt.classList.remove('selected'));
+    options[index].classList.add('selected');
+    selectedAnswer = index;
+}
+
+function submitQuizAnswer() {
+    if (selectedAnswer === null) {
+        alert('Vui lòng chọn một đáp án!');
+        return;
+    }
+    
+    const question = quizData[currentQuizIndex];
+    const options = document.querySelectorAll('.quiz-option');
+    const isCorrect = selectedAnswer === question.correct;
+    
+    if (isCorrect) {
+        quizScore++;
+        options[selectedAnswer].classList.add('correct');
+        document.getElementById('answerFeedback').className = 'answer-feedback correct';
+        document.getElementById('answerFeedback').innerHTML = `✓ Đúng rồi!<br>${question.explanation}`;
+    } else {
+        options[selectedAnswer].classList.add('incorrect');
+        options[question.correct].classList.add('correct');
+        document.getElementById('answerFeedback').className = 'answer-feedback incorrect';
+        document.getElementById('answerFeedback').innerHTML = `✗ Sai rồi!<br>Đáp án đúng: ${question.options[question.correct]}<br>${question.explanation}`;
+    }
+    
+    userAnswers.push({
+        question: question.question,
+        passage: question.passage,
+        userAnswer: question.options[selectedAnswer],
+        correctAnswer: question.options[question.correct],
+        isCorrect: isCorrect
+    });
+    
+    options.forEach(opt => opt.classList.add('disabled'));
+    document.getElementById('answerFeedback').style.display = 'block';
+    document.getElementById('submitAnswer').style.display = 'none';
+    document.getElementById('nextQuestion').style.display = 'inline-block';
+}
+
+function nextQuizQuestion() {
+    currentQuizIndex++;
+    
+    if (currentQuizIndex < quizData.length) {
+        showQuizQuestion();
+    } else {
+        showQuizResult();
+    }
+}
+
+function showQuizResult() {
+    document.getElementById('quizArea').style.display = 'none';
+    document.getElementById('quizResult').style.display = 'block';
+    
+    const percentage = Math.round((quizScore / 42) * 100);
+    document.getElementById('finalScore').textContent = `${quizScore}/42`;
+    document.getElementById('finalPercentage').textContent = `${percentage}%`;
+    
+    let detailsHtml = '';
+    userAnswers.forEach((ans, i) => {
+        detailsHtml += `
+            <div class="result-item ${ans.isCorrect ? 'correct' : 'incorrect'}">
+                <div class="result-question"><strong>Câu ${i + 1}:</strong> ${ans.question}</div>
+                ${!ans.isCorrect ? `<div class="result-answer your-answer">Bạn chọn: ${ans.userAnswer}</div>` : ''}
+                <div class="result-answer correct-answer">Đáp án đúng: ${ans.correctAnswer}</div>
+            </div>
+        `;
+    });
+    
+    document.getElementById('resultDetails').innerHTML = detailsHtml;
 }

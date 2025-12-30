@@ -3,106 +3,2898 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bảng Báo Giá Tự Động</title>
+    <title>Ngữ Pháp Tiếng Nhật</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="wrapper">
-        <div class="controls">
-            <button onclick="addRow()" class="add-btn">Thêm Hàng</button>
-            <button onclick="printTable()" class="print-btn">In</button>
-            <button onclick="clearTable()" class="delete-btn">Xóa Tất Cả</button>
-            <button onclick="showHelp()" class="help-btn">Cách sử dụng</button>
-        </div>
-        
-        <div class="container">
-            <div class="editable-header">
-                <input type="text" id="companyName" placeholder="Tên công ty" value="CTY TNHH TRƯỜNG GIANG WINDOWS">
-                <input type="text" id="companyTax" placeholder="MST" value="MST:1702262181">
-                <input type="text" id="companyAddress" placeholder="Địa chỉ" value="Đ/C: P45, căn 19, khu đô thị Phú Cường, phường An Hoà, TP.Rạch Giá, Kiên Giang">
-                <input type="text" id="companyPhone" placeholder="SĐT" value="SĐT: 0919808309">
-            </div>
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
-            <div class="header">
-                <div class="title">BẢNG BÁO GIÁ</div>
-                <div class="subtitle">
-                    <span>Kính gửi quý khách hàng: <input type="text" id="customerName" placeholder="Nhập tên" value="" style="border: none; border-bottom: 1px solid #000; padding: 2px 5px; min-width: 150px; background: transparent; font-style: italic; font-size: 16px;"></span>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>MENU</h2>
+            <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Bài Học</div>
+                <button class="tab-button active" onclick="switchTab(event, 'lesson8')"><span>Bài 8</span></button>
+                <button class="tab-button" onclick="switchTab(event, 'lesson9')"><span>Bài 9</span></button>
+                <button class="tab-button" onclick="switchTab(event, 'lesson10')"><span>Bài 10</span></button>
+                <button class="tab-button" onclick="switchTab(event, 'lesson11')"><span>Bài 11</span></button>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Kanji</div>
+                <button class="tab-button" onclick="switchTab(event, 'kanji8')"><span>Kanji Bài 8</span></button>
+                <button class="tab-button" onclick="switchTab(event, 'kanji9')"><span>Kanji Bài 9</span></button>
+                <button class="tab-button" onclick="switchTab(event, 'kanji10')"><span>Kanji Bài 10</span></button>
+                <button class="tab-button" onclick="switchTab(event, 'kanji11')"><span>Kanji Bài 11</span></button>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Bảng Chữ</div>
+                <button class="tab-button" onclick="switchTab(event, 'hiragana')"><span>Hiragana</span></button>
+                <button class="tab-button" onclick="switchTab(event, 'katakana')"><span>Katakana</span></button>
+            </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Luyện Tập</div>
+                <button class="tab-button" onclick="switchTab(event, 'aireading')"><span>AI Đọc Hiểu</span></button>
+                <button class="tab-button" onclick="switchTab(event, 'kanjitest')"><span>Test Kanji</span></button>
+                <button class="tab-button" onclick="switchTab(event, 'readingquiz')"><span>Quiz FE</span></button>
+            </div>
+            <div class="nav-section">
+                <button class="tab-button" onclick="switchTab(event, 'settings')"><span>Settings</span></button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <header>
+            <h1>Ngữ Pháp Tiếng Nhật</h1>
+            <p>Học ngữ pháp tiếng Nhật một cách dễ dàng và hiệu quả</p>
+        </header>
+
+        <div class="container">
+
+        <!-- Bài 8 Content -->
+        <div id="lesson8" class="tab-content active">
+            <div class="grammar-section">
+                <h2>Ngữ Pháp Bài 8</h2>
+                
+                <div class="grammar-item">
+                    <div class="grammar-title">Sống ở... / Nơi sinh sống</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: [Địa điểm] に すんでいます</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Sống ở...</div>
+                            <div class="tooltip-romaji">[Địa điểm] ni sundeimasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Nói về nơi mình đang sinh sống, cư trú</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Sống với ai, mấy người / Người sống chung</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: [Người] と [Số người] で すんでいます</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Sống với ai, mấy người</div>
+                            <div class="tooltip-romaji">[Người] to [Số người] de sundeimasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Nói về việc sống cùng ai, số người trong gia đình</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Có người/thú + số lượng / Giới thiệu gia đình, bạn bè, thú cưng</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: [Người/Thú] が [Số lượng] います</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Có người/thú</div>
+                            <div class="tooltip-romaji">[Người/Thú] ga [Số lượng] imasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Nói về số lượng thành viên trong gia đình, thú cưng, hoặc giới thiệu về người khác</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Diễn tả một hành động diễn ra liên tục, kéo dài</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: [Địa điểm] で [Động từ thể て] います</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Đang làm nghề... / Đang học ở... / Đang làm việc ở...</div>
+                            <div class="tooltip-romaji">[Địa điểm] de [Động từ thể te] imasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>• Đang làm nghề…</p>
+                        <p>• Đang học ở…</p>
+                        <p>• Đang làm việc ở…</p>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Cấu trúc:</div>
+                        <p>［Danh từ chỉ địa điểm］で　［Động từ thể て］います</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Và…, nối ý (tính từ đuôi い)</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: [Tính từ đuôi い]くて、～</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Và…, nối ý (tính từ đuôi い)</div>
+                            <div class="tooltip-romaji">[Tính từ i]kute, ~</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">Dùng để:</div>
+                        <p>Miêu tả 2 đặc điểm ngoại hình/tính cách</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Và…, nối ý (tính từ đuôi な)</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: [Tính từ đuôi な]で、～</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Và…, nối ý (tính từ đuôi な)</div>
+                            <div class="tooltip-romaji">[Tính từ na]de, ~</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">Dùng để:</div>
+                        <p>Miêu tả tính cách, đặc điểm</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Và…, nối danh từ</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: [Danh từ] で、～</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Và…, nối danh từ</div>
+                            <div class="tooltip-romaji">[Danh từ] de, ~</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">Dùng để:</div>
+                        <p>Nói nghề nghiệp, trạng thái + thêm thông tin</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Người đó như thế nào?</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: どんな人ですか</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Người đó như thế nào?</div>
+                            <div class="tooltip-romaji">donna hito desu ka</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">Dùng để:</div>
+                        <p>Hỏi đặc điểm ngoại hình / tính cách</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Là người… và…</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: [Tính từ]くて / [Tính từ]で + 人です</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Là người… và…</div>
+                            <div class="tooltip-romaji">[Tính từ]kute / [Tính từ]de + hito desu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">Dùng để:</div>
+                        <p>Trả lời mô tả người</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Nối tính từ đặc biệt</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: よくて、～</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Nối tính từ đặc biệt</div>
+                            <div class="tooltip-romaji">yokute, ~</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">Dùng để:</div>
+                        <p>Dùng khi nối tính từ "いい"</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Cho/tặng (Người A → Người B)</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: Aは Bに Nを あげます</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Cho/tặng</div>
+                            <div class="tooltip-romaji">A wa B ni N wo agemasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">Cấu trúc:</div>
+                        <p>Cho/tặng từ A đến B</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Nhận (Tôi hoặc A nhận từ B)</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: 私/Aは Bに Nを もらいました</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Nhận</div>
+                            <div class="tooltip-romaji">watashi/A wa B ni N wo moraimashita</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Cấu trúc:</div>
+                        <p>Nhận từ người khác</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Ai tặng tôi (B → Tôi)</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: Bが（私に）Nを くれました</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Ai tặng tôi</div>
+                            <div class="tooltip-romaji">B ga (watashi ni) N wo kuremashita</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Cấu trúc:</div>
+                        <p>Người khác cho/tặng tôi</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Mô tả người bằng tính từ</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: N（người）は　Aい / Aな　です</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Miêu tả tính cách, đặc điểm</div>
+                            <div class="tooltip-romaji">N (hito) wa A-i / A-na desu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Miêu tả tính cách, đặc điểm của người</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">かみが ながい です。</div>
+                        <div class="meaning">→ Tóc dài</div>
+                        <div class="japanese-text">めが おおきい です。</div>
+                        <div class="meaning">→ Mắt to</div>
+                        <div class="japanese-text">やさしい です。</div>
+                        <div class="meaning">→ Hiền lành</div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Kết hợp nhiều đặc điểm:</div>
+                        <p>• N は A くて、A です。(Tính từ -i)</p>
+                        <p>• N は A で、A です。(Tính từ -na)</p>
+                        <div class="japanese-text">かみが みじかくて、めが おおきい です。</div>
+                        <div class="japanese-text">しずかで、やさしい ひと です。</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Hỏi số lượng, nơi ở của gia đình</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: ご家族は 何人ですか</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Gia đình bạn có mấy người?</div>
+                            <div class="tooltip-romaji">go-kazoku wa nan-nin desu ka</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: ～に 住んでいます</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Sống ở ~</div>
+                            <div class="tooltip-romaji">~ ni sundeimasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">家族は 4人 です。</div>
+                        <div class="meaning">Gia đình có 4 người.</div>
+                        <div class="japanese-text">ホーチミンに 住んでいます。</div>
+                        <div class="meaning">Sống ở Hồ Chí Minh.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Hỏi "ai là người quan trọng"</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: 大切な人は だれですか</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Người quan trọng của bạn là ai?</div>
+                            <div class="tooltip-romaji">taisetsu na hito wa dare desu ka</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: どんな人ですか</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Là người như thế nào?</div>
+                            <div class="tooltip-romaji">donna hito desu ka</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Hỏi về người quan trọng và đặc điểm của họ</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Mẫu câu về tặng – nhận quà</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: N1 は N2 に N3 を もらいました</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">N1 nhận N3 từ N2</div>
+                            <div class="tooltip-romaji">N1 wa N2 ni N3 wo moraimashita</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Nhận quà:</div>
+                        <p>N1 は N2 に N3 を もらいました。→ N1 nhận N3 từ N2.</p>
+                    </div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: N1 は N2 に N3 を あげます</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">N1 tặng N3 cho N2</div>
+                            <div class="tooltip-romaji">N1 wa N2 ni N3 wo agemasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Tặng quà:</div>
+                        <p>N1 は N2 に N3 を あげます。→ N1 tặng N3 cho N2.</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">パクさんは　だれに　かばんを もらいましたか。</div>
+                        <div class="meaning">(Anh Park nhận cặp từ ai?)</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Hỏi – đáp khi tư vấn quà tặng</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: プレゼントは 何が いいですか</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Món quà nào thì tốt?</div>
+                            <div class="tooltip-romaji">purezento wa nani ga ii desu ka</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: ～は どうですか</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">… thì sao?</div>
+                            <div class="tooltip-romaji">~ wa dou desu ka</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: いいと思います</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Tôi nghĩ là tốt</div>
+                            <div class="tooltip-romaji">ii to omoimasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Hỏi và tư vấn về quà tặng phù hợp</p>
+                    </div>
                 </div>
             </div>
+        </div>
 
-        <table id="priceTable">
-            <thead>
-                <tr>
-                    <th style="width: 50px;">STT</th>
-                    <th style="width: 250px;">Tên Hàng</th>
-                    <th style="width: 180px;">Kích Thước</th>
-                    <th style="width: 120px;">Số Lượng</th>
-                    <th style="width: 120px;">Đơn Giá</th>
-                    <th style="width: 140px;">Thành Tiền</th>
-                    <th style="width: 100px;" class="no-print">Thao Tác</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <!-- Rows will be added here -->
-            </tbody>
-            <tfoot>
-                <tr class="total-row">
-                    <td colspan="2">Tổng Cộng</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td id="grandTotal">0</td>
-                    <td class="no-print"></td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
+        <!-- Bài 9 Content -->
+        <div id="lesson9" class="tab-content">
+            <div class="grammar-section">
+                <h2>Ngữ Pháp Bài 9</h2>
+                
+                <div class="grammar-item">
+                    <div class="grammar-title">Động từ thể từ điển（辞書形 / Vる）</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Nhóm 1 (五段動詞 – nhóm u):</div>
+                        <p>Động từ kết thúc bằng: …ます → …う / …る / …く / …ぐ / …む / …ぶ / …す / …つ / …ぬ</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ Nhóm 1:</div>
+                        <div class="japanese-text">あいます → あう</div>
+                        <div class="japanese-text">たちます → たつ</div>
+                        <div class="japanese-text">のみます → のむ</div>
+                        <div class="japanese-text">ききます → きく</div>
+                        <div class="japanese-text">およぎます → およぐ</div>
+                        <div class="japanese-text">はなします → はなす</div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Nhóm 2 (一段動詞 – nhóm ru):</div>
+                        <p>Động từ kết thúc bằng: …ます → …る</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ Nhóm 2:</div>
+                        <div class="japanese-text">たべます → たべる</div>
+                        <div class="japanese-text">みます → みる</div>
+                        <div class="japanese-text">あつめます → あつめる</div>
+                        <div class="japanese-text">かります → かりる</div>
+                        <div class="japanese-text">おきます → おきる</div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Nhóm 3 – Bất quy tắc:</div>
+                        <div class="japanese-text">します → する</div>
+                        <div class="japanese-text">べんきょうします → べんきょうする</div>
+                        <div class="japanese-text">そうじします → そうじする</div>
+                        <div class="japanese-text">きます → くる</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Cấu trúc diễn tả sở thích: ～ Vることです</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: A の しゅみは Vることです</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Sở thích của A là (làm gì)</div>
+                            <div class="tooltip-romaji">A no shumi wa V-ru koto desu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">しゅみは　本をよむことです。</div>
+                        <div class="meaning">→ Sở thích của tôi là đọc sách.</div>
+                        <div class="japanese-text">しゅみは　テニスをすることです。</div>
+                        <div class="meaning">→ Sở thích của tôi là chơi tennis.</div>
+                        <div class="japanese-text">しゅみは　えをみることです。</div>
+                        <div class="meaning">→ Sở thích của tôi là xem tranh.</div>
+                    </div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Hỏi sở thích: しゅみは何ですか</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Sở thích của bạn là gì?</div>
+                            <div class="tooltip-romaji">shumi wa nan desu ka</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Hỏi – đáp về sở thích</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Mẫu hội thoại:</div>
+                        <p>N：＿＿の ＿＿ は 何ですか。</p>
+                        <p>M：＿＿ は ＿＿ を Vることです。</p>
+                        <p>N：だれの＿＿が好きですか。</p>
+                        <p>M：＿＿の＿＿が好きです。</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">A：メアリーさんのしゅみは何ですか。</div>
+                        <div class="japanese-text">B：えを見ることです。</div>
+                        <div class="japanese-text">A：だれのえが好きですか。</div>
+                        <div class="japanese-text">B：ピカソのえが好きです。</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Từ vựng sử dụng trong chủ đề sở thích</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Từ quan trọng:</div>
+                        <p>えいが（映画）– phim</p>
+                        <p>しょうせつ – tiểu thuyết</p>
+                        <p>まんが – truyện tranh</p>
+                        <p>プール – hồ bơi</p>
+                        <p>およぎます – bơi</p>
+                        <p>つり – câu cá</p>
+                        <p>ギターをひきます – chơi guitar</p>
+                        <p>りょうり – nấu ăn</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Tần suất với trạng từ chỉ mức độ</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Trạng từ tần suất:</div>
+                        <p>いつも – luôn luôn (V肯定)</p>
+                        <p>よく – thường (V肯定)</p>
+                        <p>ときどき – thỉnh thoảng (V肯定)</p>
+                        <p>あまり – không…lắm (V否定)</p>
+                        <p>ぜんぜん – hoàn toàn không (V否定)</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">よくサッカーをします。</div>
+                        <div class="meaning">Thường chơi bóng đá.</div>
+                        <div class="japanese-text">あまりサッカーをしません。</div>
+                        <div class="meaning">Không chơi bóng đá lắm.</div>
+                        <div class="japanese-text">ぜんぜん しません。</div>
+                        <div class="meaning">Hoàn toàn không làm.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Mẫu câu rủ rê</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: いっしょに ～ませんか</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Cùng làm … nhé?</div>
+                            <div class="tooltip-romaji">issho ni ~ masen ka</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Trả lời:</div>
+                        <p>いいですね。しましょう。→ Tốt đấy. Cùng làm nhé.</p>
+                        <p>すみません、ちょっと…… → (từ chối lịch sự)</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Diễn tả tần suất số lần: ～に～かい～ます</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: [Khoảng thời gian] に [Số lần] Vます</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Số lần trong một khoảng thời gian</div>
+                            <div class="tooltip-romaji">[khoảng thời gian] ni [số lần] V-masu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Cấu trúc:</div>
+                        <p>➡️ Khoảng thời gian + に + số lần + Vます。</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">いっしゅうかんに ２かい えいがを見ます。</div>
+                        <div class="meaning">Một tuần xem phim 2 lần.</div>
+                        <div class="japanese-text">一週間に 3 回 日本語をべんきょうします。</div>
+                        <div class="meaning">Một tuần học tiếng Nhật 3 lần.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Liệt kê hành động theo trình tự: ～ Vて、Vて、…</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: Vて、Vて、…Vました</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Kể lại các hành động theo thứ tự trong quá khứ</div>
+                            <div class="tooltip-romaji">V-te, V-te, ... V-mashita</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Lưu ý:</div>
+                        <p>• Thì, thể phụ thuộc động từ cuối cùng của câu.</p>
+                        <p>• Có thể thêm 「それから」 để nối ý: Vて、Vて、それから Vました。</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">かいものを して、しょくじ して、コンサートに 行きました。</div>
+                        <div class="meaning">→ Tôi mua sắm, rồi ăn uống, rồi đi concert.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Hỏi – đáp về hoạt động cuối tuần</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Hỏi: しゅうまつ、何をしましたか</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Cuối tuần bạn đã làm gì?</div>
+                            <div class="tooltip-romaji">shuumatsu, nani wo shimashita ka</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Trả lời:</div>
+                        <p>Vて、Vて、…Vました。(Liệt kê các hành động theo thứ tự)</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Cách hỏi làm thế nào: どうやって ～ Vますか</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: どうやって + N を + Vますか</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Làm thế nào để...?</div>
+                            <div class="tooltip-romaji">douyatte + N wo + V-masu ka</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Hỏi cách làm / phương pháp thực hiện</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">どうやって チケットを 買いますか。</div>
+                        <div class="meaning">→ Làm thế nào để mua vé?</div>
+                        <div class="japanese-text">インターネットで よやく して、コンビニで お金を はらい ます。</div>
+                        <div class="meaning">→ Đặt trên internet rồi trả tiền ở combini.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Mẫu kết hợp: どうやって ～ Vて、～Vます</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: Nơi/Phương tiện + で + Vて、Nơi/Phương tiện + で + Vます</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Trả lời câu hỏi "làm thế nào"</div>
+                            <div class="tooltip-romaji">Nơi/Phương tiện + de + V-te, Nơi/Phương tiện + de + V-masu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">インターネットで よやく して、コンビニで はらい ます。</div>
+                        <div class="meaning">→ Đặt trên mạng rồi trả tiền tại combini.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Nói về "có thể làm gì" – ～ができます</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: N が できます</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Có thể làm N</div>
+                            <div class="tooltip-romaji">N ga dekimasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: Vること が できます</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Có thể làm V</div>
+                            <div class="tooltip-romaji">V-ru koto ga dekimasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Nói khả năng, năng lực, có thể làm gì</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">日本語が できます。</div>
+                        <div class="meaning">Có thể làm/nói được tiếng Nhật.</div>
+                        <div class="japanese-text">ギターを ひくことが できます。</div>
+                        <div class="meaning">Có thể chơi guitar.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Từ vựng liên quan đến hướng dẫn/ thủ tục</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Từ quan trọng:</div>
+                        <p>受付（うけつけ）– quầy tiếp tân</p>
+                        <p>図書館のカード – thẻ thư viện</p>
+                        <p>がいこくじんとうろくしょう – thẻ lưu trú</p>
+                        <p>住所（じゅうしょ）– địa chỉ</p>
+                        <p>見せます – cho xem</p>
+                        <p>はらいます – trả tiền</p>
+                        <p>よやくします – đặt (vé, chỗ…)</p>
+                        <p>パスポートを見せます – đưa passport</p>
+                        <p>でんわばんごう – số điện thoại</p>
+                        <p>バスの16ばん – xe buýt số 16</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bài 10 Content -->
+        <div id="lesson10" class="tab-content">
+            <div class="grammar-section">
+                <h2>Ngữ Pháp Bài 10</h2>
+                
+                <div class="grammar-item">
+                    <div class="grammar-title">Vẫn chưa: まだ～Vていません</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: まだ Vていません</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Vẫn chưa …</div>
+                            <div class="tooltip-romaji">mada V-te imasen</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Nói một hành động cho đến bây giờ vẫn chưa xảy ra</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">まだ 来ていません。</div>
+                        <div class="meaning">→ Vẫn chưa đến.</div>
+                        <div class="japanese-text">まだ 飲んでいません。</div>
+                        <div class="meaning">→ Vẫn chưa uống.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Đi làm gì rồi quay lại: ～Vてきます</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: Vてきます</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Đi làm gì rồi quay lại</div>
+                            <div class="tooltip-romaji">V-te kimasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Rời chỗ hiện tại, đi làm một việc rồi quay trở lại ngay</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">ちょっと さがしてきます。</div>
+                        <div class="meaning">→ Tôi đi tìm rồi quay lại.</div>
+                        <div class="japanese-text">トイレへ行ってきます。</div>
+                        <div class="meaning">→ Tôi đi vệ sinh rồi quay lại.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Nhìn thấy / nghe thấy: ～が見えます / ～が聞こえます</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 So sánh:</div>
+                        <p>見ます (nhìn - chủ động) → 見えます (nhìn thấy - tự nhiên)</p>
+                        <p>聞きます (nghe - chủ động) → 聞こえます (nghe thấy - tự nhiên)</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">銀行が見えます。</div>
+                        <div class="meaning">→ Nhìn thấy ngân hàng.</div>
+                        <div class="japanese-text">こえが聞こえます。</div>
+                        <div class="meaning">→ Nghe thấy giọng nói.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Di chuyển qua nơi nào đó: N（場所）を Vます</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: N（場所）を Vます</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Di chuyển qua / rẽ tại nơi nào đó</div>
+                            <div class="tooltip-romaji">N (basho) wo V-masu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">はしを わたります。</div>
+                        <div class="meaning">→ Băng qua cầu.</div>
+                        <div class="japanese-text">こうさてんを 右に まがります。</div>
+                        <div class="meaning">→ Rẽ phải ở ngã tư.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Xin phép: ～Vてもいいですか</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: Vてもいいですか</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Tôi… có được không?</div>
+                            <div class="tooltip-romaji">V-te mo ii desu ka</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Trả lời:</div>
+                        <p>はい、どうぞ。→ Vâng, cứ tự nhiên.</p>
+                        <p>すみません、ちょっと…。→ Xin lỗi, không được.</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">ここに すわってもいいですか。</div>
+                        <div class="meaning">→ Tôi ngồi đây được không?</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Xin đừng: ～Vないでください</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: Vないでください</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Xin đừng…</div>
+                            <div class="tooltip-romaji">V-nai de kudasai</div>
+                        </div>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">ここで すわないでください。</div>
+                        <div class="meaning">→ Xin đừng ngồi ở đây.</div>
+                        <div class="japanese-text">ゴミをすてないでください。</div>
+                        <div class="meaning">→ Xin đừng vứt rác.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Cách chia động từ thể ない（Vない）</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Nhóm 1:</div>
+                        <p>Đổi hàng i → a + ない</p>
+                        <div class="japanese-text">のみます → のまない</div>
+                        <div class="japanese-text">よびます → よばない</div>
+                        <div class="japanese-text">はなします → はなさない</div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Nhóm 2:</div>
+                        <p>Bỏ ます + ない</p>
+                        <div class="japanese-text">たべます → たべない</div>
+                        <div class="japanese-text">みます → みない</div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Nhóm 3:</div>
+                        <div class="japanese-text">します → しない</div>
+                        <div class="japanese-text">来ます（きます）→ こない</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Nêu chủ đề nhấn mạnh: ～は ～</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Đưa sự vật/sự việc lên chủ đề để đối chiếu</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">ごみは あそこに すててください。</div>
+                        <div class="meaning">→ Rác thì hãy vứt ở đằng kia.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Phát hiện hành động đang diễn ra: ～が ～Vています</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: ～が ～Vています</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">A đang B kìa</div>
+                            <div class="tooltip-romaji">~ ga ~ V-te imasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Dùng が để diễn tả sự phát hiện</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">サルがバナナを食べていますよ。</div>
+                        <div class="meaning">→ Con khỉ đang ăn chuối kìa.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Có thể làm / có dịch vụ: ～Vることができます</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: Vることができます</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Có thể làm / Có dịch vụ</div>
+                            <div class="tooltip-romaji">V-ru koto ga dekimasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Nghĩa 1:</div>
+                        <p>Có thể làm việc gì đó</p>
+                        <div class="japanese-text">日本語が 話すことができます。</div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Nghĩa 2:</div>
+                        <p>Nơi nào đó có dịch vụ, điều kiện để làm …</p>
+                        <div class="japanese-text">ここで チケットを 買うことができます。</div>
+                        <div class="meaning">→ Ở đây có thể mua vé.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Trở nên / trở thành: ～なります</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Aい → Aく なります:</div>
+                        <div class="japanese-text">さむい → さむくなります（Trở nên lạnh）</div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Aな → Aに なります:</div>
+                        <div class="japanese-text">きれい → きれいになります（Trở nên đẹp）</div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 N → Nに なります:</div>
+                        <div class="japanese-text">いしゃ → いしゃになります（Trở thành bác sĩ）</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bài 11 Content -->
+        <div id="lesson11" class="tab-content">
+            <div class="grammar-section">
+                <h2>Ngữ Pháp Bài 11</h2>
+                
+                <div class="grammar-item">
+                    <div class="grammar-title">Mẫu câu đối lập: ～は～が、～は～</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: ～は～が、～は～</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">So sánh 2 vế, thể hiện ý tương phản</div>
+                            <div class="tooltip-romaji">~ wa ~ ga, ~ wa ~</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Cách đổi trợ từ:</div>
+                        <p>を→は / が→は / へ→へは / に→には / で→では / と→とは</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">日本語はできますが、韓国語はできません。</div>
+                        <div class="meaning">Tiếng Nhật thì có thể, nhưng tiếng Hàn thì không.</div>
+                        <div class="japanese-text">ピアノはできますが、ギターはできません。</div>
+                        <div class="meaning">Piano thì có thể, nhưng guitar thì không.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Thì tiếp diễn – diễn tả thói quen: ～Vています</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: ～Vています</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Hành động diễn ra thường xuyên / thói quen</div>
+                            <div class="tooltip-romaji">~ V-te imasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Nói hành động diễn ra thường xuyên / thói quen</p>
+                        <p>Đi kèm: 毎日、いつも、よく…</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">午後はいつもインタネットをしています。</div>
+                        <div class="meaning">Buổi chiều luôn luôn lên mạng.</div>
+                        <div class="japanese-text">毎週火曜日と木曜日はアルバイトをしています。</div>
+                        <div class="meaning">Mỗi tuần thứ 3 và thứ 5 làm thêm.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Liệt kê không thứ tự: ～Vたり、～Vたりします</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: ～Vたり、～Vたりします</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Lúc thì… lúc thì…</div>
+                            <div class="tooltip-romaji">~ V-tari, ~ V-tari shimasu</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Lúc thì… lúc thì… (không quan trọng thứ tự)</p>
+                        <p>Động từ chia thể た</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">音楽を聞いたり、テレビを見たりします。</div>
+                        <div class="meaning">Lúc thì nghe nhạc, lúc thì xem TV.</div>
+                        <div class="japanese-text">そうじしたり、せんたくしたりしています。</div>
+                        <div class="meaning">Lúc thì dọn dẹp, lúc thì giặt giũ.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Diễn tả "khi…" với とき: ～とき、～</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng với danh từ:</div>
+                        <p>N のとき</p>
+                        <div class="japanese-text">ひまなとき、本を読みます。</div>
+                        <div class="meaning">→ Khi rảnh, đọc sách.</div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng với tính từ:</div>
+                        <p>Aい とき / Aな とき</p>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng với động từ:</div>
+                        <p>Vる とき / Vない とき / Vた とき / Vなかった とき</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">天気がいいとき、サッカーをします。</div>
+                        <div class="meaning">Khi thời tiết tốt, chơi bóng đá.</div>
+                        <div class="japanese-text">頭がいたいとき、薬を飲みます。</div>
+                        <div class="meaning">Khi đau đầu, uống thuốc.</div>
+                        <div class="japanese-text">ご飯を食べるとき、はしを使います。</div>
+                        <div class="meaning">Khi ăn cơm, dùng đũa.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Hỏi "Khi ~ thì bạn làm gì?": ～とき、どうしますか</div>
+                    
+                    <div class="grammar-pattern">
+                        <div class="japanese-text">Mẫu câu: ～とき、どうしますか</div>
+                        <div class="tooltip">
+                            <div class="tooltip-meaning">Khi ~ thì bạn làm gì?</div>
+                            <div class="tooltip-romaji">~ toki, dou shimasu ka</div>
+                        </div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Dùng để:</div>
+                        <p>Hỏi cách xử lý một tình huống</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">ねることができないとき、どうしますか。</div>
+                        <div class="meaning">Khi không ngủ được, bạn làm gì?</div>
+                        <div class="japanese-text">→ あたたかいぎゅうにゅうを飲みます。</div>
+                        <div class="meaning">→ Uống sữa ấm.</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Sử dụng thể thường (普通形) trong hội thoại bạn bè</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Động từ:</div>
+                        <div class="japanese-text">する → する／しない／した</div>
+                        <div class="japanese-text">食べる → 食べる／食べない／食べた</div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Cách hỏi thể thường:</div>
+                        <p>Vる？ / Vた？ / Vない？</p>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Trả lời:</div>
+                        <p>うん、する。 ／ ううん、しない。</p>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Lưu ý:</div>
+                        <p>Thể thường dùng khi nói chuyện thân mật</p>
+                        <p>Cần phân biệt lịch sự – thông thường</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Chia tính từ thể thường</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Aい:</div>
+                        <div class="japanese-text">おいしい → おいしい／おいしくない／おいしかった／おいしくなかった</div>
+                    </div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Aな:</div>
+                        <div class="japanese-text">しずか → しずか(だ)／しずかじゃない／しずかだった／しずかじゃなかった</div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Rút gọn trong hội thoại thân mật</div>
+                    
+                    <div class="note">
+                        <div class="note-title">📝 Cách dùng trong thể thường:</div>
+                        <p>Vたい → Vたい</p>
+                        <p>Vませんか → Vない？</p>
+                        <p>Vてください → Vて</p>
+                        <p>Vないでください → Vないで</p>
+                        <p>Vてもいいですか → Vてもいい？</p>
+                    </div>
+                    
+                    <div class="example">
+                        <div class="example-title">Ví dụ:</div>
+                        <div class="japanese-text">行かない？</div>
+                        <div class="meaning">Đi không?</div>
+                        <div class="japanese-text">見せて。</div>
+                        <div class="meaning">Cho xem.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Katakana Chart -->
+        <div id="katakana" class="tab-content">
+            <div class="grammar-section">
+                <h2>カタカナ表 - Bảng Katakana</h2>
+                
+                <div class="kana-table">
+                    <table>
+                        <tr>
+                            <th>あ</th>
+                            <th>か</th>
+                            <th>さ</th>
+                            <th>た</th>
+                            <th>な</th>
+                            <th>は</th>
+                            <th>ま</th>
+                            <th>や</th>
+                            <th>ら</th>
+                            <th>わ</th>
+                        </tr>
+                        <tr>
+                            <td><div class="kana-cell"><span class="kana">ア</span><span class="romaji">a</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">カ</span><span class="romaji">ka</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">サ</span><span class="romaji">sa</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">タ</span><span class="romaji">ta</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ナ</span><span class="romaji">na</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ハ</span><span class="romaji">ha</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">マ</span><span class="romaji">ma</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ヤ</span><span class="romaji">ya</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ラ</span><span class="romaji">ra</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ワ</span><span class="romaji">wa</span></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="kana-cell"><span class="kana">イ</span><span class="romaji">i</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">キ</span><span class="romaji">ki</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">シ</span><span class="romaji">shi</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">チ</span><span class="romaji">chi</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ニ</span><span class="romaji">ni</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ヒ</span><span class="romaji">hi</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ミ</span><span class="romaji">mi</span></div></td>
+                            <td><div class="kana-cell empty"></div></td>
+                            <td><div class="kana-cell"><span class="kana">リ</span><span class="romaji">ri</span></div></td>
+                            <td><div class="kana-cell empty"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="kana-cell"><span class="kana">ウ</span><span class="romaji">u</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ク</span><span class="romaji">ku</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ス</span><span class="romaji">su</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ツ</span><span class="romaji">tsu</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ヌ</span><span class="romaji">nu</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">フ</span><span class="romaji">fu</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ム</span><span class="romaji">mu</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ユ</span><span class="romaji">yu</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ル</span><span class="romaji">ru</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ン</span><span class="romaji">n</span></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="kana-cell"><span class="kana">エ</span><span class="romaji">e</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ケ</span><span class="romaji">ke</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">セ</span><span class="romaji">se</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">テ</span><span class="romaji">te</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ネ</span><span class="romaji">ne</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ヘ</span><span class="romaji">he</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">メ</span><span class="romaji">me</span></div></td>
+                            <td><div class="kana-cell empty"></div></td>
+                            <td><div class="kana-cell"><span class="kana">レ</span><span class="romaji">re</span></div></td>
+                            <td><div class="kana-cell empty"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="kana-cell"><span class="kana">オ</span><span class="romaji">o</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">コ</span><span class="romaji">ko</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ソ</span><span class="romaji">so</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ト</span><span class="romaji">to</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ノ</span><span class="romaji">no</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ホ</span><span class="romaji">ho</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">モ</span><span class="romaji">mo</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ヨ</span><span class="romaji">yo</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ロ</span><span class="romaji">ro</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ヲ</span><span class="romaji">wo</span></div></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Katakana có dấu Dakuten (゛)</div>
+                    <div class="kana-table">
+                        <table>
+                            <tr>
+                                <th>が</th>
+                                <th>ざ</th>
+                                <th>だ</th>
+                                <th>ば</th>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ガ</span><span class="romaji">ga</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ザ</span><span class="romaji">za</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ダ</span><span class="romaji">da</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">バ</span><span class="romaji">ba</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ギ</span><span class="romaji">gi</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ジ</span><span class="romaji">ji</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ヂ</span><span class="romaji">ji</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ビ</span><span class="romaji">bi</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">グ</span><span class="romaji">gu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ズ</span><span class="romaji">zu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ヅ</span><span class="romaji">zu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ブ</span><span class="romaji">bu</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ゲ</span><span class="romaji">ge</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ゼ</span><span class="romaji">ze</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">デ</span><span class="romaji">de</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ベ</span><span class="romaji">be</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ゴ</span><span class="romaji">go</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ゾ</span><span class="romaji">zo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ド</span><span class="romaji">do</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ボ</span><span class="romaji">bo</span></div></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Katakana có dấu Handakuten (゜)</div>
+                    <div class="kana-table">
+                        <table>
+                            <tr>
+                                <th>ぱ</th>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">パ</span><span class="romaji">pa</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ピ</span><span class="romaji">pi</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">プ</span><span class="romaji">pu</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ペ</span><span class="romaji">pe</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ポ</span><span class="romaji">po</span></div></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Katakana tổ hợp (Yōon)</div>
+                    <div class="kana-table">
+                        <table>
+                            <tr>
+                                <th>きゃ</th>
+                                <th>しゃ</th>
+                                <th>ちゃ</th>
+                                <th>にゃ</th>
+                                <th>ひゃ</th>
+                                <th>みゃ</th>
+                                <th>りゃ</th>
+                                <th>ぎゃ</th>
+                                <th>じゃ</th>
+                                <th>びゃ</th>
+                                <th>ぴゃ</th>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">キャ</span><span class="romaji">kya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">シャ</span><span class="romaji">sha</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">チャ</span><span class="romaji">cha</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ニャ</span><span class="romaji">nya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ヒャ</span><span class="romaji">hya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ミャ</span><span class="romaji">mya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">リャ</span><span class="romaji">rya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ギャ</span><span class="romaji">gya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ジャ</span><span class="romaji">ja</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ビャ</span><span class="romaji">bya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ピャ</span><span class="romaji">pya</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">キュ</span><span class="romaji">kyu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">シュ</span><span class="romaji">shu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">チュ</span><span class="romaji">chu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ニュ</span><span class="romaji">nyu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ヒュ</span><span class="romaji">hyu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ミュ</span><span class="romaji">myu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">リュ</span><span class="romaji">ryu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ギュ</span><span class="romaji">gyu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ジュ</span><span class="romaji">ju</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ビュ</span><span class="romaji">byu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ピュ</span><span class="romaji">pyu</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">キョ</span><span class="romaji">kyo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ショ</span><span class="romaji">sho</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">チョ</span><span class="romaji">cho</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ニョ</span><span class="romaji">nyo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ヒョ</span><span class="romaji">hyo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ミョ</span><span class="romaji">myo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">リョ</span><span class="romaji">ryo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ギョ</span><span class="romaji">gyo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ジョ</span><span class="romaji">jo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ビョ</span><span class="romaji">byo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ピョ</span><span class="romaji">pyo</span></div></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanji Bài 9 -->
+        <div id="kanji9" class="tab-content">
+            <div class="grammar-section">
+                <h2>漢字 - Kanji Bài 9</h2>
+                
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">好</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: コウ</div>
+                            <div class="reading-type">訓読み: すき</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: thích</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">好き（すき）</div>
+                            <div class="meaning">thích</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">大好き（だいすき）</div>
+                            <div class="meaning">rất thích</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">大好物（だいこうぶつ）</div>
+                            <div class="meaning">món khoái thích, món yêu thích</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">歌</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: カ</div>
+                            <div class="reading-type">訓読み: うた・う</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: bài hát / hát</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">歌（うた）</div>
+                            <div class="meaning">bài hát</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">歌う（うたう）</div>
+                            <div class="meaning">hát</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">国歌（こっか）</div>
+                            <div class="meaning">quốc ca</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">短歌（たんか）</div>
+                            <div class="meaning">thơ ngắn truyền thống</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">音</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: オン</div>
+                            <div class="reading-type">訓読み: おと</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: âm thanh</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">音（おと）</div>
+                            <div class="meaning">âm thanh, tiếng</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">音読み（おんよみ）</div>
+                            <div class="meaning">âm On</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">楽</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ガク / ラク</div>
+                            <div class="reading-type">訓読み: たのしい</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: vui vẻ / thoải mái / âm nhạc</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">楽しい（たのしい）</div>
+                            <div class="meaning">vui</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">音楽（おんがく）</div>
+                            <div class="meaning">âm nhạc</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">車</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: シャ</div>
+                            <div class="reading-type">訓読み: くるま</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: xe</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">車（くるま）</div>
+                            <div class="meaning">xe hơi, xe</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">映</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: エイ</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: chiếu, phản chiếu</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">映画（えいが）</div>
+                            <div class="meaning">phim</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">画</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ガ / カク</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: hình, họa; cũng dùng trong "phim"</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">映画（えいが）</div>
+                            <div class="meaning">phim</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">計画（けいかく）</div>
+                            <div class="meaning">kế hoạch</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">旅</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: リョ</div>
+                            <div class="reading-type">訓読み: たび</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: chuyến đi</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">旅（たび）</div>
+                            <div class="meaning">chuyến đi</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">旅行（りょこう）</div>
+                            <div class="meaning">du lịch</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">海</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: カイ</div>
+                            <div class="reading-type">訓読み: うみ</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: biển</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">海（うみ）</div>
+                            <div class="meaning">biển</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">海水（かいすい）</div>
+                            <div class="meaning">nước biển</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">外</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ガイ</div>
+                            <div class="reading-type">訓読み: そと</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: bên ngoài / nước ngoài</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">外（そと）</div>
+                            <div class="meaning">bên ngoài</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">家の外（いえのそと）</div>
+                            <div class="meaning">bên ngoài nhà</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">外国（がいこく）</div>
+                            <div class="meaning">nước ngoài</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">外国語（がいこくご）</div>
+                            <div class="meaning">ngoại ngữ</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">外国人（がいこくじん）</div>
+                            <div class="meaning">người nước ngoài</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">社外（しゃがい）</div>
+                            <div class="meaning">ngoài công ty</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">海外（かいがい）</div>
+                            <div class="meaning">hải ngoại / nước ngoài</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanji Bài 10 -->
+        <div id="kanji10" class="tab-content">
+            <div class="grammar-section">
+                <h2>漢字 - Kanji Bài 10</h2>
+                
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">駅</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: エキ</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: ga, nhà ga</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">駅（えき）</div>
+                            <div class="meaning">nhà ga</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">駅長（えきちょう）</div>
+                            <div class="meaning">trưởng ga</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">上</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ジョウ</div>
+                            <div class="reading-type">訓読み: うえ</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: trên</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">上（うえ）</div>
+                            <div class="meaning">trên</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">上京（じょうきょう）</div>
+                            <div class="meaning">lên Tokyo</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">下</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: カ</div>
+                            <div class="reading-type">訓読み: した</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: dưới</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">下（した）</div>
+                            <div class="meaning">dưới</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">下車（げしゃ）</div>
+                            <div class="meaning">xuống xe</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">上下（じょうげ）</div>
+                            <div class="meaning">trên dưới</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">地</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: チ</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: đất, mặt đất</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">土地（とち）</div>
+                            <div class="meaning">đất đai</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">地下（ちか）</div>
+                            <div class="meaning">dưới đất, tầng hầm</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">図</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ト / ズ</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: bản vẽ, bản đồ</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">地図（ちず）</div>
+                            <div class="meaning">bản đồ</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">図（ず）</div>
+                            <div class="meaning">hình vẽ</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">館</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: カン</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: tòa nhà lớn, quán, viện</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">図書館（としょかん）</div>
+                            <div class="meaning">thư viện</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">旅館（りょかん）</div>
+                            <div class="meaning">lữ quán</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">会館（かいかん）</div>
+                            <div class="meaning">hội trường</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">映画館（えいがかん）</div>
+                            <div class="meaning">rạp phim</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">右</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ユウ</div>
+                            <div class="reading-type">訓読み: みぎ</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: bên phải</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">右（みぎ）</div>
+                            <div class="meaning">phải</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">左</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: サ</div>
+                            <div class="reading-type">訓読み: ひだり</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: bên trái</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">左（ひだり）</div>
+                            <div class="meaning">trái</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">左右（さゆう）</div>
+                            <div class="meaning">trái phải</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">道</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ドウ</div>
+                            <div class="reading-type">訓読み: みち</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: đường, con đường</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">道（みち）</div>
+                            <div class="meaning">đường</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">書道（しょどう）</div>
+                            <div class="meaning">thư pháp</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">国道（こくどう）</div>
+                            <div class="meaning">quốc lộ</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">車道（しゃどう）</div>
+                            <div class="meaning">lòng đường</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanji Bài 11 -->
+        <div id="kanji11" class="tab-content">
+            <div class="grammar-section">
+                <h2>漢字 - Kanji Bài 11</h2>
+                
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">起</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: キ</div>
+                            <div class="reading-type">訓読み: お・きる / お・こす</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: khởi</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">起きる（おきる）</div>
+                            <div class="meaning">thức dậy</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">起こす（おこす）</div>
+                            <div class="meaning">làm cho xảy ra / đánh thức</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">歩</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ホ</div>
+                            <div class="reading-type">訓読み: ある・く</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: bộ</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">歩く（あるく）</div>
+                            <div class="meaning">đi bộ</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">歩行（ほこう）</div>
+                            <div class="meaning">bộ hành</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">一歩（いっぽ）</div>
+                            <div class="meaning">một bước</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">乗</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ジョウ</div>
+                            <div class="reading-type">訓読み: の・る / の・せる</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: thừa</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">乗る（のる）</div>
+                            <div class="meaning">lên xe/tàu</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">乗せる（のせる）</div>
+                            <div class="meaning">chất lên / cho ai lên xe</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">乗車（じょうしゃ）</div>
+                            <div class="meaning">lên xe</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">始</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: シ</div>
+                            <div class="reading-type">訓読み: はじ・める / はじ・まる</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: thủy</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">始める（はじめる）</div>
+                            <div class="meaning">bắt đầu (tha động từ)</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">始まる（はじまる）</div>
+                            <div class="meaning">bắt đầu (tự động từ)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">終</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: シュウ</div>
+                            <div class="reading-type">訓読み: お・わる / お・える</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: chung</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">終わる（おわる）</div>
+                            <div class="meaning">kết thúc (tự động từ)</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">終える（おえる）</div>
+                            <div class="meaning">kết thúc (tha động từ)</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">始終（しじゅう）</div>
+                            <div class="meaning">từ đầu đến cuối / suốt</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">勉</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ベン</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: miễn</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">勉強（べんきょう）</div>
+                            <div class="meaning">học tập</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">勉学（べんがく）</div>
+                            <div class="meaning">việc học</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">強</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: キョウ</div>
+                            <div class="reading-type">訓読み: つよ・い</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: cường</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">強い（つよい）</div>
+                            <div class="meaning">mạnh mẽ</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">勉強（べんきょう）</div>
+                            <div class="meaning">học tập</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">朝</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: チョウ</div>
+                            <div class="reading-type">訓読み: あさ</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: triều</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">朝（あさ）</div>
+                            <div class="meaning">buổi sáng</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">朝食（ちょうしょく）</div>
+                            <div class="meaning">bữa sáng</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">今朝（けさ）</div>
+                            <div class="meaning">sáng nay</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">毎朝（まいあさ）</div>
+                            <div class="meaning">mỗi sáng</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">昼</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: チュウ</div>
+                            <div class="reading-type">訓読み: ひる</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: trú</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">昼（ひる）</div>
+                            <div class="meaning">buổi trưa</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">昼食（ちゅうしょく）</div>
+                            <div class="meaning">bữa trưa</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">昼間（ひるま）</div>
+                            <div class="meaning">ban ngày</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">夜</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ヤ</div>
+                            <div class="reading-type">訓読み: よる</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: dạ</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">夜（よる）</div>
+                            <div class="meaning">ban đêm</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">夜道（よみち）</div>
+                            <div class="meaning">đường phố buổi tối</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">夜会（やかい）</div>
+                            <div class="meaning">dạ hội</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">夜間（やかん）</div>
+                            <div class="meaning">ban đêm</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hiragana Chart -->
+        <div id="hiragana" class="tab-content">
+            <div class="grammar-section">
+                <h2>ひらがな表 - Bảng Hiragana</h2>
+                
+                <div class="kana-table">
+                    <table>
+                        <tr>
+                            <th>あ</th>
+                            <th>か</th>
+                            <th>さ</th>
+                            <th>た</th>
+                            <th>な</th>
+                            <th>は</th>
+                            <th>ま</th>
+                            <th>や</th>
+                            <th>ら</th>
+                            <th>わ</th>
+                        </tr>
+                        <tr>
+                            <td><div class="kana-cell"><span class="kana">あ</span><span class="romaji">a</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">か</span><span class="romaji">ka</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">さ</span><span class="romaji">sa</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">た</span><span class="romaji">ta</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">な</span><span class="romaji">na</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">は</span><span class="romaji">ha</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ま</span><span class="romaji">ma</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">や</span><span class="romaji">ya</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ら</span><span class="romaji">ra</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">わ</span><span class="romaji">wa</span></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="kana-cell"><span class="kana">い</span><span class="romaji">i</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">き</span><span class="romaji">ki</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">し</span><span class="romaji">shi</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ち</span><span class="romaji">chi</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">に</span><span class="romaji">ni</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ひ</span><span class="romaji">hi</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">み</span><span class="romaji">mi</span></div></td>
+                            <td><div class="kana-cell empty"></div></td>
+                            <td><div class="kana-cell"><span class="kana">り</span><span class="romaji">ri</span></div></td>
+                            <td><div class="kana-cell empty"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="kana-cell"><span class="kana">う</span><span class="romaji">u</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">く</span><span class="romaji">ku</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">す</span><span class="romaji">su</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">つ</span><span class="romaji">tsu</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ぬ</span><span class="romaji">nu</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ふ</span><span class="romaji">fu</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">む</span><span class="romaji">mu</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ゆ</span><span class="romaji">yu</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">る</span><span class="romaji">ru</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ん</span><span class="romaji">n</span></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="kana-cell"><span class="kana">え</span><span class="romaji">e</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">け</span><span class="romaji">ke</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">せ</span><span class="romaji">se</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">て</span><span class="romaji">te</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ね</span><span class="romaji">ne</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">へ</span><span class="romaji">he</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">め</span><span class="romaji">me</span></div></td>
+                            <td><div class="kana-cell empty"></div></td>
+                            <td><div class="kana-cell"><span class="kana">れ</span><span class="romaji">re</span></div></td>
+                            <td><div class="kana-cell empty"></div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="kana-cell"><span class="kana">お</span><span class="romaji">o</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">こ</span><span class="romaji">ko</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">そ</span><span class="romaji">so</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">と</span><span class="romaji">to</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">の</span><span class="romaji">no</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ほ</span><span class="romaji">ho</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">も</span><span class="romaji">mo</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">よ</span><span class="romaji">yo</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">ろ</span><span class="romaji">ro</span></div></td>
+                            <td><div class="kana-cell"><span class="kana">を</span><span class="romaji">wo</span></div></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Hiragana có dấu Dakuten (゛)</div>
+                    <div class="kana-table">
+                        <table>
+                            <tr>
+                                <th>が</th>
+                                <th>ざ</th>
+                                <th>だ</th>
+                                <th>ば</th>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">が</span><span class="romaji">ga</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ざ</span><span class="romaji">za</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">だ</span><span class="romaji">da</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ば</span><span class="romaji">ba</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ぎ</span><span class="romaji">gi</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">じ</span><span class="romaji">ji</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ぢ</span><span class="romaji">ji</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">び</span><span class="romaji">bi</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ぐ</span><span class="romaji">gu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ず</span><span class="romaji">zu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">づ</span><span class="romaji">zu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ぶ</span><span class="romaji">bu</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">げ</span><span class="romaji">ge</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ぜ</span><span class="romaji">ze</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">で</span><span class="romaji">de</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">べ</span><span class="romaji">be</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ご</span><span class="romaji">go</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ぞ</span><span class="romaji">zo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ど</span><span class="romaji">do</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ぼ</span><span class="romaji">bo</span></div></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Hiragana có dấu Handakuten (゜)</div>
+                    <div class="kana-table">
+                        <table>
+                            <tr>
+                                <th>ぱ</th>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ぱ</span><span class="romaji">pa</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ぴ</span><span class="romaji">pi</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ぷ</span><span class="romaji">pu</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ぺ</span><span class="romaji">pe</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">ぽ</span><span class="romaji">po</span></div></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Hiragana tổ hợp (Yōon)</div>
+                    <div class="kana-table">
+                        <table>
+                            <tr>
+                                <th>きゃ</th>
+                                <th>しゃ</th>
+                                <th>ちゃ</th>
+                                <th>にゃ</th>
+                                <th>ひゃ</th>
+                                <th>みゃ</th>
+                                <th>りゃ</th>
+                                <th>ぎゃ</th>
+                                <th>じゃ</th>
+                                <th>びゃ</th>
+                                <th>ぴゃ</th>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">きゃ</span><span class="romaji">kya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">しゃ</span><span class="romaji">sha</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ちゃ</span><span class="romaji">cha</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">にゃ</span><span class="romaji">nya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ひゃ</span><span class="romaji">hya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">みゃ</span><span class="romaji">mya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">りゃ</span><span class="romaji">rya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ぎゃ</span><span class="romaji">gya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">じゃ</span><span class="romaji">ja</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">びゃ</span><span class="romaji">bya</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ぴゃ</span><span class="romaji">pya</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">きゅ</span><span class="romaji">kyu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">しゅ</span><span class="romaji">shu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ちゅ</span><span class="romaji">chu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">にゅ</span><span class="romaji">nyu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ひゅ</span><span class="romaji">hyu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">みゅ</span><span class="romaji">myu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">りゅ</span><span class="romaji">ryu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ぎゅ</span><span class="romaji">gyu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">じゅ</span><span class="romaji">ju</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">びゅ</span><span class="romaji">byu</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ぴゅ</span><span class="romaji">pyu</span></div></td>
+                            </tr>
+                            <tr>
+                                <td><div class="kana-cell"><span class="kana">きょ</span><span class="romaji">kyo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">しょ</span><span class="romaji">sho</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ちょ</span><span class="romaji">cho</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">にょ</span><span class="romaji">nyo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ひょ</span><span class="romaji">hyo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">みょ</span><span class="romaji">myo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">りょ</span><span class="romaji">ryo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ぎょ</span><span class="romaji">gyo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">じょ</span><span class="romaji">jo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">びょ</span><span class="romaji">byo</span></div></td>
+                                <td><div class="kana-cell"><span class="kana">ぴょ</span><span class="romaji">pyo</span></div></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanji Bài 8 -->
+        <div id="kanji8" class="tab-content">
+            <div class="grammar-section">
+                <h2>漢字 - Kanji Bài 8</h2>
+                
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">家</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: カ</div>
+                            <div class="reading-type">訓読み: いえ・うち</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: nhà</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">家（いえ）</div>
+                            <div class="meaning">nhà</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">うち</div>
+                            <div class="meaning">nhà/tổ ấm</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">大家（おおや）</div>
+                            <div class="meaning">chủ trọ</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">族</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ゾク</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: tộc, gia đình</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">家族（かぞく）</div>
+                            <div class="meaning">gia đình</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">父</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: フ</div>
+                            <div class="reading-type">訓読み: ちち</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: bố</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">父（ちち）</div>
+                            <div class="meaning">bố (nói về bố mình)</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">お父さん（おとうさん）</div>
+                            <div class="meaning">bố (gọi bố người khác/bố mình)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">母</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ボ</div>
+                            <div class="reading-type">訓読み: はは</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: mẹ</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">母（はは）</div>
+                            <div class="meaning">mẹ (nói về mẹ mình)</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">お母さん（おかあさん）</div>
+                            <div class="meaning">mẹ</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">父母（ふぼ）</div>
+                            <div class="meaning">bố mẹ</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">母国語（ぼこくご）</div>
+                            <div class="meaning">tiếng mẹ đẻ</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">兄</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: キョウ</div>
+                            <div class="reading-type">訓読み: あに</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: anh trai</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">兄（あに）</div>
+                            <div class="meaning">anh trai (của mình)</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">お兄さん（おにいさん）</div>
+                            <div class="meaning">anh trai (gọi lịch sự)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">弟</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ダイ</div>
+                            <div class="reading-type">訓読み: おとうと</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: em trai</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">弟（おとうと）</div>
+                            <div class="meaning">em trai (của mình)</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">弟さん（おとうとさん）</div>
+                            <div class="meaning">em trai (người khác)</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">兄弟（きょうだい）</div>
+                            <div class="meaning">anh em</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">姉</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: シ</div>
+                            <div class="reading-type">訓読み: あね</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: chị gái</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">姉（あね）</div>
+                            <div class="meaning">chị gái (của mình)</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">お姉さん（おねえさん）</div>
+                            <div class="meaning">chị gái</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">妹</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: マイ</div>
+                            <div class="reading-type">訓読み: いもうと</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: em gái</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">妹（いもうと）</div>
+                            <div class="meaning">em gái</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">妹さん（いもうとさん）</div>
+                            <div class="meaning">em gái (người khác)</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">姉妹（しまい）</div>
+                            <div class="meaning">chị em gái</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">犬</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: ケン</div>
+                            <div class="reading-type">訓読み: いぬ</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: con chó</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">犬（いぬ）</div>
+                            <div class="meaning">chó</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">高</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: コウ</div>
+                            <div class="reading-type">訓読み: たかい</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: cao, đắt</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">高い（たかい）</div>
+                            <div class="meaning">cao / đắt</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">高校（こうこう）</div>
+                            <div class="meaning">trường cấp 3</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">高校生（こうこうせい）</div>
+                            <div class="meaning">học sinh cấp 3</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">短</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: タン</div>
+                            <div class="reading-type">訓読み: みじかい</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: ngắn</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">短い（みじかい）</div>
+                            <div class="meaning">ngắn</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">短大（たんだい）</div>
+                            <div class="meaning">cao đẳng</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="kanji-main">
+                        <div class="kanji-character">長</div>
+                        <div class="kanji-reading">
+                            <div class="reading-type">音読み: チョウ</div>
+                            <div class="reading-type">訓読み: ながい</div>
+                        </div>
+                    </div>
+                    <div class="grammar-title">Nghĩa: dài / trưởng</div>
+                    <div class="note">
+                        <div class="note-title">Từ vựng:</div>
+                        <div class="example">
+                            <div class="japanese-text">長い（ながい）</div>
+                            <div class="meaning">dài</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">族長（ぞくちょう）</div>
+                            <div class="meaning">tộc trưởng</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">社長（しゃちょう）</div>
+                            <div class="meaning">giám đốc</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">学長（がくちょう）</div>
+                            <div class="meaning">hiệu trưởng đại học</div>
+                        </div>
+                        <div class="example">
+                            <div class="japanese-text">校長（こうちょう）</div>
+                            <div class="meaning">hiệu trưởng</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Reading Panel -->
+        <div id="aireading" class="tab-content">
+            <div class="grammar-section">
+                <h2>AI Tạo Bài Đọc</h2>
+                
+                <div class="grammar-item">
+                    <div class="grammar-title">Tạo Bài Đọc Tiếng Nhật với AI</div>
+                    
+                    <div class="ai-controls">
+                        <button id="generateBtn" class="generate-btn" onclick="generateReading()">
+                            <span id="btnText">START - Tạo Bài Đọc</span>
+                        </button>
+                    </div>
+
+                    <div class="note">
+                        <div class="note-title">Hướng dẫn:</div>
+                        <p>Nhấn nút START để AI tạo một bài đọc tiếng Nhật ngẫu nhiên</p>
+                        <p>Bài đọc bao gồm: Kanji, Furigana và dịch tiếng Việt</p>
+                    </div>
+                </div>
+
+                <div id="readingResult" class="reading-result" style="display: none;">
+                    <div class="grammar-item">
+                        <div class="grammar-title">Bài Đọc</div>
+                        <div class="ai-controls">
+                            <button id="romajiBtn" class="generate-btn" onclick="toggleRomaji()" style="background: #9966ff; font-size: 14px; padding: 10px 20px;">
+                                <span id="romajiBtnText">Hiện Furigana & Romaji</span>
+                            </button>
+                        </div>
+                        <div id="readingContent" class="reading-content"></div>
+                    </div>
+                </div>
+
+                <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Đang tạo bài đọc...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanji Test Panel -->
+        <div id="kanjitest" class="tab-content">
+            <div class="grammar-section">
+                <h2>Kiểm Tra Kanji</h2>
+                
+                <div class="grammar-item">
+                    <div class="grammar-title">Chọn Bài Học</div>
+                    <div class="ai-controls" style="gap: 15px;">
+                        <select id="lessonSelect" class="lesson-select" onchange="loadKanjiTest()">
+                            <option value="8">Bài 8</option>
+                            <option value="9">Bài 9</option>
+                            <option value="10">Bài 10</option>
+                            <option value="11">Bài 11</option>
+                        </select>
+                        <button class="generate-btn" onclick="startKanjiTest()">
+                            <span>Bắt Đầu Test (5 từ)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="testArea" class="test-area" style="display: none;">
+                    <div class="question-number" id="questionTitle">Câu 1/5</div>
+                    <div class="kanji-test-display">
+                        <div class="kanji-display" id="kanjiDisplay">漢字</div>
+                    </div>
+                    <div id="optionsArea" class="test-options"></div>
+                </div>
+
+                <div id="resultArea" class="test-result" style="display: none;">
+                    <div class="score-display">
+                        <div class="score-text">Kết Quả</div>
+                        <div class="score-number" id="scoreTitle">0/5</div>
+                    </div>
+                    <div class="result-list" id="resultDetails"></div>
+                    <button class="retry-button" onclick="startKanjiTest()">
+                        <span>Làm Lại</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reading Quiz Panel -->
+        <div id="readingquiz" class="tab-content">
+            <div class="grammar-section">
+                <h2>Quiz Đọc Hiểu - Bài 8-11</h2>
+                
+                <div class="grammar-item">
+                    <div class="grammar-title">Bài Kiểm Tra FE-Style (42 câu)</div>
+                    <div class="note">
+                        <div class="note-title">Hướng dẫn:</div>
+                        <p>• Quiz kiểu thi FE của FPT University</p>
+                        <p>• 20 câu ngữ pháp + 18 câu từ vựng + 2 câu đọc hiểu</p>
+                        <p>• Mỗi câu có 4 đáp án, chỉ 1 đáp án đúng</p>
+                        <p>• Chọn "Generate AI Quiz" để tạo đề random, hoặc "Quiz Cố Định" để dùng đề có sẵn</p>
+                    </div>
+                    <div class="ai-controls">
+                        <button id="startQuizBtn" class="generate-button" onclick="generateAIQuiz()">
+                            <span>Generate AI Quiz (Random)</span>
+                        </button>
+                        <button class="generate-button" onclick="startReadingQuiz()" style="background: #4CAF50;">
+                            <span>Quiz Cố Định</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="quizArea" class="quiz-area" style="display: none;">
+                    <div class="quiz-progress">
+                        <div class="progress-info">
+                            <span id="currentQuestion">Câu 1/42</span>
+                            <span id="quizScore">Điểm: 0</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progressFill" class="progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="reading-passage">
+                        <div class="passage-title">📖 Đoạn Văn</div>
+                        <div id="passageText" class="passage-content"></div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <div id="questionText" class="question-text"></div>
+                        <div id="quizOptions" class="quiz-options"></div>
+                    </div>
+
+                    <div class="quiz-controls">
+                        <button id="submitAnswer" class="quiz-button" onclick="submitQuizAnswer()">Trả Lời</button>
+                        <button id="nextQuestion" class="quiz-button" onclick="nextQuizQuestion()" style="display: none;">Câu Tiếp →</button>
+                    </div>
+
+                    <div id="answerFeedback" class="answer-feedback" style="display: none;"></div>
+                </div>
+
+                <div id="quizResult" class="quiz-result" style="display: none;">
+                    <div class="result-header">
+                        <h3>🎉 Hoàn Thành Quiz!</h3>
+                        <div class="final-score">
+                            <span id="finalScore">0/42</span>
+                            <span id="finalPercentage">0%</span>
+                        </div>
+                    </div>
+                    <div class="result-details" id="resultDetails"></div>
+                    <button class="retry-button" onclick="startReadingQuiz()">Làm Lại Quiz</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div id="settings" class="tab-content">
+            <div class="grammar-section">
+                <h2>Cài Đặt</h2>
+                
+                <div class="grammar-item">
+                    <div class="grammar-title">Nhạc Nền</div>
+                    <div class="settings-control">
+                        <label class="switch">
+                            <input type="checkbox" id="bgMusicToggle" onchange="toggleMusic()">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="setting-label" id="musicStatus">Tắt</span>
+                    </div>
+                    <div class="note">
+                        <div class="note-title">Lưu ý:</div>
+                        <p>Bật nhạc nền retro 8-bit để có trải nghiệm học tập thú vị hơn!</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Dark Mode</div>
+                    <div class="settings-control">
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="setting-label" id="darkModeStatus">Tắt</span>
+                    </div>
+                    <div class="note">
+                        <div class="note-title">Lưu ý:</div>
+                        <p>Chế độ tối giúp bảo vệ mắt khi học ban đêm.</p>
+                    </div>
+                </div>
+
+                <div class="grammar-item">
+                    <div class="grammar-title">Về Trang Web</div>
+                    <div class="example">
+                        <div class="japanese-text">日本語文法学習サイト</div>
+                        <div class="meaning">Trang học ngữ pháp tiếng Nhật</div>
+                    </div>
+                    <div class="note">
+                        <p>Version: 2.0</p>
+                        <p>Cập nhật: 2025</p>
+                        <p>Style: Retro Pixel Art</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 - Tài liệu học tiếng Nhật | Cập nhật thường xuyên</p>
+        </footer>
     </div>
 
-    <!-- Modal Hướng dẫn -->
-    <div id="helpModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeHelp()">&times;</span>
-            <h2>Hướng dẫn sử dụng</h2>
-            <div class="help-content">
-                <h3>1. Nhập thông tin công ty:</h3>
-                <p>- Chỉnh sửa tên công ty, MST, địa chỉ, số điện thoại ổ phía trên</p>
-                <p>- Nhập tên khách hàng vào ô sau "Kính gửi quý khách hàng:"</p>
-                
-                <h3>2. Thêm hàng hóa:</h3>
-                <p>- Nhấn nút "Thêm Hàng" để thêm dòng mới</p>
-                <p>- Nhập tên hàng, kích thước, số lượng, đơn giá</p>
-                
-                <h3>3. Kích thước tự động:</h3>
-                <p>- Nhập: <strong>330 x 120</strong> → Tự động chuyển thành: <strong>3m30 x 1m20</strong></p>
-                <p>- Hỗ trợ số thập phân: <strong>309,8 x 295,6</strong> → <strong>3m09,8 x 2m95,6</strong></p>
-                <p>- Phép cộng: <strong>450 + 75</strong> → <strong>4m50 + 75cm</strong></p>
-                
-                <h3>4. Số lượng tự động tính:</h3>
-                <p>- Khi nhập kích thước và nhấn Tab, số lượng sẽ tự động tính</p>
-                <p>- Ví dụ: <strong>3m30 x 1m20</strong> = <strong>3m96</strong> (diện tích)</p>
-                
-                <h3>5. Đơn giá:</h3>
-                <p>- Nhập số thuần, tự động format: <strong>5100000</strong> → <strong>5.100.000</strong></p>
-                
-                <h3>6. In và Lưu:</h3>
-                <p>- Nhấn nút "In" để in hoặc lưu PDF</p>
-                <p>- Nhấn "Xóa Tất Cả" để làm mới bảng</p>
+    <!-- Floating Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header" onclick="toggleChat()">
+            <span class="chat-title">Gemini AI</span>
+            <span class="chat-toggle" id="chatToggle">−</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message bot-message">
+                    <div class="message-content">Xin chào! Tôi là Gemini AI. Hỏi tôi bất cứ điều gì về tiếng Nhật!</div>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Nhập câu hỏi..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <button class="chat-send-btn" onclick="sendMessage()">Gửi</button>
             </div>
         </div>
     </div>
 
-    <!-- Custom Confirm Modal -->
-    <div id="confirmModal" class="modal">
-        <div class="modal-content confirm-modal">
-            <h3 id="confirmMessage">Bạn có chắc chắn?</h3>
-            <div class="confirm-buttons">
-                <button onclick="confirmAction(true)" class="confirm-yes">Xác nhận</button>
-                <button onclick="confirmAction(false)" class="confirm-no">Hủy</button>
-            </div>
         </div>
     </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-8bitadventure.mp3" type="audio/mpeg">
+    </audio>
 
     <script src="script.js"></script>
 </body>
 </html>
+       
