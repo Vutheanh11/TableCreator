@@ -61,6 +61,20 @@
     </div>
     </div>
 
+    <!-- Floating Action Button for Mobile -->
+    <button id="fabBtn" class="fab-button" onclick="toggleFabMenu(event)">
+        <span class="fab-icon">☰</span>
+    </button>
+    <div id="fabMenu" class="fab-menu">
+        <button onclick="addRow()" class="add-btn">Thêm Hàng</button>
+        <button onclick="printTable(); toggleFabMenu()" class="print-btn">In</button>
+        <button onclick="exportToExcel(); toggleFabMenu()" class="excel-btn">Xuất Excel</button>
+        <button onclick="document.getElementById('excelFileInput').click(); toggleFabMenu()" class="load-btn">Load Excel</button>
+        <button onclick="clearTable(); toggleFabMenu()" class="delete-btn">Xóa Tất Cả</button>
+        <button onclick="window.location.href='BangBaoGia.html'" class="print-btn" style="background-color: #9C27B0;">Bảng Báo Giá</button>
+        <button onclick="showHelp(); toggleFabMenu()" class="help-btn">Cách sử dụng</button>
+    </div>
+
     <!-- Modal Hướng dẫn -->
     <div id="helpModal" class="modal">
         <div class="modal-content">

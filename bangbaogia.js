@@ -92,6 +92,30 @@ window.addEventListener('click', function(event) {
     }
 });
 
+// ===== FAB MENU TOGGLE =====
+function toggleFabMenu(event) {
+    if (event) {
+        event.stopPropagation();
+    }
+    const fabBtn = document.getElementById('fabBtn');
+    const fabMenu = document.getElementById('fabMenu');
+    fabBtn.classList.toggle('active');
+    fabMenu.classList.toggle('active');
+}
+
+// Close FAB menu when clicking outside
+document.addEventListener('click', function(event) {
+    const fabBtn = document.getElementById('fabBtn');
+    const fabMenu = document.getElementById('fabMenu');
+    
+    if (fabBtn && fabMenu && fabMenu.classList.contains('active')) {
+        if (!fabBtn.contains(event.target) && !fabMenu.contains(event.target)) {
+            fabBtn.classList.remove('active');
+            fabMenu.classList.remove('active');
+        }
+    }
+});
+
 // Override exportToExcel for Bảng Báo Giá
 function exportToExcel() {
     const companyName = document.getElementById('companyName').value;
@@ -135,7 +159,7 @@ function exportToExcel() {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Báo Giá');
 
-    const fileName = `BaoGia_${customerName || 'KhachHang'}_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.xlsx`;
+    const fileName = `BBG_${customerName || 'KhachHang'}_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.xlsx`;
     XLSX.writeFile(wb, fileName);
 }
 

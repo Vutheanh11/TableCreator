@@ -290,10 +290,24 @@ function calculateRow(input) {
     let quantity = 0;
     const quantityText = quantityInput.value.trim();
     
-    // Try to extract number from quantity (handles formats like "9m1.5.7", "16 con", etc.)
-    const numberMatch = quantityText.match(/[\d.]+/);
-    if (numberMatch) {
-        quantity = parseFloat(numberMatch[0]);
+    // Parse quantity - handle formats like "9m40" (9.4), "3m96,5" (3.965), "89cm" (0.89), etc.
+    if (quantityText.toLowerCase().includes('m') && !quantityText.toLowerCase().includes('cm')) {
+        // Format: 9m40 -> 9.4, 3m96,5 -> 3.965
+        const parts = quantityText.toLowerCase().split('m');
+        const meters = parseFloat(parts[0].replace(',', '.')) || 0;
+        const cmsText = parts[1] ? parts[1].replace(',', '.') : '0';
+        const cms = parseFloat(cmsText) || 0;
+        quantity = meters + (cms / 100);
+    } else if (quantityText.toLowerCase().includes('cm')) {
+        // Format: 89cm -> 0.89
+        const cm = parseFloat(quantityText.toLowerCase().replace('cm', '').replace(',', '.')) || 0;
+        quantity = cm / 100;
+    } else {
+        // Plain number or other format
+        const numberMatch = quantityText.match(/[\d.,]+/);
+        if (numberMatch) {
+            quantity = parseFloat(numberMatch[0].replace(',', '.'));
+        }
     }
 
     // Parse unit price - remove dots and convert to number
@@ -373,6 +387,30 @@ function confirmAction(result) {
     }
 }
 
+// ===== FAB MENU TOGGLE =====
+function toggleFabMenu(event) {
+    if (event) {
+        event.stopPropagation();
+    }
+    const fabBtn = document.getElementById('fabBtn');
+    const fabMenu = document.getElementById('fabMenu');
+    fabBtn.classList.toggle('active');
+    fabMenu.classList.toggle('active');
+}
+
+// Close FAB menu when clicking outside
+document.addEventListener('click', function(event) {
+    const fabBtn = document.getElementById('fabBtn');
+    const fabMenu = document.getElementById('fabMenu');
+    
+    if (fabBtn && fabMenu && fabMenu.classList.contains('active')) {
+        if (!fabBtn.contains(event.target) && !fabMenu.contains(event.target)) {
+            fabBtn.classList.remove('active');
+            fabMenu.classList.remove('active');
+        }
+    }
+});
+
 // ===== EXCEL EXPORT/IMPORT FUNCTIONS =====
 function exportToExcel() {
     // Thu thập dữ liệu từ header
@@ -439,7 +477,7 @@ function exportToExcel() {
     XLSX.utils.book_append_sheet(wb, ws, 'Khối Lượng');
     
     // Xuất file
-    const fileName = `BaoGia_${customerName || 'KhachHang'}_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.xlsx`;
+    const fileName = `BKL_${customerName || 'KhachHang'}_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.xlsx`;
     XLSX.writeFile(wb, fileName);
 }
 
