@@ -40,49 +40,25 @@
     border-color: #4CAF50 !important;
 }
 
-/* Mobile Edit Mode - Enhanced Drag Handles */
-.edit-mode-active .column-resizer,
-.edit-mode-active .row-resizer {
-    background-color: #2196F3 !important;
-    opacity: 0.7 !important;
-    z-index: 100 !important;
-}
-
-.edit-mode-active .column-resizer {
-    width: 12px !important;
-}
-
-.edit-mode-active .row-resizer {
-    height: 12px !important;
-}
-
-.edit-mode-active .column-resizer:active,
-.edit-mode-active .row-resizer:active {
-    opacity: 1 !important;
-    background-color: #1976D2 !important;
-}
-
-/* Touch-friendly resize indicators */
-.edit-mode-active .column-resizer::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 3px;
-    height: 20px;
-    background-color: white;
-    border-radius: 2px;
-}
-
-.edit-mode-active .row-resizer::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 20px;
-    height: 3px;
-    background-color: white;
-    border-radius: 2px;
+/* Mobile - Enhanced Drag Handles */
+@media (max-width: 768px) {
+    .column-resizer,
+    .row-resizer {
+        background-color: rgba(33, 150, 243, 0.3) !important;
+        opacity: 1 !important;
+    }
+    
+    .column-resizer {
+        width: 10px !important;
+    }
+    
+    .row-resizer {
+        height: 10px !important;
+    }
+    
+    .column-resizer:active,
+    .row-resizer:active {
+        background-color: #2196F3 !important;
+        opacity: 1 !important;
+    }
 }

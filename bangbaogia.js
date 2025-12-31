@@ -382,19 +382,6 @@ function toggleFabMenu(event) {
     fabMenu.classList.toggle('active');
 }
 
-// ===== TOGGLE EDIT TABLE MODE FOR MOBILE =====
-let isEditModeActive = false;
-function toggleEditMode() {
-    isEditModeActive = !isEditModeActive;
-    const table = document.getElementById('priceTable');
-    
-    if (isEditModeActive) {
-        table.classList.add('edit-mode-active');
-    } else {
-        table.classList.remove('edit-mode-active');
-    }
-}
-
 // ===== PDF EXPORT FUNCTION =====
 function exportToPDF() {
     document.getElementById('pdfOrientationModal').style.display = 'block';
