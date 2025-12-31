@@ -360,68 +360,9 @@ function toggleEditMode() {
     
     if (isEditModeActive) {
         table.classList.add('edit-mode-active');
-        addEditModeButtons();
     } else {
         table.classList.remove('edit-mode-active');
-        removeEditModeButtons();
     }
-}
-
-function addEditModeButtons() {
-    // Add column edit buttons to headers
-    const headers = document.querySelectorAll('#priceTable thead th');
-    headers.forEach((th, index) => {
-        if (th.classList.contains('no-print')) return;
-        
-        const editBtn = document.createElement('div');
-        editBtn.className = 'column-edit-btn';
-        editBtn.innerHTML = '<span class="edit-btn-control" onclick="adjustColumnWidth(' + index + ', 20)">+</span><span class="edit-btn-control" onclick="adjustColumnWidth(' + index + ', -20)">−</span>';
-        th.style.position = 'relative';
-        th.appendChild(editBtn);
-    });
-    
-    // Add row edit buttons to first cell of each row
-    const rows = document.querySelectorAll('#priceTable tbody tr');
-    rows.forEach((row, index) => {
-        const firstCell = row.querySelector('td');
-        if (firstCell) {
-            const editBtn = document.createElement('div');
-            editBtn.className = 'row-edit-btn';
-            editBtn.innerHTML = '<span class="edit-btn-control" onclick="adjustRowHeight(' + index + ', 10)">+</span><span class="edit-btn-control" onclick="adjustRowHeight(' + index + ', -10)">−</span>';
-            firstCell.style.position = 'relative';
-            firstCell.appendChild(editBtn);
-        }
-    });
-}
-
-function removeEditModeButtons() {
-    document.querySelectorAll('.column-edit-btn, .row-edit-btn').forEach(btn => btn.remove());
-}
-
-function adjustColumnWidth(columnIndex, delta) {
-    const headers = document.querySelectorAll('#priceTable thead th');
-    const th = headers[columnIndex];
-    if (!th) return;
-    
-    const currentWidth = th.offsetWidth;
-    const newWidth = Math.max(50, currentWidth + delta);
-    th.style.width = newWidth + 'px';
-    
-    // Save to localStorage
-    localStorage.setItem('bbg_column_' + columnIndex + '_width', newWidth);
-}
-
-function adjustRowHeight(rowIndex, delta) {
-    const rows = document.querySelectorAll('#priceTable tbody tr');
-    const row = rows[rowIndex];
-    if (!row) return;
-    
-    const currentHeight = row.offsetHeight;
-    const newHeight = Math.max(30, currentHeight + delta);
-    row.style.height = newHeight + 'px';
-    
-    // Save to localStorage
-    localStorage.setItem('bbg_row_' + rowIndex + '_height', newHeight);
 }
 
 // ===== PDF EXPORT FUNCTION =====
