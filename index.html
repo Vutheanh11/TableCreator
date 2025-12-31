@@ -12,6 +12,7 @@
     <div class="wrapper">
         <div class="controls">
             <button onclick="addRow()" class="add-btn">Thêm Hàng</button>
+            <button onclick="toggleEditMode()" class="print-btn" id="editModeBtn" style="background-color: #9C27B0;">Chỉnh Bảng</button>
             <button onclick="printTable()" class="print-btn">In</button>
             <button onclick="exportToExcel()" class="excel-btn">Xuất Excel</button>
             <button onclick="document.getElementById('excelFileInput').click()" class="load-btn">Load Excel</button>
@@ -32,7 +33,7 @@
             <div class="header">
                 <div class="title">BẢNG KHỐI LƯỢNG</div>
                 <div class="subtitle">
-                    <span>Kính gửi quý khách hàng: <input type="text" id="customerName" placeholder="Nhập tên" value="" style="border: none; border-bottom: 1px solid #000; padding: 2px 5px; min-width: 150px; background: transparent; font-style: italic; font-size: 16px; font-family: 'Times New Roman', serif;"></span>
+                    <span>Kính gửi quý khách hàng: <input type="text" id="customerName" placeholder="Nhập tên" value="" style="border: none; padding: 2px 5px; min-width: 150px; background: transparent; font-style: italic; font-size: 16px; font-family: 'Times New Roman', serif;"></span>
                 </div>
             </div>
 
@@ -53,12 +54,60 @@
             </tbody>
             <tfoot>
                 <tr class="total-row">
-                    <td colspan="5">Tổng Cộng</td>
-                    <td id="grandTotal">0</td>
+                    <td colspan="5" style="text-align: left; padding-left: 20px;">Tổng Cộng</td>
+                    <td id="grandTotal" style="text-align: center;">0</td>
+                    <td class="no-print"></td>
+                </tr>
+                <tr class="discount-row" id="discountRow" style="display: none;">
+                    <td colspan="5" style="text-align: left; padding-left: 20px;">Chiết Khấu (<span id="discountDisplay">0%</span>)</td>
+                    <td id="discountAmount" style="text-align: center;">0</td>
+                    <td class="no-print"></td>
+                </tr>
+                <tr class="vat-row" id="vatRow" style="display: none;">
+                    <td colspan="5" style="text-align: left; padding-left: 20px;">VAT (<span id="vatPercent">10</span>%)</td>
+                    <td id="vatAmount" style="text-align: center;">0</td>
+                    <td class="no-print"></td>
+                </tr>
+                <tr class="paid-row" id="paidRow" style="display: none;">
+                    <td colspan="5" style="text-align: left; padding-left: 20px;">Đã Thu</td>
+                    <td><input type="text" id="paidAmount" value="0" onblur="formatPaidAmount(this)" onfocus="removePaidFormat(this)" onchange="updateTotals()" oninput="updateTotals()" style="text-align: center; font-weight: bold;"></td>
+                    <td class="no-print"></td>
+                </tr>
+                <tr class="final-row" id="finalRow" style="display: none;">
+                    <td colspan="5" style="text-align: left; padding-left: 20px;"><strong>Tổng Thanh Toán</strong></td>
+                    <td id="finalTotal" style="text-align: center;"><strong>0</strong></td>
                     <td class="no-print"></td>
                 </tr>
             </tfoot>
         </table>
+        
+        <!-- VAT and Discount Controls -->
+        <div class="calculation-controls no-print">
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="enableVAT" onchange="toggleVAT()">
+                    <span>Tính VAT</span>
+                </label>
+                <input type="number" id="vatValue" value="10" min="0" max="100" step="1" onchange="updateTotals()" oninput="updateTotals()" style="width: 60px; margin-left: 10px;"> %
+            </div>
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="enableDiscount" onchange="toggleDiscount()">
+                    <span>Chiết khấu</span>
+                </label>
+                <input type="number" id="discountValue" value="0" min="0" step="0.1" onchange="updateTotals()" oninput="updateTotals()" style="width: 80px; margin-left: 10px;">
+                <select id="discountType" onchange="updateTotals()" style="margin-left: 5px;">
+                    <option value="percent">%</option>
+                    <option value="fixed">VNĐ</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="enablePaid" onchange="togglePaid()">
+                    <span>Đã thu</span>
+                </label>
+            </div>
+        </div>
     </div>
     </div>
 
@@ -68,8 +117,8 @@
     </button>
     <div id="fabMenu" class="fab-menu">
         <button onclick="addRow()" class="add-btn">Thêm Hàng</button>
-        <button onclick="printTable(); toggleFabMenu()" class="print-btn">In</button>
-        <button onclick="exportToPDF(); toggleFabMenu()" class="print-btn" style="background-color: #E91E63;">Xuất PDF</button>
+        <button onclick="toggleEditMode(); toggleFabMenu()" class="print-btn" id="editModeBtnMobile" style="background-color: #9C27B0;">Chỉnh Bảng</button>
+        <button onclick="exportToPDF_Mobile(); toggleFabMenu()" class="print-btn" style="background-color: #E91E63;">Xuất PDF</button>
         <button onclick="exportToExcel(); toggleFabMenu()" class="excel-btn">Xuất Excel</button>
         <button onclick="document.getElementById('excelFileInput').click(); toggleFabMenu()" class="load-btn">Load Excel</button>
         <button onclick="clearTable(); toggleFabMenu()" class="delete-btn">Xóa Tất Cả</button>
@@ -128,6 +177,23 @@
             <div class="confirm-buttons">
                 <button onclick="confirmPDFOrientation('portrait')" class="confirm-yes">Dọc</button>
                 <button onclick="confirmPDFOrientation('landscape')" class="print-btn">Ngang</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close" onclick="closeHistory()">&times;</span>
+            <h2>Lịch Sử Báo Giá</h2>
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="historySearch" placeholder="Tìm kiếm theo tên khách hàng..." onkeyup="filterHistory()" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div id="historyList" style="max-height: 400px; overflow-y: auto;">
+                <!-- History items will be added here -->
+            </div>
+            <div style="margin-top: 15px; text-align: center;">
+                <button onclick="clearHistory()" class="delete-btn">Xóa Toàn Bộ Lịch Sử</button>
             </div>
         </div>
     </div>

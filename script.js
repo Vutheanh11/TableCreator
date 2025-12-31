@@ -614,16 +614,51 @@ function printTable() {
     window.print();
 }
 
-// ===== PDF EXPORT FUNCTION =====
+// ===== EDIT MODE TOGGLE =====
+let editModeEnabled = false;
+
+function toggleEditMode() {
+    editModeEnabled = !editModeEnabled;
+    const btn = document.getElementById('editModeBtn');
+    const btnMobile = document.getElementById('editModeBtnMobile');
+    
+    if (editModeEnabled) {
+        document.body.classList.add('edit-mode');
+        if (btn) btn.textContent = 'Tắt Chỉnh Bảng';
+        if (btnMobile) btnMobile.textContent = 'Tắt Chỉnh Bảng';
+    } else {
+        document.body.classList.remove('edit-mode');
+        if (btn) btn.textContent = 'Chỉnh Bảng';
+        if (btnMobile) btnMobile.textContent = 'Chỉnh Bảng';
+    }
+}
+
+// ===== PDF EXPORT FUNCTIONS =====
 let pdfOrientationCallback = null;
 
-function exportToPDF() {
+function exportToPDF_PC() {
     document.getElementById('pdfOrientationModal').style.display = 'block';
+    pdfOrientationCallback = (orientation) => {
+        exportPDFWithConfig(orientation, 'PC');
+    };
+}
+
+function exportToPDF_Mobile() {
+    document.getElementById('pdfOrientationModal').style.display = 'block';
+    pdfOrientationCallback = (orientation) => {
+        exportPDFWithConfig(orientation, 'Mobile');
+    };
 }
 
 function confirmPDFOrientation(orientation) {
     document.getElementById('pdfOrientationModal').style.display = 'none';
-    
+    if (pdfOrientationCallback) {
+        pdfOrientationCallback(orientation);
+        pdfOrientationCallback = null;
+    }
+}
+
+function exportPDFWithConfig(orientation, mode) {
     const customerName = document.getElementById('customerName').value || 'KhachHang';
     const fileName = `BKL_${customerName}_${new Date().toLocaleDateString('vi-VN').replace(/\//g, '-')}.pdf`;
     
@@ -643,7 +678,13 @@ function confirmPDFOrientation(orientation) {
     const style = document.createElement('style');
     style.id = 'pdf-export-style';
     style.innerHTML = `
-        .editable-header input, #customerName, table input {
+        .editable-header input, #customerName {
+            border: none !important;
+            background: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        table input, table textarea {
             border: none !important;
             background: transparent !important;
             outline: none !important;
@@ -653,6 +694,9 @@ function confirmPDFOrientation(orientation) {
             display: none !important;
         }
         th.no-print, td.no-print {
+            display: none !important;
+        }
+        .calculation-controls {
             display: none !important;
         }
         tfoot {
@@ -673,11 +717,44 @@ function confirmPDFOrientation(orientation) {
         table {
             width: 100% !important;
             table-layout: auto !important;
+            border-collapse: collapse !important;
+        }
+        table, th, td {
+            border: 1px solid #000 !important;
+        }
+        th, td {
+            padding: 8px !important;
+            text-align: center !important;
+            word-wrap: break-word !important;
+        }
+        .column-resizer, .row-resizer {
+            display: none !important;
         }
     `;
     document.head.appendChild(style);
     
-    const opt = {
+    // Different configurations for PC and Mobile
+    const opt = mode === 'PC' ? {
+        margin: [0, 0, 0, 0],
+        filename: fileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 2,
+            useCORS: true,
+            windowWidth: orientation === 'portrait' ? 800 : 1100,
+            width: orientation === 'portrait' ? 800 : 1100,
+            logging: false,
+            letterRendering: true,
+            allowTaint: true
+        },
+        jsPDF: { 
+            unit: 'mm', 
+            format: 'a4',
+            orientation: orientation,
+            compress: true
+        },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    } : {
         margin: [3, 3, 3, 3],
         filename: fileName,
         image: { type: 'jpeg', quality: 0.98 },
@@ -957,3 +1034,400 @@ function loadFromExcel(event) {
     
     reader.readAsArrayBuffer(file);
 }
+
+// ===== VAT AND DISCOUNT FUNCTIONS =====
+function toggleVAT() {
+    const enabled = document.getElementById('enableVAT').checked;
+    document.getElementById('vatRow').style.display = enabled ? 'table-row' : 'none';
+    updateFinalRowVisibility();
+    updateTotals();
+}
+
+function toggleDiscount() {
+    const enabled = document.getElementById('enableDiscount').checked;
+    document.getElementById('discountRow').style.display = enabled ? 'table-row' : 'none';
+    updateFinalRowVisibility();
+    updateTotals();
+}
+
+function togglePaid() {
+    const enabled = document.getElementById('enablePaid').checked;
+    document.getElementById('paidRow').style.display = enabled ? 'table-row' : 'none';
+    updateFinalRowVisibility();
+    updateTotals();
+}
+
+function formatPaidAmount(input) {
+    // Remove all non-digit characters
+    let value = input.value.replace(/\D/g, '');
+    
+    // Convert to number and format with thousand separators
+    if (value === '' || value === '0') {
+        input.value = '0';
+    } else {
+        // Remove leading zeros and multiply by 1000
+        let numValue = parseInt(value, 10) * 1000;
+        // Add thousand separators (dots)
+        input.value = numValue.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1.');
+    }
+    updateTotals();
+}
+
+function removePaidFormat(input) {
+    // Remove dots and divide by 1000 to get original input value
+    let value = input.value.replace(/\./g, '');
+    if (value !== '0' && value !== '') {
+        value = (parseInt(value, 10) / 1000).toString();
+    }
+    input.value = value;
+}
+
+function updateFinalRowVisibility() {
+    const vatEnabled = document.getElementById('enableVAT').checked;
+    const discountEnabled = document.getElementById('enableDiscount').checked;
+    document.getElementById('finalRow').style.display = (vatEnabled || discountEnabled) ? 'table-row' : 'none';
+}
+
+function updateTotals() {
+    // Don't call calculateGrandTotal here to avoid infinite recursion
+    // calculateGrandTotal will call updateTotals instead
+    
+    const grandTotal = parseFloat(document.getElementById('grandTotal').textContent.replace(/\./g, '')) || 0;
+    let currentTotal = grandTotal;
+    
+    // Update VAT percent display regardless of whether it's enabled
+    const vatPercent = parseFloat(document.getElementById('vatValue').value) || 0;
+    document.getElementById('vatPercent').textContent = vatPercent;
+    
+    // Update discount display regardless of whether it's enabled
+    const discountValue = parseFloat(document.getElementById('discountValue').value) || 0;
+    const discountType = document.getElementById('discountType').value;
+    
+    if (discountType === 'percent') {
+        document.getElementById('discountDisplay').textContent = discountValue + '%';
+    } else {
+        document.getElementById('discountDisplay').textContent = formatNumber(discountValue) + ' VNĐ';
+    }
+    
+    // Calculate discount
+    const discountEnabled = document.getElementById('enableDiscount').checked;
+    let discountAmount = 0;
+    if (discountEnabled) {
+        if (discountType === 'percent') {
+            discountAmount = grandTotal * (discountValue / 100);
+        } else {
+            discountAmount = discountValue;
+        }
+        
+        currentTotal -= discountAmount;
+        document.getElementById('discountAmount').textContent = '-' + formatNumber(Math.round(discountAmount));
+    }
+    
+    // Calculate VAT
+    const vatEnabled = document.getElementById('enableVAT').checked;
+    let vatAmount = 0;
+    if (vatEnabled) {
+        vatAmount = currentTotal * (vatPercent / 100);
+        currentTotal += vatAmount;
+        
+        document.getElementById('vatAmount').textContent = formatNumber(Math.round(vatAmount));
+    }
+    
+    // Update final total
+    const paidEnabled = document.getElementById('enablePaid').checked;
+    
+    if (paidEnabled) {
+        // Remove dots from formatted value before parsing
+        const paidAmountStr = document.getElementById('paidAmount').value.replace(/\./g, '');
+        const paidAmount = parseFloat(paidAmountStr) || 0;
+        const totalBeforePaid = vatEnabled || discountEnabled ? currentTotal : grandTotal;
+        const remaining = totalBeforePaid - paidAmount;
+        document.getElementById('finalTotal').innerHTML = '<strong>' + formatNumber(Math.round(remaining)) + '</strong>';
+    } else if (vatEnabled || discountEnabled) {
+        document.getElementById('finalTotal').innerHTML = '<strong>' + formatNumber(Math.round(currentTotal)) + '</strong>';
+    }
+}
+
+// ===== PROJECT SAVE/LOAD FUNCTIONS =====
+function saveProject() {
+    const projectData = {
+        timestamp: new Date().toISOString(),
+        companyInfo: {
+            name: document.getElementById('companyName').value,
+            tax: document.getElementById('companyTax').value,
+            address: document.getElementById('companyAddress').value,
+            phone: document.getElementById('companyPhone').value
+        },
+        customerName: document.getElementById('customerName').value,
+        rows: [],
+        settings: {
+            vatEnabled: document.getElementById('enableVAT').checked,
+            vatValue: document.getElementById('vatValue').value,
+            discountEnabled: document.getElementById('enableDiscount').checked,
+            discountValue: document.getElementById('discountValue').value,
+            discountType: document.getElementById('discountType').value
+        }
+    };
+    
+    const tbody = document.getElementById('tableBody');
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length > 0) {
+            projectData.rows.push({
+                stt: cells[0].textContent,
+                itemName: cells[1].querySelector('textarea') ? cells[1].querySelector('textarea').value : '',
+                size: cells[2].querySelector('input') ? cells[2].querySelector('input').value : '',
+                quantity: cells[3].querySelector('input') ? cells[3].querySelector('input').value : '',
+                unitPrice: cells[4].querySelector('input') ? cells[4].querySelector('input').value : ''
+            });
+        }
+    });
+    
+    // Save to history
+    saveToHistory(projectData);
+    
+    // Download as JSON file
+    const dataStr = JSON.stringify(projectData, null, 2);
+    const blob = new Blob([dataStr], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const fileName = (projectData.customerName || 'DuAn') + '_' + new Date().toLocaleDateString('vi-VN').replace(/\//g, '-') + '.json';
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    alert('�? l�u d? �n: ' + fileName);
+}
+
+function loadProject(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const projectData = JSON.parse(e.target.result);
+            
+            // Clear current table
+            document.getElementById('tableBody').innerHTML = '';
+            
+            // Load company info
+            if (projectData.companyInfo) {
+                document.getElementById('companyName').value = projectData.companyInfo.name || '';
+                document.getElementById('companyTax').value = projectData.companyInfo.tax || '';
+                document.getElementById('companyAddress').value = projectData.companyInfo.address || '';
+                document.getElementById('companyPhone').value = projectData.companyInfo.phone || '';
+            }
+            
+            document.getElementById('customerName').value = projectData.customerName || '';
+            
+            // Load settings
+            if (projectData.settings) {
+                document.getElementById('enableVAT').checked = projectData.settings.vatEnabled || false;
+                document.getElementById('vatValue').value = projectData.settings.vatValue || 10;
+                document.getElementById('enableDiscount').checked = projectData.settings.discountEnabled || false;
+                document.getElementById('discountValue').value = projectData.settings.discountValue || 0;
+                document.getElementById('discountType').value = projectData.settings.discountType || 'percent';
+                toggleVAT();
+                toggleDiscount();
+            }
+            
+            // Load rows
+            if (projectData.rows) {
+                projectData.rows.forEach(rowData => {
+                    addRow();
+                    const tbody = document.getElementById('tableBody');
+                    const lastRow = tbody.lastElementChild;
+                    const cells = lastRow.querySelectorAll('td');
+                    
+                    if (cells[1].querySelector('textarea')) {
+                        cells[1].querySelector('textarea').value = rowData.itemName || '';
+                    }
+                    if (cells[2].querySelector('input')) {
+                        cells[2].querySelector('input').value = rowData.size || '';
+                    }
+                    if (cells[3].querySelector('input')) {
+                        cells[3].querySelector('input').value = rowData.quantity || '';
+                    }
+                    if (cells[4].querySelector('input')) {
+                        cells[4].querySelector('input').value = rowData.unitPrice || '';
+                    }
+                    
+                    calculateTotal(lastRow);
+                });
+            }
+            
+            calculateGrandTotal();
+            alert('�? t?i d? �n th�nh c�ng!');
+        } catch (error) {
+            alert('L?i khi �?c file: ' + error.message);
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+// ===== HISTORY FUNCTIONS =====
+function saveToHistory(projectData) {
+    let history = JSON.parse(localStorage.getItem('projectHistory') || '[]');
+    
+    // Add ID and summary
+    projectData.id = Date.now();
+    projectData.summary = {
+        customerName: projectData.customerName || 'Kh�ng c� t�n',
+        rowCount: projectData.rows.length,
+        total: document.getElementById('grandTotal').textContent
+    };
+    
+    history.unshift(projectData);
+    
+    // Keep only last 50 projects
+    if (history.length > 50) {
+        history = history.slice(0, 50);
+    }
+    
+    localStorage.setItem('projectHistory', JSON.stringify(history));
+}
+
+function showHistory() {
+    document.getElementById('historyModal').style.display = 'block';
+    displayHistory();
+}
+
+function closeHistory() {
+    document.getElementById('historyModal').style.display = 'none';
+}
+
+function displayHistory(filter = '') {
+    const history = JSON.parse(localStorage.getItem('projectHistory') || '[]');
+    const historyList = document.getElementById('historyList');
+    
+    if (history.length === 0) {
+        historyList.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">Chưa có lịch sử báo giá</p>';
+        return;
+    }
+    
+    const filteredHistory = filter ? 
+        history.filter(item => item.summary.customerName.toLowerCase().includes(filter.toLowerCase())) : 
+        history;
+    
+    if (filteredHistory.length === 0) {
+        historyList.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">Không tìm thấy kết quả</p>';
+        return;
+    }
+    
+    historyList.innerHTML = filteredHistory.map(item => {
+        const date = new Date(item.timestamp);
+        return `
+            <div class="history-item">
+                <div class="history-item-header">
+                    <div class="history-item-title">${item.summary.customerName}</div>
+                    <div class="history-item-date">${date.toLocaleString('vi-VN')}</div>
+                </div>
+                <div class="history-item-details">Số dòng: ${item.summary.rowCount} | Tổng: ${item.summary.total} VNĐ</div>
+                <div class="history-item-actions">
+                    <button onclick="loadFromHistory(${item.id})" class="print-btn">Tải lại</button>
+                    <button onclick="deleteFromHistory(${item.id})" class="delete-btn">Xóa</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function filterHistory() {
+    const filter = document.getElementById('historySearch').value;
+    displayHistory(filter);
+}
+
+function loadFromHistory(id) {
+    const history = JSON.parse(localStorage.getItem('projectHistory') || '[]');
+    const projectData = history.find(item => item.id === id);
+    
+    if (!projectData) {
+        alert('Kh�ng t?m th?y d? �n!');
+        return;
+    }
+    
+    // Clear current table
+    document.getElementById('tableBody').innerHTML = '';
+    
+    // Load company info
+    if (projectData.companyInfo) {
+        document.getElementById('companyName').value = projectData.companyInfo.name || '';
+        document.getElementById('companyTax').value = projectData.companyInfo.tax || '';
+        document.getElementById('companyAddress').value = projectData.companyInfo.address || '';
+        document.getElementById('companyPhone').value = projectData.companyInfo.phone || '';
+    }
+    
+    document.getElementById('customerName').value = projectData.customerName || '';
+    
+    // Load settings
+    if (projectData.settings) {
+        document.getElementById('enableVAT').checked = projectData.settings.vatEnabled || false;
+        document.getElementById('vatValue').value = projectData.settings.vatValue || 10;
+        document.getElementById('enableDiscount').checked = projectData.settings.discountEnabled || false;
+        document.getElementById('discountValue').value = projectData.settings.discountValue || 0;
+        document.getElementById('discountType').value = projectData.settings.discountType || 'percent';
+        toggleVAT();
+        toggleDiscount();
+    }
+    
+    // Load rows
+    if (projectData.rows) {
+        projectData.rows.forEach(rowData => {
+            addRow();
+            const tbody = document.getElementById('tableBody');
+            const lastRow = tbody.lastElementChild;
+            const cells = lastRow.querySelectorAll('td');
+            
+            if (cells[1].querySelector('textarea')) {
+                cells[1].querySelector('textarea').value = rowData.itemName || '';
+            }
+            if (cells[2].querySelector('input')) {
+                cells[2].querySelector('input').value = rowData.size || '';
+            }
+            if (cells[3].querySelector('input')) {
+                cells[3].querySelector('input').value = rowData.quantity || '';
+            }
+            if (cells[4].querySelector('input')) {
+                cells[4].querySelector('input').value = rowData.unitPrice || '';
+            }
+            
+            calculateTotal(lastRow);
+        });
+    }
+    
+    calculateGrandTotal();
+    closeHistory();
+    alert('�? t?i d? �n t? l?ch s?!');
+}
+
+function deleteFromHistory(id) {
+    if (!confirm('B?n c� ch?c mu?n x�a b�o gi� n�y kh?i l?ch s??')) return;
+    
+    let history = JSON.parse(localStorage.getItem('projectHistory') || '[]');
+    history = history.filter(item => item.id !== id);
+    localStorage.setItem('projectHistory', JSON.stringify(history));
+    displayHistory();
+}
+
+function clearHistory() {
+    if (!confirm('B?n c� ch?c mu?n x�a to�n b? l?ch s? b�o gi�?')) return;
+    
+    localStorage.removeItem('projectHistory');
+    displayHistory();
+    alert('�? x�a to�n b? l?ch s?!');
+}
+
+// Update calculateGrandTotal to trigger VAT/Discount recalculation
+// Update calculateGrandTotal to trigger VAT/Discount recalculation
+const originalCalculateGrandTotal = calculateGrandTotal;
+calculateGrandTotal = function() {
+    originalCalculateGrandTotal.call(this);
+    // Always call updateTotals after calculating grand total
+    updateTotals();
+};

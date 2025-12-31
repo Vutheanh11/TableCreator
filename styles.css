@@ -37,6 +37,17 @@ body {
     cursor: col-resize;
     background-color: transparent;
     z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+/* Show resizers when edit mode is enabled */
+body.edit-mode .column-resizer,
+body.edit-mode .row-resizer {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    background-color: rgba(76, 175, 80, 0.3) !important;
 }
 
 .column-resizer:hover {
@@ -59,6 +70,9 @@ body {
     cursor: row-resize;
     background-color: transparent;
     z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
 }
 
 .row-resizer:hover {
@@ -270,8 +284,16 @@ input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
 }
 
 .total-row td {
-    text-align: center !important;
     vertical-align: middle;
+}
+
+.total-row td:first-child {
+    text-align: left !important;
+    padding-left: 20px !important;
+}
+
+.total-row td:nth-child(2) {
+    text-align: center !important;
 }
 
 .editable-header {
@@ -382,7 +404,7 @@ input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
 }
 
 @media print {
-    .controls, .row-actions, .fab-button, .fab-menu {
+    .controls, .row-actions, .fab-button, .fab-menu, .calculation-controls, .no-print {
         display: none !important;
     }
     
@@ -390,13 +412,20 @@ input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
         display: none !important;
     }
     
-    /* Đảm bảo tfoot và total-row hiển thị */
-    tfoot, .total-row {
-        display: table-row-group !important;
+    /* Đảm bảo tfoot hiển thị nhưng giữ nguyên display của các row bên trong */
+    tfoot {
+        display: table-footer-group !important;
     }
     
     .total-row {
         display: table-row !important;
+    }
+    
+    /* Không force hiển thị các dòng có style="display: none" */
+    .discount-row[style*="display: none"],
+    .vat-row[style*="display: none"],
+    .paid-row[style*="display: none"] {
+        display: none !important;
     }
     
     /* Điều chỉnh colspan cho tổng cộng khi ẩn cột thao tác */
@@ -404,11 +433,72 @@ input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
         width: auto;
     }
     
-    .editable-header input, #customerName, table input, table textarea {
+    .editable-header input, #customerName {
         border: none !important;
         background: transparent !important;
         outline: none !important;
         box-shadow: none !important;
+    }
+    
+    /* Keep table structure but hide input borders inside cells */
+    table {
+        border-collapse: collapse !important;
+        border: 1px solid #000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    table thead, table tbody, table tfoot {
+        border: 1px solid #000 !important;
+        display: table-row-group !important;
+    }
+    
+    table thead tr, table tbody tr, table tfoot tr {
+        border: 1px solid #000 !important;
+        display: table-row !important;
+    }
+    
+    tbody tr {
+        border-top: 1px solid #000 !important;
+        border-bottom: 1px solid #000 !important;
+    }
+    
+    table th, table td {
+        border: 1px solid #000 !important;
+        border-left: 1px solid #000 !important;
+        border-right: 1px solid #000 !important;
+        border-top: 1px solid #000 !important;
+        border-bottom: 1px solid #000 !important;
+        display: table-cell !important;
+        padding: 8px !important;
+    }
+    
+    table thead th {
+        border: 1px solid #000 !important;
+        border-left: 1px solid #000 !important;
+        border-right: 1px solid #000 !important;
+        border-top: 1px solid #000 !important;
+        border-bottom: 1px solid #000 !important;
+        font-weight: bold !important;
+        text-align: center !important;
+    }
+    
+    .column-resizer, .row-resizer {
+        display: none !important;
+        visibility: hidden !important;
+    }
+    
+    table input, table textarea {
+        border: none !important;
+        background: transparent !important;
+        outline: none !important;
+        box-shadow: none !important;
+        color: #000 !important;
+        font-size: inherit !important;
+        font-family: inherit !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
     }
     
     input::placeholder {
@@ -419,23 +509,43 @@ input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
         color: transparent !important;
     }
     
+    /* Ensure text content is visible */
+    table input[type="text"],
+    table textarea {
+        color: #000 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
     /* Ẩn header/footer mặc định của trình duyệt (time, url, tên file) */
     @page {
         margin: 0;
+        size: auto;
     }
     
     body {
-        margin: 1cm;
+        margin: 20px !important;
+        padding: 0 !important;
+    }
+    
+    .wrapper {
+        width: calc(100vw - 40px) !important;
+        height: calc(100vh - 40px) !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     
     .container {
         box-shadow: none;
-        padding: 0;
-        max-width: 100%;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     
     table {
-        width: 100%;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }
 
@@ -806,22 +916,22 @@ button.help-btn:hover {
 
 /* Mobile Edit Mode - Enhanced Drag Handles */
 @media (max-width: 768px) {
-    .column-resizer,
-    .row-resizer {
+    body.edit-mode .column-resizer,
+    body.edit-mode .row-resizer {
         background-color: rgba(33, 150, 243, 0.3) !important;
         opacity: 1 !important;
     }
     
-    .column-resizer {
+    body.edit-mode .column-resizer {
         width: 10px !important;
     }
     
-    .row-resizer {
+    body.edit-mode .row-resizer {
         height: 10px !important;
     }
     
-    .column-resizer:active,
-    .row-resizer:active {
+    body.edit-mode .column-resizer:active,
+    body.edit-mode .row-resizer:active {
         background-color: #2196F3 !important;
         opacity: 1 !important;
     }
@@ -957,5 +1067,150 @@ button.help-btn:hover {
         min-width: 70px;
         font-size: 8px;
         padding: 6px 8px;
+    }
+}
+
+/* Calculation Controls */
+.calculation-controls {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.control-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.control-group input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.control-group input[type="number"],
+.control-group select {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Discount and VAT Rows */
+.discount-row td,
+.vat-row td {
+    background-color: #E3F2FD !important;
+    font-weight: 500;
+}
+
+.discount-row td:nth-child(6),
+.vat-row td:nth-child(6) {
+    text-align: center !important;
+}
+
+.final-row td {
+    background-color: #C8E6C9 !important;
+    font-size: 16px;
+}
+
+.final-row td:nth-child(6) {
+    text-align: center !important;
+}
+
+/* Paid and Remaining Rows */
+.paid-row td {
+    background-color: #FFF9C4 !important;
+    font-weight: 500;
+}
+
+.paid-row td:first-child {
+    text-align: left !important;
+    padding-left: 20px !important;
+}
+
+.paid-row input {
+    font-weight: bold !important;
+}
+
+.remaining-row td {
+    background-color: #FFE0B2 !important;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.remaining-row td:first-child {
+    text-align: left !important;
+    padding-left: 20px !important;
+}
+
+.remaining-row td:nth-child(2) {
+    text-align: center !important;
+}
+
+/* History List Styles */
+.history-item {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.history-item:hover {
+    background-color: #e3f2fd;
+    border-color: #2196F3;
+    transform: translateX(5px);
+}
+
+.history-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.history-item-title {
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+}
+
+.history-item-date {
+    font-size: 12px;
+    color: #666;
+}
+
+.history-item-details {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.history-item-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.history-item-actions button {
+    padding: 5px 15px;
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .calculation-controls {
+        flex-direction: column;
+        gap: 10px;
     }
 }
