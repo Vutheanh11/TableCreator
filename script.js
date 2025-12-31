@@ -1,5 +1,244 @@
 let rowCounter = 0;
 
+// Make table columns resizable
+function makeColumnsResizable() {
+    const table = document.getElementById('priceTable');
+    const headers = table.querySelectorAll('thead th');
+    
+    headers.forEach((header, index) => {
+        // Skip last column (actions)
+        if (header.classList.contains('no-print')) return;
+        
+        const resizer = document.createElement('div');
+        resizer.className = 'column-resizer';
+        header.style.position = 'relative';
+        header.appendChild(resizer);
+        
+        let startX, startWidth, nextHeader, nextWidth;
+        
+        resizer.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            startX = e.pageX;
+            startWidth = header.offsetWidth;
+            
+            // Get next column (skip no-print columns)
+            nextHeader = header.nextElementSibling;
+            while (nextHeader && nextHeader.classList.contains('no-print')) {
+                nextHeader = nextHeader.nextElementSibling;
+            }
+            
+            if (nextHeader) {
+                nextWidth = nextHeader.offsetWidth;
+            }
+            
+            document.addEventListener('mousemove', resize);
+            document.addEventListener('mouseup', stopResize);
+            
+            resizer.classList.add('resizing');
+        });
+        
+        function resize(e) {
+            const diff = e.pageX - startX;
+            const newWidth = startWidth + diff;
+            
+            if (newWidth > 50 && nextHeader) {
+                const newNextWidth = nextWidth - diff;
+                
+                if (newNextWidth > 50) {
+                    header.style.width = newWidth + 'px';
+                    nextHeader.style.width = newNextWidth + 'px';
+                    
+                    // Save to localStorage
+                    localStorage.setItem(`column_${index}_width`, newWidth);
+                    
+                    // Find next column index
+                    const nextIndex = Array.from(headers).indexOf(nextHeader);
+                    if (nextIndex !== -1) {
+                        localStorage.setItem(`column_${nextIndex}_width`, newNextWidth);
+                    }
+                }
+            }
+        }
+        
+        function stopResize() {
+            document.removeEventListener('mousemove', resize);
+            document.removeEventListener('mouseup', stopResize);
+            resizer.classList.remove('resizing');
+        }
+    });
+    
+    // Load saved column widths
+    headers.forEach((header, index) => {
+        const columnKey = `column_${index}_width`;
+        const savedWidth = localStorage.getItem(columnKey);
+        if (savedWidth) {
+            header.style.width = savedWidth + 'px';
+        }
+    });
+}
+
+// Make columns resizable from tbody cells
+function makeColumnsResizableInBody() {
+    const tbody = document.getElementById('tableBody');
+    const rows = tbody.querySelectorAll('tr');
+    const headers = document.querySelectorAll('thead th');
+    
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td:not(.no-print)');
+        
+        cells.forEach((cell, cellIndex) => {
+            // Check if resizer already exists
+            if (cell.querySelector('.column-resizer')) return;
+            
+            const resizer = document.createElement('div');
+            resizer.className = 'column-resizer';
+            cell.appendChild(resizer);
+            
+            let startX, startWidth, nextCell, nextWidth, currentHeader, nextHeader;
+            
+            resizer.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                startX = e.pageX;
+                
+                // Find current and next header
+                const allCells = Array.from(row.querySelectorAll('td'));
+                const actualIndex = allCells.indexOf(cell);
+                currentHeader = headers[actualIndex];
+                
+                startWidth = currentHeader ? currentHeader.offsetWidth : cell.offsetWidth;
+                
+                // Get next cell and header
+                nextCell = cell.nextElementSibling;
+                while (nextCell && nextCell.classList.contains('no-print')) {
+                    nextCell = nextCell.nextElementSibling;
+                }
+                
+                if (nextCell) {
+                    const nextIndex = allCells.indexOf(nextCell);
+                    nextHeader = headers[nextIndex];
+                    nextWidth = nextHeader ? nextHeader.offsetWidth : nextCell.offsetWidth;
+                }
+                
+                document.addEventListener('mousemove', resize);
+                document.addEventListener('mouseup', stopResize);
+                
+                resizer.classList.add('resizing');
+            });
+            
+            function resize(e) {
+                const diff = e.pageX - startX;
+                const newWidth = startWidth + diff;
+                
+                if (newWidth > 50 && nextHeader) {
+                    const newNextWidth = nextWidth - diff;
+                    
+                    if (newNextWidth > 50) {
+                        if (currentHeader) {
+                            currentHeader.style.width = newWidth + 'px';
+                            nextHeader.style.width = newNextWidth + 'px';
+                            
+                            // Save to localStorage
+                            const currentIndex = Array.from(headers).indexOf(currentHeader);
+                            const nextIndex = Array.from(headers).indexOf(nextHeader);
+                            
+                            if (currentIndex !== -1) {
+                                localStorage.setItem(`column_${currentIndex}_width`, newWidth);
+                            }
+                            if (nextIndex !== -1) {
+                                localStorage.setItem(`column_${nextIndex}_width`, newNextWidth);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            function stopResize() {
+                document.removeEventListener('mousemove', resize);
+                document.removeEventListener('mouseup', stopResize);
+                resizer.classList.remove('resizing');
+            }
+        });
+    });
+}
+
+// Make table rows resizable
+function makeRowsResizable() {
+    const tbody = document.getElementById('tableBody');
+    const rows = tbody.querySelectorAll('tr');
+    
+    rows.forEach((row, rowIndex) => {
+        const cells = row.querySelectorAll('td:not(.no-print)');
+        
+        cells.forEach(cell => {
+            // Check if resizer already exists
+            if (cell.querySelector('.row-resizer')) return;
+            
+            const resizer = document.createElement('div');
+            resizer.className = 'row-resizer';
+            cell.style.position = 'relative';
+            cell.appendChild(resizer);
+            
+            let startY, startHeight;
+            
+            resizer.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                startY = e.pageY;
+                startHeight = row.offsetHeight;
+                
+                document.addEventListener('mousemove', resize);
+                document.addEventListener('mouseup', stopResize);
+                
+                resizer.classList.add('resizing');
+            });
+            
+            function resize(e) {
+                const height = startHeight + (e.pageY - startY);
+                if (height > 30) { // Minimum height
+                    row.style.height = height + 'px';
+                    
+                    // Apply height to all cells in the row
+                    const allCells = row.querySelectorAll('td');
+                    allCells.forEach(c => {
+                        c.style.height = height + 'px';
+                    });
+                    
+                    // Save to localStorage
+                    const rowKey = `row_${rowIndex}_height`;
+                    localStorage.setItem(rowKey, height);
+                }
+            }
+            
+            function stopResize() {
+                document.removeEventListener('mousemove', resize);
+                document.removeEventListener('mouseup', stopResize);
+                resizer.classList.remove('resizing');
+            }
+        });
+    });
+    
+    // Load saved row heights
+    rows.forEach((row, rowIndex) => {
+        const rowKey = `row_${rowIndex}_height`;
+        const savedHeight = localStorage.getItem(rowKey);
+        if (savedHeight) {
+            row.style.height = savedHeight + 'px';
+            const cells = row.querySelectorAll('td');
+            cells.forEach(cell => {
+                cell.style.height = savedHeight + 'px';
+            });
+        }
+    });
+}
+
+// Initialize on page load
+window.addEventListener('DOMContentLoaded', function() {
+    makeColumnsResizable();
+    makeRowsResizable();
+    makeColumnsResizableInBody();
+});
+
 function addRow() {
     rowCounter++;
     const tbody = document.getElementById('tableBody');
@@ -14,10 +253,17 @@ function addRow() {
         <td class="line-total">0</td>
         <td class="no-print">
             <div class="row-actions">
-                <button onclick="deleteRow(this)" class="delete-btn">Xóa</button>
+                <div class="tooltip">
+                    <button onclick="deleteRow(this)" class="delete-btn icon-btn">Xóa</button>
+                    <span class="tooltiptext">Xóa dòng</span>
+                </div>
             </div>
         </td>
     `;
+    
+    // Make the new row resizable
+    makeRowsResizable();
+    makeColumnsResizableInBody();
 }
 
 async function deleteRow(btn) {
@@ -353,6 +599,16 @@ function confirmPDFOrientation(orientation) {
     
     const element = document.querySelector('.container');
     
+    // Save and remove all placeholders
+    const placeholderMap = new Map();
+    const allInputs = element.querySelectorAll('input, textarea');
+    allInputs.forEach(input => {
+        if (input.placeholder) {
+            placeholderMap.set(input, input.placeholder);
+            input.placeholder = '';
+        }
+    });
+    
     // Temporarily hide borders for PDF export
     const style = document.createElement('style');
     style.id = 'pdf-export-style';
@@ -413,6 +669,11 @@ function confirmPDFOrientation(orientation) {
     };
     
     html2pdf().set(opt).from(element).save().then(() => {
+        // Restore placeholders
+        placeholderMap.forEach((placeholder, input) => {
+            input.placeholder = placeholder;
+        });
+        
         // Remove temporary style after export
         const tempStyle = document.getElementById('pdf-export-style');
         if (tempStyle) tempStyle.remove();
