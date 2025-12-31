@@ -16,9 +16,10 @@ function makeColumnsResizable() {
         
         let startX, startWidth, nextHeader, nextWidth;
         
-        resizer.addEventListener('mousedown', function(e) {
+        function initResize(e) {
             e.preventDefault();
-            startX = e.pageX;
+            const clientX = e.touches ? e.touches[0].clientX : e.pageX;
+            startX = clientX;
             startWidth = header.offsetWidth;
             
             // Get next column (skip no-print columns)
@@ -33,12 +34,19 @@ function makeColumnsResizable() {
             
             document.addEventListener('mousemove', resize);
             document.addEventListener('mouseup', stopResize);
+            document.addEventListener('touchmove', resize, { passive: false });
+            document.addEventListener('touchend', stopResize);
             
             resizer.classList.add('resizing');
-        });
+        }
+        
+        resizer.addEventListener('mousedown', initResize);
+        resizer.addEventListener('touchstart', initResize, { passive: false });
         
         function resize(e) {
-            const diff = e.pageX - startX;
+            e.preventDefault();
+            const clientX = e.touches ? e.touches[0].clientX : e.pageX;
+            const diff = clientX - startX;
             const newWidth = startWidth + diff;
             
             if (newWidth > 50 && nextHeader) {
@@ -63,6 +71,8 @@ function makeColumnsResizable() {
         function stopResize() {
             document.removeEventListener('mousemove', resize);
             document.removeEventListener('mouseup', stopResize);
+            document.removeEventListener('touchmove', resize);
+            document.removeEventListener('touchend', stopResize);
             resizer.classList.remove('resizing');
         }
     });
@@ -96,10 +106,11 @@ function makeColumnsResizableInBody() {
             
             let startX, startWidth, nextCell, nextWidth, currentHeader, nextHeader;
             
-            resizer.addEventListener('mousedown', function(e) {
+            function initResize(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                startX = e.pageX;
+                const clientX = e.touches ? e.touches[0].clientX : e.pageX;
+                startX = clientX;
                 
                 // Find current and next header
                 const allCells = Array.from(row.querySelectorAll('td'));
@@ -122,12 +133,19 @@ function makeColumnsResizableInBody() {
                 
                 document.addEventListener('mousemove', resize);
                 document.addEventListener('mouseup', stopResize);
+                document.addEventListener('touchmove', resize, { passive: false });
+                document.addEventListener('touchend', stopResize);
                 
                 resizer.classList.add('resizing');
-            });
+            }
+            
+            resizer.addEventListener('mousedown', initResize);
+            resizer.addEventListener('touchstart', initResize, { passive: false });
             
             function resize(e) {
-                const diff = e.pageX - startX;
+                e.preventDefault();
+                const clientX = e.touches ? e.touches[0].clientX : e.pageX;
+                const diff = clientX - startX;
                 const newWidth = startWidth + diff;
                 
                 if (newWidth > 50 && nextHeader) {
@@ -156,6 +174,8 @@ function makeColumnsResizableInBody() {
             function stopResize() {
                 document.removeEventListener('mousemove', resize);
                 document.removeEventListener('mouseup', stopResize);
+                document.removeEventListener('touchmove', resize);
+                document.removeEventListener('touchend', stopResize);
                 resizer.classList.remove('resizing');
             }
         });
@@ -181,20 +201,28 @@ function makeRowsResizable() {
             
             let startY, startHeight;
             
-            resizer.addEventListener('mousedown', function(e) {
+            function initResize(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                startY = e.pageY;
+                const clientY = e.touches ? e.touches[0].clientY : e.pageY;
+                startY = clientY;
                 startHeight = row.offsetHeight;
                 
                 document.addEventListener('mousemove', resize);
                 document.addEventListener('mouseup', stopResize);
+                document.addEventListener('touchmove', resize, { passive: false });
+                document.addEventListener('touchend', stopResize);
                 
                 resizer.classList.add('resizing');
-            });
+            }
+            
+            resizer.addEventListener('mousedown', initResize);
+            resizer.addEventListener('touchstart', initResize, { passive: false });
             
             function resize(e) {
-                const height = startHeight + (e.pageY - startY);
+                e.preventDefault();
+                const clientY = e.touches ? e.touches[0].clientY : e.pageY;
+                const height = startHeight + (clientY - startY);
                 if (height > 30) { // Minimum height
                     row.style.height = height + 'px';
                     
@@ -213,6 +241,8 @@ function makeRowsResizable() {
             function stopResize() {
                 document.removeEventListener('mousemove', resize);
                 document.removeEventListener('mouseup', stopResize);
+                document.removeEventListener('touchmove', resize);
+                document.removeEventListener('touchend', stopResize);
                 resizer.classList.remove('resizing');
             }
         });
