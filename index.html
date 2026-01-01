@@ -9,6 +9,36 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
+    <!-- Desktop Entry Form (Outside wrapper for print) -->
+    <div class="desktop-entry-form no-print">
+        <h3>Nhập Thông Tin Hàng Hóa</h3>
+        <div class="form-row">
+            <div class="form-field">
+                <label>Tên Hàng</label>
+                <textarea id="desktopItemName" rows="2" placeholder="Nhập tên hàng"></textarea>
+            </div>
+            <div class="form-field">
+                <label>Kích Thước</label>
+                <input type="text" id="desktopItemSize" placeholder="VD: 330x120" onblur="formatDesktopDimension(this)">
+            </div>
+            <div class="form-field">
+                <label>Số Lượng</label>
+                <input type="text" id="desktopItemQuantity" placeholder="Tự động hoặc nhập thủ công" oninput="handleDesktopQuantityInput(this)">
+            </div>
+            <div class="form-field">
+                <label>Đơn Giá</label>
+                <input type="text" id="desktopItemPrice" placeholder="Nhập đơn giá" onblur="formatDesktopPrice(this)" onfocus="removeDesktopPriceFormat(this)">
+            </div>
+            <div class="form-field">
+                <label>Thành Tiền</label>
+                <div class="form-total" id="desktopItemTotal">0</div>
+            </div>
+            <div class="form-field">
+                <button onclick="addDesktopEntry()" class="add-entry-btn">➕ Thêm Vào Bảng</button>
+            </div>
+        </div>
+    </div>
+
     <div class="wrapper">
         <div class="controls">
             <button onclick="addRow()" class="add-btn">Thêm Hàng</button>
@@ -112,9 +142,14 @@
     </div>
 
     <!-- Floating Action Button for Mobile -->
-    <button id="fabBtn" class="fab-button" onclick="toggleFabMenu(event)">
-        <span class="fab-icon">☰</span>
-    </button>
+    <div class="fab-container">
+        <input type="checkbox" id="fabCheckbox" onchange="toggleFabMenu(event)">
+        <label for="fabCheckbox" class="fab-button">
+            <div class="bars" id="bar1"></div>
+            <div class="bars" id="bar2"></div>
+            <div class="bars" id="bar3"></div>
+        </label>
+    </div>
     <div id="fabMenu" class="fab-menu">
         <button onclick="addRow()" class="add-btn">Thêm Hàng</button>
         <button onclick="toggleEditMode(); toggleFabMenu()" class="print-btn" id="editModeBtnMobile" style="background-color: #9C27B0;">Chỉnh Bảng</button>
@@ -199,5 +234,6 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="mobile-functions.js"></script>
 </body>
 </html>

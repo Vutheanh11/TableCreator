@@ -250,6 +250,7 @@ td:nth-child(2) {
 th {
     background-color: #f2f2f2;
     font-weight: bold;
+    height: 50px;
 }
 
 input[type="text"], input[type="number"], textarea {
@@ -285,11 +286,16 @@ input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
 
 .total-row td {
     vertical-align: middle;
+    height: 30px;
 }
 
 .total-row td:first-child {
     text-align: left !important;
     padding-left: 20px !important;
+}
+
+.total-row td:nth-child(6) {
+    text-align: center !important;
 }
 
 .total-row td:nth-child(2) {
@@ -836,41 +842,77 @@ button.help-btn:hover {
 }
 
 /* Floating Action Button (FAB) */
-.fab-button {
+.fab-container {
     display: none;
     position: fixed;
     top: 20px;
     left: 20px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background-color: #6c5ce7;
-    color: white;
-    border: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    cursor: pointer;
     z-index: 1000;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    padding: 0;
 }
 
-.fab-button:active {
-    transform: scale(0.95) rotate(90deg);
+#fabCheckbox {
+    display: none;
 }
 
-.fab-button.active {
-    background-color: #f44336;
-    transform: rotate(90deg);
+.fab-button {
+    position: relative;
+    width: 35px;
+    height: 35px;
+    border-radius: 7.5px;
+    background-color: #6c5ce7;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition-duration: .5s;
+    box-shadow: 0 2.5px 5px rgba(0,0,0,0.3);
+    padding: 7.5px;
 }
 
-.fab-icon {
-    font-size: 24px;
-    line-height: 1;
-    transition: transform 0.3s ease;
+.bars {
+    width: 100%;
+    height: 2.5px;
+    background-color: white;
+    border-radius: 2.5px;
+    transition-duration: .5s;
 }
 
-.fab-button.active .fab-icon {
+#bar2 {
+    transition-duration: .8s;
+}
+
+#bar1, #bar3 {
+    width: 70%;
+}
+
+#fabCheckbox:checked + .fab-button .bars {
+    position: absolute;
+    transition-duration: .5s;
+}
+
+#fabCheckbox:checked + .fab-button #bar2 {
+    transform: scaleX(0);
+    transition-duration: .5s;
+}
+
+#fabCheckbox:checked + .fab-button #bar1 {
+    width: 100%;
     transform: rotate(45deg);
+    transition-duration: .5s;
+}
+
+#fabCheckbox:checked + .fab-button #bar3 {
+    width: 100%;
+    transform: rotate(-45deg);
+    transition-duration: .5s;
+}
+
+#fabCheckbox:checked + .fab-button {
+    transition-duration: .5s;
+    transform: rotate(180deg);
+    background-color: #f44336;
 }
 
 .fab-menu {
@@ -944,19 +986,6 @@ button.help-btn:hover {
     }
 }
 
-.fab-button:active {
-    transform: scale(0.95);
-}
-
-.fab-button.active {
-    background-color: #f44336;
-}
-
-.fab-button.active .fab-icon::before {
-    content: '×';
-    font-size: 32px;
-}
-
 .fab-menu button {
     width: 100%;
     text-align: left;
@@ -981,10 +1010,8 @@ button.help-btn:hover {
         display: none;
     }
 
-    .fab-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .fab-container {
+        display: block;
     }
 
     .container {
@@ -1081,6 +1108,103 @@ button.help-btn:hover {
     flex-wrap: wrap;
 }
 
+/* Desktop Entry Form */
+.desktop-entry-form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px auto;
+    max-width: 1400px;
+    border: 2px solid #e0e0e0;
+}
+
+.desktop-entry-form h3 {
+    margin: 0 0 15px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-width: 150px;
+    max-width: 200px;
+}
+
+.form-field label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 14px;
+}
+
+.form-field input,
+.form-field textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: 'Times New Roman', Times, serif;
+    transition: border-color 0.3s;
+    height: 44px;
+    box-sizing: border-box;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+    background-color: #fffacd;
+}
+
+.form-field textarea {
+    resize: none;
+    height: 44px;
+    line-height: 1.4;
+}
+
+.form-total {
+    padding: 10px;
+    background: white;
+    border: 2px solid #4CAF50;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #4CAF50;
+    text-align: center;
+}
+
+.add-entry-btn {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+    height: 44px;
+}
+
+.add-entry-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+.add-entry-btn:active {
+    transform: translateY(0);
+}
+
 .control-group {
     display: flex;
     align-items: center;
@@ -1110,26 +1234,45 @@ button.help-btn:hover {
 .vat-row td {
     background-color: #E3F2FD !important;
     font-weight: 500;
+    height: 30px;
+    vertical-align: middle;
+}
+
+.discount-row td:first-child,
+.vat-row td:first-child {
+    text-align: left !important;
+    padding-left: 20px !important;
 }
 
 .discount-row td:nth-child(6),
 .vat-row td:nth-child(6) {
     text-align: center !important;
+    vertical-align: middle !important;
 }
 
 .final-row td {
     background-color: #C8E6C9 !important;
     font-size: 16px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+.final-row td:first-child {
+    text-align: left !important;
+    padding-left: 20px !important;
 }
 
 .final-row td:nth-child(6) {
     text-align: center !important;
+    vertical-align: middle !important;
 }
 
 /* Paid and Remaining Rows */
 .paid-row td {
     background-color: #FFF9C4 !important;
     font-weight: 500;
+    height: 30px;
+    vertical-align: middle;
 }
 
 .paid-row td:first-child {
@@ -1137,8 +1280,17 @@ button.help-btn:hover {
     padding-left: 20px !important;
 }
 
+.paid-row td:nth-child(6) {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
 .paid-row input {
     font-weight: bold !important;
+    height: 16px !important;
+    padding: 1px 4px !important;
+    font-size: 12px !important;
+    line-height: 14px !important;
 }
 
 .remaining-row td {

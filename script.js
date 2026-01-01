@@ -836,20 +836,23 @@ function toggleFabMenu(event) {
     if (event) {
         event.stopPropagation();
     }
-    const fabBtn = document.getElementById('fabBtn');
+    const fabCheckbox = document.getElementById('fabCheckbox');
     const fabMenu = document.getElementById('fabMenu');
-    fabBtn.classList.toggle('active');
-    fabMenu.classList.toggle('active');
+    
+    if (fabCheckbox && fabMenu) {
+        fabMenu.classList.toggle('active');
+    }
 }
 
 // Close FAB menu when clicking outside
 document.addEventListener('click', function(event) {
-    const fabBtn = document.getElementById('fabBtn');
+    const fabCheckbox = document.getElementById('fabCheckbox');
     const fabMenu = document.getElementById('fabMenu');
+    const fabContainer = document.querySelector('.fab-container');
     
-    if (fabBtn && fabMenu && fabMenu.classList.contains('active')) {
-        if (!fabBtn.contains(event.target) && !fabMenu.contains(event.target)) {
-            fabBtn.classList.remove('active');
+    if (fabCheckbox && fabMenu && fabMenu.classList.contains('active')) {
+        if (!fabContainer.contains(event.target) && !fabMenu.contains(event.target)) {
+            fabCheckbox.checked = false;
             fabMenu.classList.remove('active');
         }
     }
