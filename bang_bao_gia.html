@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Báo Giá</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        /* Specific overrides for Báo Giá table */
+        .col-stt { width: 10%; }
+        .col-name { width: 50%; }
+        .col-price { width: 40%; }
+        
+        .hidden { display: none !important; }
+
+        /* Styles for unit buttons */
+        .unit-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+        .unit-instruction {
+            color: #ccc;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <label class="burger no-print" title="Ẩn/Hiện Menu">
+        <input type="checkbox" onclick="togglePanel()" checked>
+        <span></span>
+        <span></span>
+        <span></span>
+    </label>
+
+    <div class="control-panel no-print" id="mainControlPanel">
+        <div class="control-group">
+            <button onclick="toggleRowColControls()" id="btnRowCol" style="font-weight: bold;">Chỉnh hàng/Cột</button>
+        </div>
+
+        <div id="rowColControls" class="control-group row-col-settings hidden">
+            <div class="row-col-instruction" style="color: #ccc; font-size: 0.9em; margin-bottom: 5px;">
+                (Chọn 1 ô trong bảng để chỉnh)
+            </div>
+            
+            <div class="control-group row-setting-group">
+                <label>Chiều cao hàng:</label>
+                <div class="btn-group" style="display: flex; gap: 5px;">
+                    <button onclick="adjustSelectedRowHeight(5)" title="Tăng chiều cao hàng"><i class="icon-plus">+</i></button>
+                    <button onclick="adjustSelectedRowHeight(-5)" title="Giảm chiều cao hàng"><i class="icon-minus">-</i></button>
+                    <button onclick="resetSelectedRowHeight()" title="Đặt lại chiều cao mặc định" class="btn-reset">↺</button>
+                    <button onclick="deleteSelectedRow()" title="Xóa hàng đang chọn" class="btn-delete" style="background: #e53935;">Xóa</button>
+                </div>
+            </div>
+
+            <div class="control-group col-setting-group">
+                <label>Độ rộng cột:</label>
+                <div class="btn-group" style="display: flex; gap: 5px;">
+                     <button onclick="adjustSelectedColWidth(1)" title="Tăng chiều rộng cột"><i class="icon-plus">+</i></button>
+                     <button onclick="adjustSelectedColWidth(-1)" title="Giảm chiều rộng cột"><i class="icon-minus">-</i></button>
+                     <button onclick="resetSelectedColWidth()" title="Đặt lại độ rộng mặc định" class="btn-reset">↺</button>
+                </div>
+            </div>
+            
+            <div class="separator" style="border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0;"></div>
+        </div>
+
+        <div class="control-group add-row-group">
+            <button onclick="addRow()" class="btn-add-row" style="background: #4CAF50;">+ Thêm dòng cuối</button>
+        </div>
+
+        <!-- Unit Controls -->
+        <div class="control-group">
+            <button onclick="toggleUnitControl()" style="font-weight: bold;">Thêm Đơn Vị</button>
+        </div>
+        
+        <div id="unitControls" class="control-group row-col-settings hidden">
+            <div class="unit-instruction">Chọn ô Đơn Giá rồi chọn đơn vị:</div>
+            <div class="unit-grid">
+                <button onclick="addUnit('/cm²')">1. /cm²</button>
+                <button onclick="addUnit('/m²')">2. /m²</button>
+                <button onclick="addUnit('/cái')">3. /cái</button>
+                <button onclick="addUnit('/chiếc')">4. /chiếc</button>
+                <button onclick="addUnit('/bao')">5. /bao</button>
+                <button onclick="addUnit('/lon')">6. /lon</button>
+                <button onclick="addUnit('/thùng')">7. /thùng</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <button onclick="toggleEditMode()" id="editBtn">Sửa nội dung</button>
+        </div>
+
+        <div class="control-group">
+            <button onclick="window.location.href='index.html'" style="background-color: #FF9800 !important; border-color: #FF9800 !important; font-weight: bold;">Chuyển sang Bảng Khối Lượng</button>
+        </div>
+
+        <div class="control-group">
+            <button onclick="exportExcel()" class="btn-print" style="background-color: #217346 !important; border-color: #217346 !important;">Xuất Excel</button>
+            <button onclick="document.getElementById('excelInput').click()" class="btn-print" style="background-color: #107c41 !important; border-color: #107c41 !important;">Nhập Excel</button>
+            <input type="file" id="excelInput" accept=".xlsx, .xls" style="display: none;" onchange="importExcel(this)">
+            
+            <button onclick="printPage()" class="btn-print">In Bảng</button>
+        </div>
+    </div>
+
+    <div class="page">
+        <div class="header">
+            <div class="company-info" contenteditable="false">
+                <div class="company-name">CTY TNHH TRƯỜNG GIANG WINDOWS</div>
+                <div>MST: 1702262181</div>
+                <div>Đ/C: P45, căn 19, khu đô thị Phú Cường, phường An Hòa, TP Rạch Giá, Kiên Giang</div>
+                <div>SĐT: 0919808309</div>
+            </div>
+        </div>
+
+        <div class="title-section" contenteditable="false">
+            <h1>BẢNG BÁO GIÁ</h1>
+            <div class="subtitle">
+                <span>Kính gửi quý khách hàng: </span><span class="customer-name">..............</span>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-stt">STT</th>
+                        <th class="col-name">Tên Hàng</th>
+                        <th class="col-price">Đơn Giá</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dòng trống -->
+                    
+                </tbody>
+                <tfoot>
+                     <!-- Tạm thời ẩn footer tổng cộng nếu không cần thiết cho bảng báo giá chi tiết, hoặc để dòng ghi chú -->
+                </tfoot>
+            </table>
+        </div>
+        
+    </div>
+
+    <script src="script_bao_gia.js"></script>
+</body>
+</html>

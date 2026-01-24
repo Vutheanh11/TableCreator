@@ -1,0 +1,437 @@
+body {
+    font-family: "Times New Roman", Times, serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FAFAFA;
+}
+* {
+    box-sizing: border-box;
+}
+.page {
+    width: 21cm;
+    min-height: 29.7cm;
+    padding: 1cm 1cm; /* User requested 1cm padding */
+    margin: 1cm auto;
+    border: 1px solid #D3D3D3;
+    border-radius: 5px;
+    background: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.header {
+    margin-bottom: 30px;
+}
+
+.company-info {
+    font-size: 11pt;
+    line-height: 1.5;
+    width: 100%; /* Mở rộng chiều rộng để không bị xuống dòng */
+    text-align: left;
+    white-space: nowrap; /* Ngăn xuống dòng cho tên và địa chỉ */
+}
+
+.company-name {
+    text-transform: uppercase;
+    font-weight: 900;
+    margin-bottom: 5px;
+    font-size: 16pt;
+}
+
+.title-section {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 20pt;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.subtitle {
+    font-style: italic;
+    font-size: 12pt;
+    margin-top: 5px;
+}
+
+table {
+    width: 100%;
+    /* Sử dụng layout fixed giúp việc resize mượt mà và chính xác hơn, tránh bị nhảy cột */
+    table-layout: fixed; 
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 11pt;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    height: 50px;
+    vertical-align: middle;
+    text-align: center;
+    word-wrap: break-word; /* Kích hoạt xuống dòng */
+    white-space: normal;   /* Đảm bảo văn bản xuống dòng */
+    max-width: 150px;      /* Giới hạn chiều rộng để xuống dòng hiệu quả hơn */
+}
+
+td[contenteditable="true"]:empty::before {
+    content: attr(data-placeholder);
+    color: #ccc;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* Căn chỉnh cột cho đẹp */
+.col-stt { width: 8%; }
+.col-name { width: 30%; }
+.col-dim { width: 14%; }
+.col-area { width: 12%; }
+.col-price { width: 16%; }
+.col-total { width: 20%; }
+
+td.text-left { text-align: left; padding-left: 10px; }
+td.text-right { text-align: right; padding-right: 10px; }
+
+/* Tăng cường hiển thị bordered cho các ô */
+th, td {
+    border: 1px solid black !important;
+}
+
+/* Control Panel Styling - Sidebar Left */
+.control-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px; /* Sidebar width */
+    height: 100vh;
+    background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 70px 15px 20px 15px; /* Top padding to avoid toggle button overlapping content */
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 15px;
+    box-shadow: 4px 0 12px rgba(0,0,0,0.15);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: transform 0.3s ease-in-out, opacity 0.3s;
+    overflow-y: auto;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+}
+
+.control-group label {
+    font-weight: 500;
+    color: #e3f2fd;
+    font-size: 0.95em;
+}
+
+/* Button Base Styles */
+.control-panel button {
+    padding: 10px 16px; /* Slightly taller for ease of click */
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    width: 100%; /* Full width buttons */
+}
+
+.control-panel button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.control-panel button:active {
+    transform: translateY(0);
+}
+
+.control-panel button.active {
+    background: #4CAF50;
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+}
+
+/* Highlight Primary Actions */
+.btn-print {
+    background: #ff4081 !important; /* Pink/Red accent */
+    border-color: transparent !important;
+}
+.btn-print:hover {
+    background: #f50057 !important;
+}
+/* Row/Col Settings Panel (Expandable) */
+.row-col-settings {
+    flex-direction: column; 
+    align-items: stretch;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px; 
+    border-radius: 8px; 
+    width: 100%; /* Fit to sidebar */
+    margin-top: 5px;
+    border: 1px solid rgba(255,255,255,0.1);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.row-col-instruction {
+    font-style: italic; 
+    font-size: 0.85em; 
+    color: #b3e5fc; 
+    text-align: center; 
+    margin-bottom: 12px;
+}
+
+.row-setting-group, .col-setting-group {
+    justify-content: space-between; 
+    margin-bottom: 10px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 5px;
+}
+
+/* Specific button overrides inside settings panel */
+.row-col-settings button {
+    padding: 5px 12px;
+    min-width: 32px;
+}
+
+.btn-delete {
+    background-color: rgba(255, 82, 82, 0.2) !important;
+    border-color: #ff5252 !important;
+    color: #ff5252 !important;
+}
+.btn-delete:hover {
+    background-color: #ff5252 !important;
+    color: white !important;
+}
+
+.btn-reset {
+    background-color: rgba(255, 193, 7, 0.2) !important;
+    border-color: #ffc107 !important;
+    color: #ffc107 !important;
+}
+.btn-reset:hover {
+    background-color: #ffc107 !important;
+    color: black !important;
+}
+
+.btn-add-row {
+    width: 100%;
+    background: rgba(33, 150, 243, 0.2) !important;
+    border: 1px dashed #2196F3 !important;
+}
+.btn-add-row:hover {
+    background: #2196F3 !important;
+}
+
+.separator {
+    border-top: 1px solid rgba(255,255,255,0.15); 
+    margin: 10px 0; 
+    width: 100%;
+}
+
+.selected-cell {
+    outline: 2px solid #29b6f6 !important;
+    background-color: rgba(41, 182, 246, 0.1) !important;
+    position: relative;
+    z-index: 50;
+}
+
+.btn-print {
+    background-color: #2196F3 !important;
+    color: white !important;
+    border-color: #2196F3 !important;
+}
+
+/* From Uiverse.io by Cevorob */ 
+.burger {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1001;
+  width: 40px;
+  height: 30px;
+  background: transparent;
+  cursor: pointer;
+  display: block;
+}
+
+.burger input {
+  display: none;
+}
+
+.burger span {
+  display: block;
+  position: absolute;
+  height: 4px;
+  width: 100%;
+  background: black;
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: .25s ease-in-out;
+}
+
+.burger span:nth-of-type(1) {
+  top: 0px;
+  transform-origin: left center;
+}
+
+.burger span:nth-of-type(2) {
+  top: 50%;
+  transform: translateY(-50%);
+  transform-origin: left center;
+}
+
+.burger span:nth-of-type(3) {
+  top: 100%;
+  transform-origin: left center;
+  transform: translateY(-100%);
+}
+
+.burger input:checked ~ span:nth-of-type(1) {
+  transform: rotate(45deg);
+  top: 0px;
+  left: 5px;
+}
+
+.burger input:checked ~ span:nth-of-type(2) {
+  width: 0%;
+  opacity: 0;
+}
+
+.burger input:checked ~ span:nth-of-type(3) {
+  transform: rotate(-45deg);
+  top: 28px;
+  left: 5px;
+}
+
+.control-panel {
+    transition: transform 0.3s ease-in-out;
+}
+
+.control-panel.collapsed {
+    transform: translateX(-100%); /* Slide left to hide */
+    position: fixed;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media print {
+    @page {
+        size: A4;
+        margin: 5mm; /* Đặt lề in mặc định nhỏ (Narrow) */
+    }
+    body, .page {
+        margin: 0;
+        box-shadow: none;
+        border: none;
+        width: 100%; /* Auto width to fit margins */
+        height: auto;
+        min-height: 29.7cm;
+        overflow: visible;
+    }
+    .no-print, .control-panel, .burger {
+        display: none !important;
+    }
+    .page {
+         /* Padding 0 theo yêu cầu */
+         padding: 0cm;
+    }
+    tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
+
+/* Class hỗ trợ force layout chuẩn A4 khi xuất PDF (tránh lỗi trên mobile) */
+body.pdf-exporting .page {
+    /* A4 Width = 210mm. Margin Left/Right = 5mm + 5mm = 10mm. Available = 200mm. */
+    /* Đặt width = 198mm để an toàn (trừ hao 1-2mm) */
+    width: 198mm !important;
+    min-width: 198mm !important;
+    max-width: 198mm !important;
+    margin: 0 1cm 1cm 0 !important;
+    padding: 0 !important; /* Bỏ padding vì đã dùng margin của PDF */
+    height: auto !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
+    background: white;
+}
+body.pdf-exporting table, body.pdf-exporting tbody {
+    page-break-inside: auto;
+}
+body.pdf-exporting tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+body.pdf-exporting .table-wrapper {
+    overflow: visible !important;
+}
+body.pdf-exporting .control-panel, 
+body.pdf-exporting .burger,
+body.pdf-exporting .no-print {
+    display: none !important;
+}
+
+@media screen and (max-width: 768px) {
+    .page {
+        width: auto;
+        margin: 10px;
+        padding: 15px;
+        min-height: auto;
+    }
+    
+    .company-info {
+        width: 100%;
+    }
+
+    table {
+        font-size: 10pt;
+    }
+
+    th, td {
+        padding: 4px;
+    }
+    
+    /* Cho phép bảng cuộn ngang trên điện thoại nếu cần */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+}

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Khối Lượng</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <!-- Nút mở menu cài đặt nổi -->
+    <label class="burger no-print" title="Ẩn/Hiện Menu">
+        <input type="checkbox" onclick="togglePanel()" checked>
+        <span></span>
+        <span></span>
+        <span></span>
+    </label>
+
+    <div class="control-panel no-print" id="mainControlPanel">
+        <div class="control-group">
+            <button onclick="toggleRowColControls()" id="btnRowCol" style="font-weight: bold;">Chỉnh hàng/Cột</button>
+        </div>
+
+        <div id="rowColControls" class="control-group row-col-settings hidden">
+            <div class="row-col-instruction">
+                (Chọn 1 ô trong bảng để chỉnh)
+            </div>
+            
+            <div class="control-group row-setting-group">
+                <label>Chiều cao hàng:</label>
+                <div class="btn-group">
+                    <button onclick="adjustSelectedRowHeight(5)" title="Tăng chiều cao hàng"><i class="icon-plus">+</i></button>
+                    <button onclick="adjustSelectedRowHeight(-5)" title="Giảm chiều cao hàng"><i class="icon-minus">-</i></button>
+                    <button onclick="resetSelectedRowHeight()" title="Đặt lại chiều cao mặc định" class="btn-reset">↺</button>
+                    <button onclick="deleteSelectedRow()" title="Xóa hàng đang chọn" class="btn-delete">Xóa</button>
+                </div>
+            </div>
+
+            <div class="control-group col-setting-group">
+                <label>Độ rộng cột:</label>
+                <div class="btn-group">
+                     <button onclick="adjustSelectedColWidth(1)" title="Tăng chiều rộng cột"><i class="icon-plus">+</i></button>
+                     <button onclick="adjustSelectedColWidth(-1)" title="Giảm chiều rộng cột"><i class="icon-minus">-</i></button>
+                     <button onclick="resetSelectedColWidth()" title="Đặt lại độ rộng mặc định" class="btn-reset">↺</button>
+                </div>
+            </div>
+            
+            <div class="separator"></div>
+        </div>
+
+        <div class="control-group add-row-group">
+            <button onclick="addRow()" class="btn-add-row" style="background-color: #4CAF50 !important; border-color: #4CAF50 !important;">+ Thêm dòng cuối</button>
+        </div>
+
+        <div class="control-group">
+            <button onclick="toggleEditMode()" id="editBtn">Sửa nội dung</button>
+        </div>
+
+        <div class="control-group">
+            <button onclick="window.location.href='bang_bao_gia.html'" style="background-color: #FF9800 !important; border-color: #FF9800 !important; font-weight: bold;">Chuyển sang Bảng Báo Giá</button>
+        </div>
+
+        <div class="control-group">
+            <button onclick="exportExcel()" class="btn-print" style="background-color: #217346 !important; border-color: #217346 !important;">Xuất Excel</button>
+            <button onclick="document.getElementById('excelInput').click()" class="btn-print" style="background-color: #107c41 !important; border-color: #107c41 !important;">Nhập Excel</button>
+            <input type="file" id="excelInput" accept=".xlsx, .xls" style="display: none;" onchange="importExcel(this)">
+            
+            <button onclick="exportPDF()" class="btn-print" style="background-color: #e91e63 !important; border-color: #e91e63 !important;">Xuất PDF (chưa dùng được)</button>
+            <button onclick="printPage()" class="btn-print">In Bảng</button>
+        </div>
+    </div>
+
+    <div class="page">
+        <div class="header">
+            <div class="company-info">
+                <div class="company-name">CTY TNHH TRƯỜNG GIANG WINDOWS</div>
+                <div>MST: 1702262181</div>
+                <div>Đ/C: P45, căn 19, khu đô thị Phú Cường, phường An Hòa, TP Rạch Giá, Kiên Giang</div>
+                <div>SĐT: 0919808309</div>
+            </div>
+        </div>
+
+        <div class="title-section">
+            <h1>BẢNG KHỐI LƯỢNG</h1>
+            <div class="subtitle">
+                <span>Kính gửi quý khách hàng: </span><span class="customer-name">..............</span>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-stt">STT</th>
+                        <th class="col-name">Tên Hàng</th>
+                        <th class="col-dim">Kích Thước</th>
+                        <th class="col-area">Diện Tích</th>
+                        <th class="col-price">Đơn Giá</th>
+                        <th class="col-total">Thành Tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dòng trống -->
+                    
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5" class="text-left" style="font-weight: bold;">Tổng cộng:</td>
+                        <td class="text-center" style="font-weight: bold;"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
